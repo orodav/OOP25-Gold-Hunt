@@ -1,8 +1,8 @@
-package main.java.it.unibo.goldhunt.engine.impl;
+package it.unibo.goldhunt.engine.impl;
 
-import main.java.it.unibo.goldhunt.engine.api.GameMode;
-import main.java.it.unibo.goldhunt.engine.api.LevelState;
-import main.java.it.unibo.goldhunt.engine.api.Status;
+import it.unibo.goldhunt.engine.api.GameMode;
+import it.unibo.goldhunt.engine.api.LevelState;
+import it.unibo.goldhunt.engine.api.Status;
 
 public final class StatusImpl implements Status{
 

@@ -1,12 +1,11 @@
-package main.java.it.unibo.goldhunt.player.impl;
+package it.unibo.goldhunt.player.impl;
 //davv
 import java.util.Arrays;
 
-import main.java.it.unibo.goldhunt.engine.api.Position;
-import main.java.it.unibo.goldhunt.player.api.Inventory;
-import main.java.it.unibo.goldhunt.player.api.Item;
-import main.java.it.unibo.goldhunt.player.api.Player;
-import main.java.it.unibo.goldhunt.player.api.PlayerOperations;
+import it.unibo.goldhunt.engine.api.Position;
+import it.unibo.goldhunt.items.api.ItemTypes;
+import it.unibo.goldhunt.player.api.Inventory;
+import it.unibo.goldhunt.player.api.PlayerOperations;
 
 public final class PlayerImpl implements PlayerOperations {
 
@@ -115,12 +114,12 @@ public final class PlayerImpl implements PlayerOperations {
     }
 
     @Override
-    public PlayerImpl addItem(Item item, int quantity) {
+    public PlayerImpl addItem(final ItemTypes item, final int quantity) {
         return new PlayerImpl(this.position, this.lives, this.gold, this.inventory.add(item, quantity));
     }
 
     @Override
-    public PlayerImpl useItem(Item item, int quantity) {
+    public PlayerImpl useItem(final ItemTypes item, final int quantity) {
         return new PlayerImpl(this.position, this.lives, this.gold, this.inventory.remove(item, quantity));
     }
 }

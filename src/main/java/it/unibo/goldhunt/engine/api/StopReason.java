@@ -1,4 +1,4 @@
-package main.java.it.unibo.goldhunt.engine.api;
+package it.unibo.goldhunt.engine.api;
 //davv
 public enum StopReason {
     REACHED_CELL, BLOCKED, NO_AVAILABLE_PATH, ON_WARNING, NONE;
