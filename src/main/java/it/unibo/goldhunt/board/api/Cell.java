@@ -26,4 +26,5 @@ public interface Cell {
     void setContent(CellContent content);
 
     void removeContent();
+    
 }
