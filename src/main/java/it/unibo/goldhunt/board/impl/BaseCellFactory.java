@@ -8,14 +8,25 @@ import it.unibo.goldhunt.board.api.Cell;
 import it.unibo.goldhunt.board.api.CellFactory;
 import it.unibo.goldhunt.items.api.CellContent;
 
+/**
+ * This class is the implementation of CellFactory.
+ */
 public class BaseCellFactory implements CellFactory {
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public Cell createCell() {
         return new BaseCell();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public Cell createCell(final Optional<CellContent> content) {
         return new BaseCell(content);
     }   
-    
+
 }
