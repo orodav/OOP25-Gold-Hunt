@@ -5,11 +5,14 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import it.unibo.goldhunt.board.api.Cell;
 import it.unibo.goldhunt.board.api.CellFactory;
+import it.unibo.goldhunt.items.api.CellContent;
 
 public class BaseCellTest {
     
@@ -97,6 +100,44 @@ public class BaseCellTest {
         assertEquals(8, cell.getAdjacentTraps());
         assertThrows(IllegalArgumentException.class, () -> cell.setAdjacentTraps(-1));
         assertThrows(IllegalArgumentException.class, () -> cell.setAdjacentTraps(9));
+    }
+
+    /**
+     * Tests that setContent() does not change a cell's existing content.
+     */
+    @Test
+    void testSetContent() {
+        final CellContent content1 = new TempCellContent();
+        cell.setContent(content1);
+        assertTrue(cell.hasContent());
+        assertTrue(cell.getContent().isPresent());
+        assertEquals(content1, cell.getContent().get());
+        final CellContent content2 = new TempCellContent();
+        assertThrows(IllegalStateException.class, () -> cell.setContent(content2));
+    }
+
+    /**
+     * Tests the removal of a cell's content.
+     */
+    @Test
+    void testRemoveContent() {
+        final CellContent content = new TempCellContent();
+        cell.setContent(content);
+        cell.removeContent();
+        assertFalse(cell.hasContent());
+        assertEquals(Optional.empty(), cell.getContent());
+        cell.removeContent();
+        assertFalse(cell.hasContent());
+        assertEquals(Optional.empty(), cell.getContent());
+    }
+
+    private static final class TempCellContent implements CellContent {
+        
+        @Override
+        public boolean applyEffect() { return true; }
+
+        @Override
+        public String shortString() { return "For testing only"; }
     }
 
 }
