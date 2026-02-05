@@ -4,6 +4,7 @@ package it.unibo.goldhunt.board.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
 
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import it.unibo.goldhunt.board.api.Cell;
+import it.unibo.goldhunt.items.api.CellContent;
 
 public class BaseCellFactoryTest {
 
@@ -34,5 +36,36 @@ public class BaseCellFactoryTest {
         assertEquals(Optional.empty(), cell.getContent());
     }
 
+    /**
+     * Test the creation of a cell with content
+     */
+    @Test
+    void testCreateCellWithParameters() {
 
+        final Cell cell2 = this.factory.createCell(Optional.empty());
+        assertFalse(cell2.isRevealed());
+        assertFalse(cell2.isFlagged());
+        assertEquals(0, cell2.getAdjacentTraps());
+        assertFalse(cell2.hasContent());
+        assertEquals(Optional.empty(), cell2.getContent());
+
+        final CellContent content = new TempCellContent();
+        final Cell cell3 = this.factory.createCell(Optional.of(content));
+        assertFalse(cell3.isRevealed());
+        assertFalse(cell3.isFlagged());
+        assertEquals(0, cell3.getAdjacentTraps());
+        assertTrue(cell3.hasContent());
+        assertEquals(Optional.of(content), cell3.getContent());
+    }
+
+    private static final class TempCellContent implements CellContent {
+
+        @Override
+        public void applyEffect() {}
+
+        @Override
+        public String shortString() { return "For testing only"; }
+
+    }
+ 
 }
