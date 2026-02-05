@@ -19,7 +19,13 @@ public class FloodReveal implements RevealStrategy {
     @Override
     public void reveal(Board b, Position p) {
         Objects.requireNonNull(b);
+
         final Cell cell = b.getCell(p);
+
+        if (cell.isRevealed() || cell.isFlagged()) { 
+            return;
+        }
+
         cell.reveal();
         if (cell.getAdjacentTraps() == NO_ADJACENT_TRAPS) {
             b.getAdjacentCells(p).forEach(adjacent -> {
