@@ -50,7 +50,7 @@ public interface Cell {
      * @param n the number of adjacent traps
      * @throws IllegalArgumentException if {@code n} is negative or greater than 8
      */
-    void setAdjacentTraps();
+    void setAdjacentTraps(int n);
 
     /**
      * Checks if the cell contains a permitted object.
