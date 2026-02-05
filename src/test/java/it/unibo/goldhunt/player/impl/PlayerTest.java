@@ -7,8 +7,6 @@ import org.junit.jupiter.api.Test;
 import it.unibo.goldhunt.engine.api.Position;
 //import it.unibo.goldhunt.items.api.ItemTypes;
 import it.unibo.goldhunt.player.api.Inventory;
-import it.unibo.goldhunt.player.impl.InventoryImpl;
-import it.unibo.goldhunt.player.impl.PlayerImpl;
 
 public class PlayerTest {
 
@@ -180,7 +178,7 @@ public class PlayerTest {
     @Test
     void addItemShouldUpdateInventory() {
         final var player = basicPlayer();
-        final var updated = player.addItem(ItemTypes.LUCKY_CLOVER, 1);
+        final var updated = player.addItem(ItemTypes.SHIELD, 1);
         assertNotSame(player, updated);
         assertEquals(player.position(), updated.position());
         assertEquals(player.livesCount(), updated.livesCount());
@@ -192,8 +190,8 @@ public class PlayerTest {
     /*
     @Test
     void useItemShouldUpdateInventory() {
-        final var player = basicPlayer().addItem(ItemTypes.LUCKY_CLOVER, 1);
-        final var updated = player.useItem(ItemTypes.LUCKY_CLOVER, 1);
+        final var player = basicPlayer().addItem(ItemTypes.SHIELD, 1);
+        final var updated = player.useItem(ItemTypes.SHIELD, 1);
         assertNotSame(player, updated);
         assertNotEquals(player.inventory(), updated.inventory());
     }
@@ -217,7 +215,7 @@ public class PlayerTest {
         assertNotEquals(base, new PlayerImpl(pos(2, 1), 3, 0, inventory));
         assertNotEquals(base, new PlayerImpl(pos(1, 1), 4, 0, inventory));
         assertNotEquals(base, new PlayerImpl(pos(1, 1), 3, 4, inventory));
-        //assertNotEquals(base, new PlayerImpl(pos(1, 1), 3, 0, inventory.add(ItemTypes.LUCKY_CLOVER, 1)));
+        //assertNotEquals(base, new PlayerImpl(pos(1, 1), 3, 0, inventory.add(ItemTypes.SHIELD, 1)));
     }
 
     @Test

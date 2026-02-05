@@ -11,6 +11,4 @@ public interface Player {
     int goldCount();
 
     Inventory inventory();
-
-    // setMultiplier();
 }

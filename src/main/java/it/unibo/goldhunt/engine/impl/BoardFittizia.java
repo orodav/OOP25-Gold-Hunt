@@ -15,7 +15,7 @@ public interface BoardFittizia {
 
     boolean isStopCellFor(Position p, Player player); //luca
 
-    Iterable<Position> neighborsOf(Position p);
+    //Iterable<Position> neighborsOf(Position p);
     List<CellFittizia> getAdjacentCells(Position p);
 
     //sempre qui?
