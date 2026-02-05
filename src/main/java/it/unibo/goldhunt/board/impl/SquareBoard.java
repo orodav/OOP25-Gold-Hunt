@@ -1,3 +1,5 @@
+// AZZU
+
 package it.unibo.goldhunt.board.impl;
 
 import java.util.Arrays;
@@ -9,6 +11,7 @@ import java.util.Objects;
 import it.unibo.goldhunt.board.api.Board;
 import it.unibo.goldhunt.board.api.Cell;
 import it.unibo.goldhunt.engine.api.Position;
+import it.unibo.goldhunt.items.api.CellContent;
 
 /**
  * This class implements Board and it models a square board.
@@ -143,6 +146,31 @@ public class SquareBoard implements Board {
         int dy = Math.abs(p1.y() - p2.y());
         return (dx <= 1) && (dy <= 1) && !(dx == 0 && dy == 0);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < getBoardSize(); i++) {
+            for (int j = 0; j < getBoardSize(); j++) {
+                Cell c = board[i][j];
+
+                if (c.isFlagged()) {
+                    sb.append("F "); 
+                } else if (!c.isRevealed()) {
+                    sb.append(". "); 
+                } else if (c.hasContent()) {
+                    sb.append(c.getContent()
+                           .map(CellContent::shortString)
+                           .orElse("?")).append(" ");
+                } else {
+                    sb.append(c.getAdjacentTraps()).append(" ");
+                }
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
+
 
     private void checkValidCell(final Cell cell) {
         if (!cellPositions.containsKey(cell)) {
