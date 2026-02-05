@@ -9,6 +9,11 @@ import it.unibo.goldhunt.board.api.Cell;
 import it.unibo.goldhunt.board.api.RevealStrategy;
 import it.unibo.goldhunt.engine.api.Position;
 
+/**
+ * This class implements RevealStrategy.
+ * With this reveal strategy, when a cell with no adjacent traps is revealed,
+ * all adjacent cells with no traps are revealed as well.
+ */
 public final class FloodReveal implements RevealStrategy {
 
     private static final int NO_ADJACENT_TRAPS = 0;
