@@ -1,20 +1,20 @@
-package main.java.it.unibo.goldhunt.engine.impl;
+package it.unibo.goldhunt.engine.impl;
 //davv
 import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.Queue;
 import java.util.Set;
 
-import main.java.it.unibo.goldhunt.engine.api.MovementRules;
-import main.java.it.unibo.goldhunt.engine.api.Position;
-import main.java.it.unibo.goldhunt.player.api.Player;
+import it.unibo.goldhunt.engine.api.MovementRules;
+import it.unibo.goldhunt.engine.api.Position;
+import it.unibo.goldhunt.player.api.Player;
 
 
 public class MovementRulesImpl implements MovementRules {
 
-    private final BoardView board;
+    private final BoardFittizia board;
 
-    public MovementRulesImpl(final BoardView board) {
+    public MovementRulesImpl(final BoardFittizia board) {
         if(board == null) {
             throw new IllegalArgumentException("board can't be null");
         }
@@ -68,7 +68,7 @@ public class MovementRulesImpl implements MovementRules {
     /** BFS reachability check.
      * 
      * Dependencies: 
-     * - BoardView.neighborsOf() - hypothetical name
+     * - BoardFittizia.neighborsOf() - hypothetical name
      * - canEnter() - local rule
      */
     private boolean bfsReachable(final Position from, final Position to, final Player player) {

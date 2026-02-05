@@ -1,6 +1,6 @@
-package main.java.it.unibo.goldhunt.engine.api;
+package it.unibo.goldhunt.engine.api;
 
-import main.java.it.unibo.goldhunt.player.api.Player;
+import it.unibo.goldhunt.player.api.Player;
 
 public interface MovementRules {
 
