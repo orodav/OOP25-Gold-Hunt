@@ -1,4 +1,4 @@
-package it.unibo.goldhunt.player;
+package it.unibo.goldhunt.player.impl;
 
 import org.junit.jupiter.api.Test;
 
@@ -46,4 +46,24 @@ public class InventoryTest {
 
     @Test
     void shouldAllowReachingZero() {} //andRemoveEntry ?
+
+    @Test
+    void shouldThrowIfRemoveMoreThanOwned() {}
+
+    @Test
+    void shouldThrowIfRemoveItemNull() {}
+
+    @Test
+    void shouldThrowIfRemoveQuantityZeroOrNegative() {}
+
+
+
+    @Test
+    void shouldHasAtLeastReturnTrueWhenEnough() {}
+
+    @Test
+    void shouldHasAtLeastReturnFalseWhenNotEnough() {}
+
+    @Test
+    void shouldHasAtLeastThrowIfQuantityNegative() {}
 }

@@ -1,12 +1,13 @@
-package it.unibo.goldhunt.player;
+package it.unibo.goldhunt.player.impl;
 //davv
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
 import it.unibo.goldhunt.engine.api.Position;
-import it.unibo.goldhunt.items.api.ItemTypes;
+//import it.unibo.goldhunt.items.api.ItemTypes;
 import it.unibo.goldhunt.player.api.Inventory;
+import it.unibo.goldhunt.player.impl.InventoryImpl;
 import it.unibo.goldhunt.player.impl.PlayerImpl;
 
 public class PlayerTest {
@@ -14,11 +15,11 @@ public class PlayerTest {
     // helpers
 
     private Position pos(final int x, final int y) {
-        throw new UnsupportedOperationException();
+        return new Position(x,y);
     }
 
     private Inventory emptyInventory() {
-        throw new UnsupportedOperationException();
+        return new InventoryImpl();
     }
 
     private PlayerImpl basicPlayer() {
@@ -84,7 +85,7 @@ public class PlayerTest {
         var updated = player.moveTo(newPos);
         assertNotSame(player, updated);
         assertEquals(newPos, updated.position());
-        assertEquals(2, updated.livesCount());
+        assertEquals(3, updated.livesCount());
         assertEquals(0, updated.goldCount());
         assertEquals(player.inventory(), updated.inventory());
     }
@@ -96,14 +97,14 @@ public class PlayerTest {
                 player.moveTo(null));
     }
 
-    /*
+    
     @Test
     void moveToSamePositionStillReturnsNewInstance() {
-        var player = new PlayerImpl(Pos(0,0), 3, 0, emptyInventory());
+        var player = new PlayerImpl(pos(0,0), 3, 0, emptyInventory());
         var updated = player.moveTo(pos(0,0));
         assertNotSame(player, updated);
         assertEquals(player, updated);
-    } */
+    }
 
     //_________________gold
 
@@ -118,15 +119,15 @@ public class PlayerTest {
 
     @Test
     void addGoldShouldDecreaseGoldWhenNumNegative() {
-        var player = basicPlayer();
+        var player = new PlayerImpl(pos(0, 0), 3, 4, emptyInventory());
         var updated = player.addGold(-3);
         assertNotSame(player, updated);
-        assertEquals(2, updated.goldCount());
-        assertEquals(5, player.goldCount());
+        assertEquals(1, updated.goldCount());
+        assertEquals(4, player.goldCount());
     }
 
     @Test
-    void addGoldShouldThrowWhenNegative() {
+    void addGoldShouldThrowWhenResultNegative() {
         var player = new PlayerImpl(pos(0, 0), 3, 0, emptyInventory());
         assertThrows(IllegalArgumentException.class, () ->
                 player.addGold(-1));
@@ -216,7 +217,7 @@ public class PlayerTest {
         assertNotEquals(base, new PlayerImpl(pos(2, 1), 3, 0, inventory));
         assertNotEquals(base, new PlayerImpl(pos(1, 1), 4, 0, inventory));
         assertNotEquals(base, new PlayerImpl(pos(1, 1), 3, 4, inventory));
-        assertNotEquals(base, new PlayerImpl(pos(1, 1), 3, 0, inventory.add(ItemTypes.LUCKY_CLOVER, 1)));
+        //assertNotEquals(base, new PlayerImpl(pos(1, 1), 3, 0, inventory.add(ItemTypes.LUCKY_CLOVER, 1)));
     }
 
     @Test

@@ -35,7 +35,7 @@ public class MovementRulesImpl implements MovementRules {
         /** condizioni legate a board:
          *  nomi fittizi per ora
          * 
-        if (!this.board.isInside(to)) {
+        if (!this.board.isPositionValid(to)) {
             return false;
         }
         if (!this.board.areAdjacent(from, to)) {
