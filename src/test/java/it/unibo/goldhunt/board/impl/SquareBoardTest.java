@@ -25,7 +25,7 @@ public final class SquareBoardTest {
 
     @BeforeEach
     void init() {
-        this.board = new TestableSquareBoard(3);
+        this.board = SquareBoard.create(3);
         this.factory = new BaseCellFactory();
         this.cells = new Cell[3][3];
         fillBoard();
@@ -59,6 +59,8 @@ public final class SquareBoardTest {
         assertThrows(IndexOutOfBoundsException.class, () -> board.getCell(new Position(0, 3)));
     }
 
+    
+
     private void fillBoard() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -69,9 +71,4 @@ public final class SquareBoardTest {
         }
     }
 
-    static class TestableSquareBoard extends SquareBoard {
-        TestableSquareBoard(final int boardSize) {
-            super(boardSize);
-        }
-    }
 }
