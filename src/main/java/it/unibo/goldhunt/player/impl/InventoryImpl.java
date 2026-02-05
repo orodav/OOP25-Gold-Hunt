@@ -3,28 +3,35 @@ package it.unibo.goldhunt.player.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import it.unibo.goldhunt.items.api.ItemTypes;
 import it.unibo.goldhunt.player.api.Inventory;
-import main.java.it.unibo.goldhunt.items.Item;
-
 
 public class InventoryImpl implements Inventory {
 
-    private final Map<Item, Integer> items = new HashMap<>();
+    private final Map<ItemTypes, Integer> items;
 
+    public InventoryImpl() {
+        this.items = Map.of();  //empty inventory - immutable 
+    }
+
+    private InventoryImpl(final Map<ItemTypes, Integer> items) {
+        this.items = Map.copyOf(items);
+    }
     @Override
-    public void add(final Item item, final int quantity) {
+    public Inventory add(final ItemTypes item, final int quantity) {
         if (item == null) {
             throw new IllegalArgumentException("item");
         }
-        if (quantity <= 0) {
-            throw new IllegalArgumentException("quantity must be > 0");
+        if (quantity < 0) {
+            throw new IllegalArgumentException("quantity must be >= 0");
         }
-        final int addedQuantity = this.quantity(item);
-        this.items.put(item, addedQuantity + quantity);
+        final Map<ItemTypes, Integer> newItems = new HashMap<>(this.items);
+        newItems.put(item, this.quantity(item) + quantity);
+        return new InventoryImpl(newItems);
     }
 
     @Override
-    public void remove(final Item item, final int quantity) {
+    public Inventory remove(final ItemTypes item, final int quantity) {
         if (item == null) {
             throw new IllegalArgumentException("item");
         }
@@ -35,16 +42,17 @@ public class InventoryImpl implements Inventory {
         if (current < quantity) {
             throw new IllegalArgumentException("not enough quantity in inventory");
         }
-        final int difference = current - quantity;
-        if (difference == 0) {
-            this.items.remove(item);
+        final Map<ItemTypes, Integer> newItems = new HashMap<>(this.items);
+        if (current == quantity) {
+            newItems.remove(item);
         } else {
-            this.items.put(item, difference);
+            newItems.put(item, current - quantity);
         }
+        return new InventoryImpl(newItems);
     }
 
     @Override
-    public int quantity(final Item item) {
+    public int quantity(final ItemTypes item) {
         if (item == null) {
             throw new IllegalArgumentException("item");
         }

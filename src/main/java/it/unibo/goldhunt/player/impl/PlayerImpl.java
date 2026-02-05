@@ -3,10 +3,11 @@ package it.unibo.goldhunt.player.impl;
 import java.util.Arrays;
 
 import it.unibo.goldhunt.engine.api.Position;
+import it.unibo.goldhunt.items.api.ItemTypes;
 import it.unibo.goldhunt.player.api.Inventory;
-import it.unibo.goldhunt.player.api.Player;
+import it.unibo.goldhunt.player.api.PlayerOperations;
 
-public final class PlayerImpl implements Player {
+public final class PlayerImpl implements PlayerOperations {
 
     private final Position position;
     private final int lives;
@@ -36,17 +37,9 @@ public final class PlayerImpl implements Player {
         return this.position;
     }
 
-    public PlayerImpl setPosition(final Position newPosition) {
-        return new PlayerImpl(newPosition, this.lives, this.gold, this.inventory);
-    }
-
     @Override
     public int livesCount() {
         return this.lives;
-    }
-
-    public PlayerImpl setLives(final int newLives) {
-        return new PlayerImpl(this.position, newLives, this.gold, this.inventory);
     }
 
     @Override
@@ -54,17 +47,9 @@ public final class PlayerImpl implements Player {
         return this.gold;
     }
 
-    public PlayerImpl setGold(final int newGold) {
-        return new PlayerImpl(this.position, this.lives, newGold, this.inventory);
-    }
-
     @Override
     public Inventory inventory() {
         return this.inventory;
-    }
-
-    public PlayerImpl setInventory(final Inventory newInventory) {
-        return new PlayerImpl(this.position, this.lives, this.gold, newInventory);
     }
 
     /*
@@ -110,5 +95,31 @@ public final class PlayerImpl implements Player {
                 + ", gold=" + this.gold
                 + ", inventory=" + this.inventory
                 + "]";
+    }
+
+
+     @Override
+    public PlayerImpl moveTo(final Position newPos) {
+        return new PlayerImpl(newPos, this.lives, this.gold, this.inventory);
+    }
+
+    @Override
+    public PlayerImpl addGold(int num) {
+        return new PlayerImpl(this.position, this.lives, this.gold + num, this.inventory);
+    }
+
+    @Override
+    public PlayerImpl addLives(int num) {
+        return new PlayerImpl(this.position, this.lives + num, this.gold, this.inventory);
+    }
+
+    @Override
+    public PlayerImpl addItem(final ItemTypes item, final int quantity) {
+        return new PlayerImpl(this.position, this.lives, this.gold, this.inventory.add(item, quantity));
+    }
+
+    @Override
+    public PlayerImpl useItem(final ItemTypes item, final int quantity) {
+        return new PlayerImpl(this.position, this.lives, this.gold, this.inventory.remove(item, quantity));
     }
 }

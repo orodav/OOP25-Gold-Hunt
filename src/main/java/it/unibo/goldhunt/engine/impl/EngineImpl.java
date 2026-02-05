@@ -14,10 +14,10 @@ public class EngineImpl implements Engine{
 
     private final Player player;
     private final Status status;
-    private final BoardView board;
+    private final BoardFittizia board;
     private final MovementRules rules;
 
-    public EngineImpl(Player player, Status status, BoardView board, MovementRules rules) {
+    public EngineImpl(Player player, Status status, BoardFittizia board, MovementRules rules) {
         this.player = player;
         this.status = status;
         this.board = board;

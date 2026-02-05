@@ -1,22 +1,23 @@
 package it.unibo.goldhunt.player.api;
 
-import main.java.it.unibo.goldhunt.items.Item;
+import it.unibo.goldhunt.items.api.ItemTypes;
+
 //davv
 public interface Inventory {
 
-    void add(Item item, int quantity);
+    Inventory add(ItemTypes item, int quantity);
 
-    void remove(Item item, int quantity);
+    Inventory remove(ItemTypes item, int quantity);
 
     /** Default Method */
-    default boolean hasAtLeast(Item item, int quantity) {
+    default boolean hasAtLeast(ItemTypes item, int quantity) {
         if (quantity <= 0) {
             throw new IllegalArgumentException("Quantity must be > 0");
         }
         return this.quantity(item) >= quantity;
     }
 
-    int quantity(Item item);
+    int quantity(ItemTypes item);
 }
 
 /* per Testing: 
