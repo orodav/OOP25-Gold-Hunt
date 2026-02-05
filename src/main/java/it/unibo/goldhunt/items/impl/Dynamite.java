@@ -30,7 +30,7 @@ public class Dynamite extends Item{
     }
 
     @Override
-    public String ShortString() {
+    public String shortString() {
         return "D";
     }
 

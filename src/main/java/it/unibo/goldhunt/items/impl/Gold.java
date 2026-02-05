@@ -31,7 +31,7 @@ public class Gold extends Item{
     }
 
     @Override
-    public String ShortString() {
+    public String shortString() {
         return "G";
     }
 

@@ -9,7 +9,7 @@ public class Trap implements CellContent{
     }
 
     @Override
-    public String ShortString() {
+    public String shortString() {
         return "T";
     }
 

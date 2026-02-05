@@ -29,7 +29,7 @@ public class LuckyClover extends Item{
     }
 
     @Override
-    public String ShortString() {
+    public String shortString() {
         return "C";
     }
 

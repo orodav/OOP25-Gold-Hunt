@@ -3,5 +3,5 @@ package it.unibo.goldhunt.items.api;
 public interface CellContent{
     public void applyEffect();
 
-    public String ShortString();
+    public String shortString();
 }

@@ -31,7 +31,7 @@ public class Lifes extends Item{
     }
 
     @Override
-    public String ShortString() {
+    public String shortString() {
         return "L";
     }
 }

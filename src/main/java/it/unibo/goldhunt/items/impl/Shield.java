@@ -24,7 +24,7 @@ public class Shield extends Item{
 
     @Override
     public void applyEffect() {
-        if((boolean) trap.applyEffect()){
+        if(trap.applyEffect()){
             player.lifeCounter++;
 
         }
@@ -36,7 +36,7 @@ public class Shield extends Item{
     }
 
     @Override
-    public String ShortString() {
+    public String shortString() {
         return "S";
     }
 

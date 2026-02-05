@@ -29,7 +29,7 @@ public class Chart extends Item{
     }
 
     @Override
-    public String ShortString() {
+    public String shortString() {
         return "M";
     }
 
