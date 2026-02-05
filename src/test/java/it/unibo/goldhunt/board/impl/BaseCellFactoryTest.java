@@ -15,7 +15,7 @@ import it.unibo.goldhunt.board.api.Cell;
 import it.unibo.goldhunt.board.api.CellFactory;
 import it.unibo.goldhunt.items.api.CellContent;
 
-public class BaseCellFactoryTest {
+public final class BaseCellFactoryTest {
 
     private CellFactory factory;
 
