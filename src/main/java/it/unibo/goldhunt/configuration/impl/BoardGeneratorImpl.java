@@ -9,6 +9,9 @@ import java.util.Set;
 
 import it.unibo.goldhunt.board.api.Board;
 import it.unibo.goldhunt.board.api.Cell;
+import it.unibo.goldhunt.board.api.CellFactory;
+import it.unibo.goldhunt.board.impl.BaseCell;
+import it.unibo.goldhunt.board.impl.SquareBoard;
 import it.unibo.goldhunt.configuration.api.BoardGenerator;
 import it.unibo.goldhunt.configuration.api.LevelConfig;
 import it.unibo.goldhunt.engine.api.Position;
@@ -19,18 +22,22 @@ import it.unibo.goldhunt.items.impl.Trap;
 
 public class BoardGeneratorImpl implements BoardGenerator {
     
+    private final CellFactory cellFactory;
     private final ItemFactory itemFactory;
+    
 
-    public BoardGeneratorImpl(ItemFactory itemFactory) {
+    public BoardGeneratorImpl(CellFactory cellFactory, ItemFactory itemFactory) {
+        this.cellFactory = cellFactory;
         this.itemFactory = itemFactory;
     }
 
+    
     @Override
     public Board generate(LevelConfig config, Position start, Position exit) {
 
         final int size = config.getBoardSize();
 
-        Board board = new BoardImpl(size);
+        Board board = SquareBoard.create(size);
 
         initializeBoard(board);
 
@@ -43,7 +50,6 @@ public class BoardGeneratorImpl implements BoardGenerator {
 
         return board;
     }
-
     
 
     private void initializeBoard(Board board) {
@@ -52,10 +58,11 @@ public class BoardGeneratorImpl implements BoardGenerator {
 
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
-                board.setCell(new BaseCell(), new Position(row, col));
+                board.setCell(cellFactory.createCell(), new Position(row, col));
             }
         }
     }
+
 
     private Set<Cell> computeSafePath(Board board, Position start, Position exit) {
         
