@@ -1,3 +1,4 @@
+//SARA
 package it.unibo.goldhunt.configuration.api;
 
 import java.util.Map;
@@ -11,3 +12,4 @@ public interface LevelConfig {
     int getBoardSize();
 
 }
+
