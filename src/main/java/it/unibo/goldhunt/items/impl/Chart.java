@@ -1,15 +1,19 @@
 package it.unibo.goldhunt.items.impl;
 
+import java.util.HashSet;
+
+import java.util.Set;
+
+import it.unibo.goldhunt.board.api.Cell;
+import it.unibo.goldhunt.items.api.Revealable;
+
+
 //luca
 public class Chart extends Item{
 
-    private final static boolean consumable = true;
-    private final static String ITEM_NAME = "Map";
+    Set<Cell> collectedCells = new HashSet<>();
 
-    @Override
-    public boolean isConsumable() {
-        return consumable;
-    }
+    private final static String ITEM_NAME = "Map";
 
     @Override
     public String getName() {
@@ -18,13 +22,28 @@ public class Chart extends Item{
 
     @Override
     public boolean applyEffect() {
-        getAdjacentPosition(player.getCell()).getAdjacentPosition();
-        stream.pos.cell.contains.trap.reveal;
-    }
+        recursiveCollect(board.getCell(player.position()), RADIUS, collectedCells);
+        collectedCells.stream()
+        .filter(c-> c.getContent().isPresent() && c.getContent().get() instanceof Revealable)
+        .forEach(Cell::toggleFlag);
+        return true;
 
-    @Override
-    public boolean canUse() {
-        return inGame;
+    }
+    
+    private void recursiveCollect(Cell pos, int radius, Set<Cell> collected){
+        collected.add(pos);
+
+        if(radius<=0){
+            return;
+        }
+
+        
+
+        for(Cell nbor : board.getAdjacentCells(board.getCellPosition(pos))){
+            if(!collected.contains(nbor)){
+                recursiveCollect(nbor, radius - 1, collected);
+            }
+        }
     }
 
     @Override

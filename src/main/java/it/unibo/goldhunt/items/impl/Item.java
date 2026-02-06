@@ -17,6 +17,8 @@ public abstract class Item implements ItemTypes{
     public static final int ADDED_GOLD = 1;
     public static final int ADDED_GOLDX3 = 3;
     public static final int PLUS_LIFE = 1;
+    public static final int RADIUS = 2;
+    public static final int LUCKY_CLOVER_MULTIPLIER = 1;
 
     public InventoryImpl inventory;
     public Position position;
@@ -24,7 +26,9 @@ public abstract class Item implements ItemTypes{
     public PlayerOperations playerop;
     public Trap trap;
     public Gold gold;
+    public GoldX3 goldX3;
     public Board board;
+    public LuckyClover luckyclover;
 
 
     public void cannotUse(){
