@@ -21,7 +21,7 @@ public class Dynamite extends Item implements ClearCells{
     public boolean applyEffect() {
         Cell currentCell = board.getCell(player.position());
         
-        List<Cell> adjacent = board.getAdjacentCells(currentCell);
+        List<Cell> adjacent = board.getAdjacentCells(board.getCellPosition(currentCell));
         if(adjacent == null || adjacent.isEmpty()){
             throw new IllegalStateException("no cells nearby");
         }

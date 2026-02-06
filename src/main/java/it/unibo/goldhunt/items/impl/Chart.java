@@ -39,7 +39,7 @@ public class Chart extends Item{
 
         
 
-        for(Cell nbor : board.getAdjacentCells(pos)){
+        for(Cell nbor : board.getAdjacentCells(board.getCellPosition(pos))){
             if(!collected.contains(nbor)){
                 recursiveCollect(nbor, radius - 1, collected);
             }
