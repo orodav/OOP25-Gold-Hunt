@@ -1,9 +1,12 @@
 package it.unibo.goldhunt.items.impl;
 
+import java.util.List;
+
 import it.unibo.goldhunt.board.api.Cell;
+import it.unibo.goldhunt.items.api.ClearCells;
 
 //luca
-public class Dynamite extends Item{
+public class Dynamite extends Item implements ClearCells{
 
     private final static String ITEM_NAME = "Dynamite";
     
@@ -16,11 +19,14 @@ public class Dynamite extends Item{
 
     @Override
     public boolean applyEffect() {
-        var cells = board.getAdjacentCells(player.position());
-        cells.stream()
-        .filter(Cell::hasContent)
-        .map(Cell::getContent)
-        .forEach();
+        Cell currentCell = board.getCell(player.position());
+        
+        List<Cell> adjacent = board.getAdjacentCells(currentCell);
+        if(adjacent == null || adjacent.isEmpty()){
+            throw new IllegalStateException("no cells nearby");
+        }
+        disarm(adjacent);
+        return true;
         }
         
 
