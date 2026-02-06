@@ -1,3 +1,4 @@
+//SARA
 package it.unibo.goldhunt.configuration.impl;
 
 import java.util.ArrayList;
@@ -19,19 +20,28 @@ import it.unibo.goldhunt.items.api.ItemFactory;
 import it.unibo.goldhunt.items.impl.Item;
 import it.unibo.goldhunt.items.impl.Trap;
 
-
+/**
+ * This class is the implementation of BoardGenerator.
+ */
 public class BoardGeneratorImpl implements BoardGenerator {
     
     private final CellFactory cellFactory;
     private final ItemFactory itemFactory;
     
-
+    /**
+     * Creates a new {@code BoardGeneratorImpl}.
+     * 
+     * @param cellFactory the factory used to create board cells
+     * @param itemFactory the factory used to create items placed on the board
+     */
     public BoardGeneratorImpl(CellFactory cellFactory, ItemFactory itemFactory) {
         this.cellFactory = cellFactory;
         this.itemFactory = itemFactory;
     }
 
-    
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Board generate(LevelConfig config, Position start, Position exit) {
 
@@ -51,7 +61,11 @@ public class BoardGeneratorImpl implements BoardGenerator {
         return board;
     }
     
-
+    /**
+     * Initializes the board by filling all positions with empty cells.
+     * 
+     * @param board the board to initialize
+     */
     private void initializeBoard(Board board) {
         
         final int size = board.getBoardSize();
@@ -63,7 +77,15 @@ public class BoardGeneratorImpl implements BoardGenerator {
         }
     }
 
-
+    /**
+     * Computes a safe path by using a DFS algorithm and stores it 
+     * in a {@link Set} of {@link Cell}.
+     * 
+     * @param board the board on which the safepath is computed
+     * @param start the starting position of the algorithm
+     * @param exit the ending position of the algorithm
+     * @return a {@link Set} containing all cells belonging to the safe path
+     */
     private Set<Cell> computeSafePath(Board board, Position start, Position exit) {
         
         Set<Cell> safePath = new HashSet<>();
@@ -73,11 +95,23 @@ public class BoardGeneratorImpl implements BoardGenerator {
         return safePath;
     }
 
-
+    /**
+     * Recursive implementation of the DFS algorithm used to compute a safe path.
+     * Starting from the current position, the method adds the corresponding cell to the safe path,
+     * then explores adjacent cells in random order untile the exit position is reached.
+     * If a dead end is encountered, backtracking is performed by removing the current cell
+     * from the safe path.
+     * 
+     * @param board the board on which the search is performed
+     * @param current the current position explored by the algorithm
+     * @param exit the target exit position
+     * @param safePath the {@link Set} collecting the cells of the safe path
+     * @return true if a path to the exit has been found, false otherwise
+     */
     private boolean dfs(Board board, Position current, Position exit, Set<Cell> safePath) {
         Cell currentCell = board.getCell(current);
 
-        if (current.equals(exit)) {     //caso base
+        if (current.equals(exit)) {             
             safePath.add(currentCell);
             return true;
         }
@@ -96,11 +130,17 @@ public class BoardGeneratorImpl implements BoardGenerator {
             }
         }
 
-        safePath.remove(currentCell);       //backtracking
+        safePath.remove(currentCell);           
         return false;    
     }
 
-
+    /**
+     * Places traps in a randomly on the board, avoiding the cells of the safe path.
+     * 
+     * @param board the board on which traps are placed
+     * @param safePath the {@link Set} of {@link Cell} that must remain trap-free
+     * @param config the level configuration providing the number of traps
+     */
     private void placeTraps(Board board, Set<Cell> safePath, LevelConfig config) {
         
         int trapCount = config.getTrapCount();
@@ -124,7 +164,13 @@ public class BoardGeneratorImpl implements BoardGenerator {
         }
     }
 
-
+    /**
+     * Places items randomly on the board, avoiding the cells of the safe path.
+     *  
+     * @param board the board on which items are places
+     * @param safePath the {@link Set} of {@link Cell} that must remain trap-free
+     * @param config the level configuration providing the number of traps
+     */
     private void placeItems(Board board, Set<Cell> safePath, LevelConfig config) {
         
         List<Cell> availableCells = new ArrayList<>();  // lista che conterrà tutte le caselle che non fanno parte del safepath
@@ -158,7 +204,11 @@ public class BoardGeneratorImpl implements BoardGenerator {
         }
     }
 
-
+    /**
+     * Computes the number of adjacent traps for each cell on the board.
+     * 
+     * @param board the board on which adjacent traps are computed
+     */
     private void computeAdjacentTraps(Board board) {
         
         for (Cell cell : board.getBoardCells()) {

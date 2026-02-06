@@ -1,10 +1,14 @@
+//SARA
 package it.unibo.goldhunt.configuration.impl;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import it.unibo.goldhunt.configuration.api.LevelConfig;
 
+/**
+ * This class is one of the implementations of LevelConfig and represents 
+ * the configuration for the EASY difficulty level.
+ */
 public class EasyConfig implements LevelConfig {
 
     private static final int BOARD_SIZE = 9;
@@ -20,10 +24,9 @@ public class EasyConfig implements LevelConfig {
     private static final int PICKAXE_COUNT = 1;
     private static final int SHIELD_COUNT = 1;
 
-    public EasyConfig() {
-        getItemConfig();
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Map<String, Integer> getItemConfig() {
         
@@ -41,14 +44,19 @@ public class EasyConfig implements LevelConfig {
         return easyData;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getTrapCount() {
         return TRAP_COUNT;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getBoardSize() {
         return BOARD_SIZE;
     }
-
 }

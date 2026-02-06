@@ -1,10 +1,14 @@
+//SARA
 package it.unibo.goldhunt.configuration.impl;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import it.unibo.goldhunt.configuration.api.LevelConfig;
 
+/**
+ * This class is one of the implementations of LevelConfig and represents
+ * the configuration for the MEDIUM difficulty level.
+ */
 public class MediumConfig implements LevelConfig {
 
     private static final int BOARD_SIZE = 16;
@@ -15,15 +19,14 @@ public class MediumConfig implements LevelConfig {
     private static final int GOLD_COUNT = 12;
     private static final int GOLDX3_COUNT = 2;
     private static final int LIFES_COUNT = 4;
-    private static final int LUCKY_CLOVER_COUNT = 2;
+    private static final int LUCKY_CLOVER_COUNT = 1;
     private static final int CHART_COUNT = 2;
     private static final int PICKAXE_COUNT = 2;
     private static final int SHIELD_COUNT = 2;
     
-    public MediumConfig() {
-        getItemConfig();
-    }
-    
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final Map<String, Integer> getItemConfig() {
         
@@ -41,11 +44,17 @@ public class MediumConfig implements LevelConfig {
         return mediumData;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getTrapCount() {
         return TRAP_COUNT;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final int getBoardSize() {
         return BOARD_SIZE;
