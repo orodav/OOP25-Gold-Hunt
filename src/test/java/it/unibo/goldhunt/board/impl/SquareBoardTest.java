@@ -3,6 +3,7 @@
 package it.unibo.goldhunt.board.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -215,6 +216,26 @@ public final class SquareBoardTest {
     void testGetColumnThrowsIndexOutOfBoundsException() {
         assertThrows(IndexOutOfBoundsException.class, () -> board.getColumn(-1));
         assertThrows(IndexOutOfBoundsException.class, () -> board.getColumn(3));
+    }
+
+    /**
+     * Tests that isPositionValid() returns the right results.
+     */
+    @Test
+    void testIsPositionValidReturnsRightResults() {
+        assertTrue(board.isPositionValid(new Position(0, 0)));
+        assertTrue(board.isPositionValid(new Position(1,1)));
+        assertTrue(board.isPositionValid(new Position(2, 2)));
+        assertFalse(board.isPositionValid(new Position(-1, 0)));
+        assertFalse(board.isPositionValid(new Position(0, 3)));
+    }
+
+    /**
+     * Tests that isPositionValid() throws NullPointerException correctly.
+     */
+    @Test
+    void testIsPositionValidThrowsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> board.isPositionValid(null));
     }
 
     private void fillBoard() {
