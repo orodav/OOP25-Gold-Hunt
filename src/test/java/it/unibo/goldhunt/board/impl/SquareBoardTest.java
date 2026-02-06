@@ -46,31 +46,44 @@ public final class SquareBoardTest {
     }
 
     /**
-     * Tests that getCell() return the right cell and
-     * throws the right exceptions.
+     * Tests that getCell() return the right cell.
      */
     @Test
-    void testGetCell() {
+    void testGetCellReturnsRightCells() {
         assertSame(cells[0][0], board.getCell(new Position(0, 0)));
         assertSame(cells[1][1], board.getCell(new Position(1, 1)));
         assertSame(cells[2][2], board.getCell(new Position(2, 2)));
+    }
+
+    /**
+     * Tests that getCell() throws NullPointerException
+     * and IndexOutOfBoundsException correctly.
+     */
+    @Test
+    void testGetCellThrowsRightExceptions() {
         assertThrows(NullPointerException.class, () -> board.getCell(null));
         assertThrows(IndexOutOfBoundsException.class, () -> board.getCell(new Position(-1, 0)));
         assertThrows(IndexOutOfBoundsException.class, () -> board.getCell(new Position(0, 3)));
     }
 
     /**
-     * Tests that getCellPosition() returns the right position
-     * and throws the right exceptions.
+     * Tests that getCellPosition() returns the right position.
      */
     @Test
-    void testGetCellPosition() {
+    void testGetCellPositionReturnsRightPositions() {
         assertEquals(new Position(0, 0), board.getCellPosition(cells[0][0]));
         assertEquals(new Position(1, 1), board.getCellPosition(cells[1][1]));
         assertEquals(new Position(2, 2), board.getCellPosition(cells[2][2]));
+    }
+
+    /**
+     * Tests that getCellPosition() throws NullPointerException
+     * and IndexOutOfBoundsException correctly. 
+     */
+    @Test
+    void testGetCellPositionThrowsRightExceptions() {
         assertThrows(NullPointerException.class, () -> board.getCellPosition(null));
         assertThrows(IllegalArgumentException.class, () -> board.getCellPosition(factory.createCell()));
-        
     }
 
     private void fillBoard() {
