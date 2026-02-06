@@ -171,6 +171,14 @@ public final class SquareBoardTest {
         assertThrows(IndexOutOfBoundsException.class, () -> board.getAdjacentCells(new Position(0, 3)));
     }
 
+    /**
+     * Tests that getBoardSize() return the right board size.
+     */
+    @Test
+    void testGetBoardSize() {
+        assertEquals(3, board.getBoardSize());
+    }
+
 
     private void fillBoard() {
         for (int i = 0; i < 3; i++) {
