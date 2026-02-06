@@ -18,7 +18,13 @@ import it.unibo.goldhunt.board.api.Cell;
 import it.unibo.goldhunt.board.api.CellFactory;
 import it.unibo.goldhunt.engine.api.Position;
 
+/**
+ * This class tests SquareBoard.
+ */
 public final class SquareBoardTest {
+
+    private static final int ADJACENT_CELLS_ON_EDGE = 5;
+    private static final int OUT_OF_BOUNDS = 9;
 
     private Board board;
     private CellFactory factory;
@@ -38,12 +44,12 @@ public final class SquareBoardTest {
      */
     @Test
     void testGetBoardCells() {
-        List<Cell> list = this.board.getBoardCells();
-        assertEquals(9, list.size());
+        final List<Cell> list = this.board.getBoardCells();
+        assertEquals(OUT_OF_BOUNDS, list.size());
         assertTrue(list.containsAll(List.of(
             cells[0][0], cells[0][1], cells[0][2],
             cells[1][0], cells[1][1], cells[1][2],
-            cells[2][0], cells[2][1], cells[2][2] )));
+            cells[2][0], cells[2][1], cells[2][2])));
     }
 
     /**
@@ -93,19 +99,19 @@ public final class SquareBoardTest {
     @Test
     void testSetCellSetsRightCell() {
         final Cell cell1 = factory.createCell();
-        final Position p1 = new Position(0,0);
+        final Position p1 = new Position(0, 0);
         board.setCell(cell1, p1);
         assertSame(cell1, board.getCell(p1));
         assertEquals(p1, board.getCellPosition(cell1));
 
         final Cell cell2 = factory.createCell();
-        final Position p2 = new Position(1,1);
+        final Position p2 = new Position(1, 1);
         board.setCell(cell2, p2);
         assertSame(cell2, board.getCell(p2));
         assertEquals(p2, board.getCellPosition(cell2));
 
         final Cell cell3 = factory.createCell();
-        final Position p3 = new Position(2,2);
+        final Position p3 = new Position(2, 2);
         board.setCell(cell3, p3);
         assertSame(cell3, board.getCell(p3));
         assertEquals(p3, board.getCellPosition(cell3));
@@ -117,7 +123,7 @@ public final class SquareBoardTest {
      */
     @Test
     void testSetCellThrowsRightExceptions() {
-        assertThrows(NullPointerException.class, () -> board.setCell(null, new Position(0,0)));
+        assertThrows(NullPointerException.class, () -> board.setCell(null, new Position(0, 0)));
         assertThrows(NullPointerException.class, () -> board.setCell(factory.createCell(), null));
         assertThrows(IndexOutOfBoundsException.class, () -> board.setCell(factory.createCell(), new Position(-1, 0)));
         assertThrows(IndexOutOfBoundsException.class, () -> board.setCell(factory.createCell(), new Position(0, 3)));
@@ -129,7 +135,7 @@ public final class SquareBoardTest {
      */
     @Test
     void testGetAdjacentCellsOnCornerIsThree() {
-        List<Cell> list = board.getAdjacentCells(new Position(0, 0));
+        final List<Cell> list = board.getAdjacentCells(new Position(0, 0));
         assertEquals(3, list.size());
         assertTrue(list.containsAll(List.of(cells[0][1], cells[1][0], cells[1][1])));
     }
@@ -140,8 +146,8 @@ public final class SquareBoardTest {
      */
     @Test
     void testGetAdjacentCellsOnEdgeIsFive() {
-        List<Cell> list = board.getAdjacentCells(new Position(1,0));
-        assertEquals(5, list.size());
+        final List<Cell> list = board.getAdjacentCells(new Position(1, 0));
+        assertEquals(ADJACENT_CELLS_ON_EDGE, list.size());
         assertTrue(list.containsAll(List.of(
             cells[0][0], cells[0][1], cells[1][1],
             cells[2][0], cells[2][1])));
@@ -153,7 +159,7 @@ public final class SquareBoardTest {
      */
     @Test 
     void testGetAdjacentCellsInCenterIsEight() {
-        List<Cell> list = board.getAdjacentCells(new Position(1,1));
+        final List<Cell> list = board.getAdjacentCells(new Position(1, 1));
         assertEquals(8, list.size());
         assertTrue(list.containsAll(List.of(
             cells[0][0], cells[0][1], cells[0][2],
@@ -185,7 +191,7 @@ public final class SquareBoardTest {
      */
     @Test
     void testGetRowReturnsRightRow() {
-        List<Cell> row = board.getRow(1);
+        final List<Cell> row = board.getRow(1);
         assertEquals(3, row.size());
         assertTrue(row.containsAll(List.of(cells[1][0], cells[1][1], cells[1][2])));
     }
@@ -204,7 +210,7 @@ public final class SquareBoardTest {
      */
     @Test
     void testGetColumnReturnsRightColumn() {
-        List<Cell> col = board.getColumn(1);
+        final List<Cell> col = board.getColumn(1);
         assertEquals(3, col.size());
         assertTrue(col.containsAll(List.of(cells[0][1], cells[1][1], cells[2][1])));
     }
@@ -224,7 +230,7 @@ public final class SquareBoardTest {
     @Test
     void testIsPositionValidReturnsRightResults() {
         assertTrue(board.isPositionValid(new Position(0, 0)));
-        assertTrue(board.isPositionValid(new Position(1,1)));
+        assertTrue(board.isPositionValid(new Position(1, 1)));
         assertTrue(board.isPositionValid(new Position(2, 2)));
         assertFalse(board.isPositionValid(new Position(-1, 0)));
         assertFalse(board.isPositionValid(new Position(0, 3)));
@@ -256,8 +262,8 @@ public final class SquareBoardTest {
      */
     @Test
     void testIsAdjacentThrowsNullPointerException() {
-        final Position p1 = new Position(0,0);
-        final Position p2 = new Position(1,1);
+        final Position p1 = new Position(0, 0);
+        final Position p2 = new Position(1, 1);
         assertThrows(NullPointerException.class, () -> board.isAdjacent(null, p2));
         assertThrows(NullPointerException.class, () -> board.isAdjacent(p1, null));
     }

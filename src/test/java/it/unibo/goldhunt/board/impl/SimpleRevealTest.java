@@ -15,6 +15,9 @@ import it.unibo.goldhunt.board.api.CellFactory;
 import it.unibo.goldhunt.board.api.RevealStrategy;
 import it.unibo.goldhunt.engine.api.Position;
 
+/**
+ * This class tests SimpleReveal.
+ */
 public final class SimpleRevealTest {
 
     private Board board;

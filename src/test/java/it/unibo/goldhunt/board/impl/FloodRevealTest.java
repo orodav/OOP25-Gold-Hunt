@@ -15,6 +15,9 @@ import it.unibo.goldhunt.board.api.CellFactory;
 import it.unibo.goldhunt.board.api.RevealStrategy;
 import it.unibo.goldhunt.engine.api.Position;
 
+/**
+ * This class tests FloodReveal.
+ */
 public final class FloodRevealTest {
 
     private Board board;
@@ -46,7 +49,7 @@ public final class FloodRevealTest {
     @Test
     void testRevealOnRevealedCell() {
         cells[0][2].reveal();
-        strategy.reveal(board, new Position(0,2));
+        strategy.reveal(board, new Position(0, 2));
         assertTrue(cells[0][2].isRevealed());
         assertFalse(cells[0][1].isRevealed());
         assertFalse(cells[1][1].isRevealed());
@@ -89,7 +92,7 @@ public final class FloodRevealTest {
      */
     @Test
     void testRevealFloodsWhenAdjacentTrapsIsZero() {
-        strategy.reveal(board, new Position(0,2));
+        strategy.reveal(board, new Position(0, 2));
         for (int i = 0; i <= 2; i++) {
             for (int j = 1; j <= 2; j++) {
                 assertTrue(cells[i][j].isRevealed());
@@ -97,7 +100,8 @@ public final class FloodRevealTest {
         }
     }
 
-    /** Tests that a flagged cell is not revealed
+    /**
+     * Tests that a flagged cell is not revealed
      * when it is checked by the flood reveal strategy.
      */
     @Test

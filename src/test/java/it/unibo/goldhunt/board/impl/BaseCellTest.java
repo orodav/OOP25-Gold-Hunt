@@ -16,8 +16,13 @@ import it.unibo.goldhunt.board.api.Cell;
 import it.unibo.goldhunt.board.api.CellFactory;
 import it.unibo.goldhunt.items.api.CellContent;
 
+/**
+ * This class tests BaseCell.
+ */
 public final class BaseCellTest {
-    
+
+    private static final int OUT_OF_BOUNDS = 9;
+
     private CellFactory factory;
     private Cell cell;
 
@@ -36,7 +41,7 @@ public final class BaseCellTest {
         assertTrue(cell.isRevealed());
         assertFalse(cell.isFlagged());
     }
-    
+
     /**
      * Tests that a revealed cell remains revealed if revealed more than once.
      */
@@ -109,7 +114,7 @@ public final class BaseCellTest {
     @Test
     void testSetAdjacentTrapsThrowsIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class, () -> cell.setAdjacentTraps(-1));
-        assertThrows(IllegalArgumentException.class, () -> cell.setAdjacentTraps(9));
+        assertThrows(IllegalArgumentException.class, () -> cell.setAdjacentTraps(OUT_OF_BOUNDS));
     }
 
 

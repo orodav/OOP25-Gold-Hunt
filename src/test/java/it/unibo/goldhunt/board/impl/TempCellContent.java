@@ -13,12 +13,16 @@ public final class TempCellContent implements CellContent {
      * {@inheritDoc}
      */
     @Override
-    public boolean applyEffect() { return true; }
+    public boolean applyEffect() {
+        return true;
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String shortString() { return "For testing only"; }
-    
+    public String shortString() {
+        return "For testing only";
+    }
+
 }
