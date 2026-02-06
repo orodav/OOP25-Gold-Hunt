@@ -93,33 +93,66 @@ public final class BaseCellTest {
      * Tests that the number of adjacent cells is between 0 and 8 inclusive.
      */
     @Test
-    void testSetAdjacentTraps() {
+    void testSetAdjacentTrapsSetsTrapsCorrectly() {
         cell.setAdjacentTraps(0);
         assertEquals(0, cell.getAdjacentTraps());
         cell.setAdjacentTraps(1);
         assertEquals(1, cell.getAdjacentTraps());
         cell.setAdjacentTraps(8);
         assertEquals(8, cell.getAdjacentTraps());
+    }
+
+    /**
+     * Tests that setAdjacentTraps() throws IllegalArgumentException
+     * when a negative number or a number greater than 8 is passed.
+     */
+    @Test
+    void testSetAdjacentTrapsThrowsIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class, () -> cell.setAdjacentTraps(-1));
         assertThrows(IllegalArgumentException.class, () -> cell.setAdjacentTraps(9));
+    }
+
+
+    /**
+     * Tests that setContent() adds content to a cell correctly.
+     */
+    @Test
+    void testSetContentSetsContent() {
+        final CellContent content = new TempCellContent();
+        cell.setContent(content);
+        assertTrue(cell.hasContent());
+        assertTrue(cell.getContent().isPresent());
+        assertEquals(content, cell.getContent().get());
+    }
+
+    /**
+     * Test that setContent() adds content to a cell
+     * after its initial content has been removed.
+     */
+    @Test
+    void testSetContentAfterRemoveContent() {
+        final CellContent content = new TempCellContent();
+        cell.setContent(content);
+        cell.removeContent();
+        cell.setContent(content);
+        assertTrue(cell.hasContent());
+        assertTrue(cell.getContent().isPresent());
+        assertEquals(content, cell.getContent().get());
     }
 
     /**
      * Tests that setContent() does not change a cell's existing content.
      */
     @Test
-    void testSetContent() {
+    void testSetContentThrowsIllegalStateExceptionIfAlreadyHasContent() {
         final CellContent content1 = new TempCellContent();
         cell.setContent(content1);
-        assertTrue(cell.hasContent());
-        assertTrue(cell.getContent().isPresent());
-        assertEquals(content1, cell.getContent().get());
         final CellContent content2 = new TempCellContent();
         assertThrows(IllegalStateException.class, () -> cell.setContent(content2));
     }
 
     /**
-     * Tests the removal of a cell's content.
+     * Tests that removeContent() removes a cell's content correctly.
      */
     @Test
     void testRemoveContent() {
@@ -128,6 +161,14 @@ public final class BaseCellTest {
         cell.removeContent();
         assertFalse(cell.hasContent());
         assertEquals(Optional.empty(), cell.getContent());
+    }
+
+    /**
+     * Tests that removeContent() works correctly when used
+     * on cells with no content.
+     */
+    @Test
+    void testRemoveContentWithNoContent() {
         cell.removeContent();
         assertFalse(cell.hasContent());
         assertEquals(Optional.empty(), cell.getContent());
