@@ -1,3 +1,5 @@
+// AZZU
+
 package it.unibo.goldhunt.board.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -14,7 +16,7 @@ import it.unibo.goldhunt.board.api.Cell;
 import it.unibo.goldhunt.board.api.CellFactory;
 import it.unibo.goldhunt.items.api.CellContent;
 
-public class BaseCellTest {
+public final class BaseCellTest {
     
     private CellFactory factory;
     private Cell cell;
@@ -88,7 +90,7 @@ public class BaseCellTest {
     }
 
     /**
-     * Tests that the number of adjacent cells is between 0 and 8 inclusive
+     * Tests that the number of adjacent cells is between 0 and 8 inclusive.
      */
     @Test
     void testSetAdjacentTraps() {

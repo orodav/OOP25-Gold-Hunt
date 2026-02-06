@@ -22,7 +22,7 @@ public final class FloodReveal implements RevealStrategy {
      * {@inheritDoc}
      */
     @Override
-    public void reveal(Board b, Position p) {
+    public void reveal(final Board b, final Position p) {
         Objects.requireNonNull(b);
 
         final Cell cell = b.getCell(p);

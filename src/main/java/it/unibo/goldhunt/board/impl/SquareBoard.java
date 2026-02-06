@@ -28,14 +28,30 @@ public class SquareBoard implements Board {
     private final Map<Cell, Position> cellPositions;
 
     /**
-     * BaseBoard's constructor.
+     * SquareBoard's constructor.
      * This constructor sets the board's size.
      * 
-     * @param boardSize
+     * @param boardSize the board's size
+     * @throws IllegalArgumentException if {@code boardSize} is less than or equal to 0
      */
-    protected SquareBoard(final int boardSize) {
+    private SquareBoard(final int boardSize) {
+        if (boardSize <= 0) {
+            throw new IllegalArgumentException("The board size must be greater than 0");
+        }
         this.board = new Cell[boardSize][boardSize];
         this.cellPositions = new HashMap<>();
+    }
+
+    /**
+     * Creates a board.
+     * This method is meant to be used by the board generator.
+     * 
+     * @param boardSize the board'size
+     * @return a new {@code SquareBoard}
+     * @throws IllegalArgumentException if {@code boardSize} is less than or equal to 0
+     */
+    public static Board create(final int boardSize) {
+        return new SquareBoard(boardSize);
     }
 
     /**

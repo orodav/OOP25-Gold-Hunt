@@ -18,7 +18,7 @@ public final class SimpleReveal implements RevealStrategy {
      * {@inheritDoc}
      */
     @Override
-    public void reveal(Board b, Position p) {
+    public void reveal(final Board b, final Position p) {
         Objects.requireNonNull(b);
         b.getCell(p).reveal();
     }

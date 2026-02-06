@@ -15,7 +15,7 @@ import it.unibo.goldhunt.board.api.Cell;
 import it.unibo.goldhunt.board.api.CellFactory;
 import it.unibo.goldhunt.items.api.CellContent;
 
-public class BaseCellFactoryTest {
+public final class BaseCellFactoryTest {
 
     private CellFactory factory;
 
@@ -25,7 +25,7 @@ public class BaseCellFactoryTest {
     }
 
     /**
-     * Tests the creation of an empty cell
+     * Tests the creation of an empty cell.
      */
     @Test
     void testCreateCellWithNoParameters() {
@@ -38,7 +38,7 @@ public class BaseCellFactoryTest {
     }
 
     /**
-     * Test the creation of a cell with content
+     * Test the creation of a cell with content.
      */
     @Test
     void testCreateCellWithParameters() {
