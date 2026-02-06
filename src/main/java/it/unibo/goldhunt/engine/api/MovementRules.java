@@ -1,5 +1,8 @@
 package it.unibo.goldhunt.engine.api;
 
+import java.util.List;
+import java.util.Optional;
+
 import it.unibo.goldhunt.player.api.Player;
 
 public interface MovementRules {
@@ -13,5 +16,7 @@ public interface MovementRules {
 
     boolean mustStopOn(Position p, Player player);
 
-    /* nell'implementazione: dovrò guardare Inventory, Item, Board */
+    Optional<Position> nextUnitaryStep(Position from, Position to, Player player);
+
+    Optional<List<Position>> pathCalculation(Position from, Position to, Player player);
 }

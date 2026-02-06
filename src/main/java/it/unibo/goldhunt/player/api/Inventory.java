@@ -11,7 +11,10 @@ public interface Inventory {
 
     /** Default Method */
     default boolean hasAtLeast(ItemTypes item, int quantity) {
-        if (quantity <= 0) {
+        if (item == null) {
+            throw new IllegalArgumentException("item can't be null");
+        }
+        if (quantity < 0) {
             throw new IllegalArgumentException("Quantity must be > 0");
         }
         return this.quantity(item) >= quantity;
@@ -19,9 +22,3 @@ public interface Inventory {
 
     int quantity(ItemTypes item);
 }
-
-/* per Testing: 
-    quantity per nr item = 0
-    funzionamento corretto di add e remove
-    comportamento remove oltre la quantità 
-*/
