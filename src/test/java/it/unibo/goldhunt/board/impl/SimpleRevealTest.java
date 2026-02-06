@@ -52,8 +52,8 @@ public final class SimpleRevealTest {
      */
     @Test
     void testRevealThrowsIndexOutOfBoundsException() {
-        assertThrows(NullPointerException.class, () -> strategy.reveal(board, new Position(-1, 0)));
-        assertThrows(NullPointerException.class, () -> strategy.reveal(board, new Position(0, 3)));
+        assertThrows(IndexOutOfBoundsException.class, () -> strategy.reveal(board, new Position(-1, 0)));
+        assertThrows(IndexOutOfBoundsException.class, () -> strategy.reveal(board, new Position(0, 3)));
     }
 
 }
