@@ -171,18 +171,18 @@ public final class SquareBoard implements Board {
                 final Cell c = board[i][j];
 
                 if (c.isFlagged()) {
-                    sb.append("F").append(" "); 
+                    sb.append('F').append(' '); 
                 } else if (!c.isRevealed()) {
-                    sb.append(".").append(" "); 
+                    sb.append('.').append(' '); 
                 } else if (c.hasContent()) {
                     sb.append(c.getContent()
                            .map(CellContent::shortString)
-                           .orElse("?")).append(" ");
+                           .orElse("?")).append(' ');
                 } else {
-                    sb.append(c.getAdjacentTraps()).append(" ");
+                    sb.append(c.getAdjacentTraps()).append(' ');
                 }
             }
-            sb.append("\n");
+            sb.append('\n');
         }
         return sb.toString();
     }
