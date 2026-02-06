@@ -174,13 +174,4 @@ public final class BaseCellTest {
         assertEquals(Optional.empty(), cell.getContent());
     }
 
-    private static final class TempCellContent implements CellContent {
-        
-        @Override
-        public boolean applyEffect() { return true; }
-
-        @Override
-        public String shortString() { return "For testing only"; }
-    }
-
 }
