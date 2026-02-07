@@ -22,12 +22,12 @@ public interface Cell {
      * @return true if the cell is revealed, false otherwise
      */
     boolean isRevealed();
-    
+
     /**
      * Toggles the cell's flag status if it is not revealed.
      */
     void toggleFlag();
-    
+
     /**
      * Checks if the cell is flagged.
      * 
@@ -39,7 +39,7 @@ public interface Cell {
      * Returns the number of adjacent traps.
      * 
      * @return an {@code int} that represents the number of
-     * traps in the eight cells surrounding the cell
+     *     traps in the eight cells surrounding the cell
      */
     int getAdjacentTraps();
 
@@ -80,5 +80,5 @@ public interface Cell {
      * Removes the content from the cell.
      */
     void removeContent();
-    
+
 }

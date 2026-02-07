@@ -91,8 +91,7 @@ public final class BaseCell implements Cell {
     public void setAdjacentTraps(final int n) {
         if (n >= NO_ADJACENT_TRAPS && n <= MAX_ADJACENT_TRAPS) {
             this.adjacentTraps = n;
-        }
-        else {
+        } else {
             throw new IllegalArgumentException("The cell cannot have more than 8 or negative adjacent traps");
         }
     }
@@ -132,6 +131,10 @@ public final class BaseCell implements Cell {
         this.content = Optional.empty();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public String toString() {
         return "Cell[revealed=" + this.revealed
         + ", flagged=" + this.flagged

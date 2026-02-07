@@ -15,6 +15,12 @@ public final class StatusImpl implements Status{
         final GameMode gameMode,
         final int levelNumber
     ) {
+        if (levelState == null || gameMode == null) {
+            throw new IllegalArgumentException("dependencies can't be null");
+        }
+        if (levelNumber < 0) {
+            throw new IllegalArgumentException("levelNumber can't be negative");
+        }
         this.levelState = levelState;
         this.gameMode = gameMode;
         this.levelNumber = levelNumber;
@@ -25,7 +31,10 @@ public final class StatusImpl implements Status{
         return this.levelState;
     }
 
-    public Status getLevelState(final LevelState newState) {
+    public Status withLevelState(final LevelState newState) {
+        if (newState == null) {
+            throw new IllegalArgumentException("state can't be null");
+        }
         return new StatusImpl(newState, this.gameMode, this.levelNumber);
     }
 
@@ -34,7 +43,10 @@ public final class StatusImpl implements Status{
         return this.gameMode;
     }
 
-    public Status getGameMode(final GameMode newMode) {
+    public Status withGameMode(final GameMode newMode) {
+        if (newMode == null) {
+            throw new IllegalArgumentException("mode can't be null");
+        }
         return new StatusImpl(this.levelState, newMode, this.levelNumber);
     }
 
@@ -43,7 +55,10 @@ public final class StatusImpl implements Status{
         return this.levelNumber;
     }
 
-    public Status getLevelNumber(final int newLevel) {
+    public Status withLevelNumber(final int newLevel) {
+        if (newLevel < 0) {
+            throw new IllegalArgumentException("level can't be < 0");
+        }
         return new StatusImpl(this.levelState, this.gameMode, newLevel);
     }
 

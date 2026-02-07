@@ -3,9 +3,8 @@ package it.unibo.goldhunt.engine.api;
 //davv
 public interface Status {
 
-    /** This interface represents the description of the game status.
-     * It describes in what game phase the player is, at what level
-     * the player is and the game difficulty chosen.
+    /** 
+     * This interface represents the description of the game status.
      */
 
     LevelState levelState();
