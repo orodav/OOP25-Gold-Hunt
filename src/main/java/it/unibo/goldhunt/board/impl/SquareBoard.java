@@ -162,33 +162,6 @@ public final class SquareBoard implements Board {
         return dx <= 1 && dy <= 1 && !(dx == 0 && dy == 0);
     }
 
-<<<<<<< Updated upstream
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < getBoardSize(); i++) {
-            for (int j = 0; j < getBoardSize(); j++) {
-                final Cell c = board[i][j];
-
-                if (c.isFlagged()) {
-                    sb.append('F').append(' '); 
-                } else if (!c.isRevealed()) {
-                    sb.append('.').append(' '); 
-                } else if (c.hasContent()) {
-                    sb.append(c.getContent()
-                           .map(CellContent::shortString)
-                           .orElse("?")).append(' ');
-                } else {
-                    sb.append(c.getAdjacentTraps()).append(' ');
-                }
-            }
-            sb.append('\n');
-        }
-        return sb.toString();
-    }
-
-=======
->>>>>>> Stashed changes
     private void checkValidCell(final Cell cell) {
         if (!cellPositions.containsKey(cell)) {
             throw new IllegalArgumentException(CELL_NOT_IN_BOARD_EXCEPTION + cell);
