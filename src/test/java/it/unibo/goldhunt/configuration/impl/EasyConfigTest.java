@@ -32,13 +32,14 @@ class EasyConfigTest {
     @Test
     void testItemQuantities() {
         Map<String, Integer> items = config.getItemConfig();
-        assertEquals(2, items.get("D"));
-        assertEquals(5, items.get("G"));
-        assertEquals(1, items.get("X"));
-        assertEquals(3, items.get("L"));
-        assertEquals(1, items.get("C"));
-        assertEquals(0, items.get("M"));
-        assertEquals(1, items.get("P"));
-        assertEquals(1, items.get("S"));
+        assertEquals(2, items.getOrDefault("D", 0));
+        assertEquals(5, items.getOrDefault("G", 0));
+        assertEquals(1, items.getOrDefault("X", 0));
+        assertEquals(3, items.getOrDefault("L", 0));
+        assertEquals(1, items.getOrDefault("C", 0));
+        assertEquals(0, items.getOrDefault("M", 0));
+        assertEquals(1, items.getOrDefault("P", 0));
+        assertEquals(1, items.getOrDefault("S", 0));
     }
 }
+

@@ -32,13 +32,13 @@ class MediumConfigTest {
     @Test
     void testItemQuantities() {
         Map<String, Integer> items = config.getItemConfig();
-        assertEquals(3, items.get("D"));
-        assertEquals(12, items.get("G"));
-        assertEquals(2, items.get("X"));
-        assertEquals(4, items.get("L"));
-        assertEquals(1, items.get("C"));
-        assertEquals(2, items.get("M"));
-        assertEquals(2, items.get("P"));
-        assertEquals(2, items.get("S"));
+        assertEquals(3, items.getOrDefault("D", 0));
+        assertEquals(12, items.getOrDefault("G", 0));
+        assertEquals(2, items.getOrDefault("X", 0));
+        assertEquals(4, items.getOrDefault("L", 0));
+        assertEquals(1, items.getOrDefault("C", 0));
+        assertEquals(2, items.getOrDefault("M", 0));
+        assertEquals(2, items.getOrDefault("P", 0));
+        assertEquals(2, items.getOrDefault("S", 0));
     }
 }

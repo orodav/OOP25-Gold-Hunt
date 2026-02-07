@@ -32,13 +32,13 @@ class HardConfigTest {
     @Test
     void testItemQuantities() {
         Map<String, Integer> items = config.getItemConfig();
-        assertEquals(4, items.get("D"));
-        assertEquals(24, items.get("G"));
-        assertEquals(4, items.get("X"));
-        assertEquals(5, items.get("L"));
-        assertEquals(1, items.get("C"));
-        assertEquals(3, items.get("M"));
-        assertEquals(3, items.get("P"));
-        assertEquals(3, items.get("S"));
+        assertEquals(4, items.getOrDefault("D", 0));
+        assertEquals(24, items.getOrDefault("G", 0));
+        assertEquals(4, items.getOrDefault("X", 0));
+        assertEquals(5, items.getOrDefault("L", 0));
+        assertEquals(1, items.getOrDefault("C", 0));
+        assertEquals(3, items.getOrDefault("M", 0));
+        assertEquals(3, items.getOrDefault("P", 0));
+        assertEquals(3, items.getOrDefault("S", 0));
     }
 }
