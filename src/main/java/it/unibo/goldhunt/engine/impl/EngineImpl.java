@@ -1,28 +1,60 @@
 package it.unibo.goldhunt.engine.impl;
 
-import it.unibo.goldhunt.engine.api.ActionEffect;
+import it.unibo.goldhunt.board.api.Board;
+import it.unibo.goldhunt.board.api.RevealStrategy;
 import it.unibo.goldhunt.engine.api.ActionResult;
-import it.unibo.goldhunt.engine.api.ActionType;
 import it.unibo.goldhunt.engine.api.Engine;
 import it.unibo.goldhunt.engine.api.MovementRules;
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.engine.api.Status;
-import it.unibo.goldhunt.engine.api.StopReason;
 import it.unibo.goldhunt.player.api.Player;
+import it.unibo.goldhunt.player.api.PlayerOperations;
 
 public class EngineImpl implements Engine{
 
-    private final Player player;
-    private final Status status;
-    private final BoardFittizia board;
-    private final MovementRules rules;
+    private PlayerOperations player;
+    private Status status;
+    //private final Position start;
+    //private final Position exit;
+    private final MoveService moveService;
+    private final RevealService revealService;
 
-    public EngineImpl(Player player, Status status, BoardFittizia board, MovementRules rules) {
+    public EngineImpl(
+        final PlayerOperations player,
+        final Status status,
+        final Board board,
+        final MovementRules rules,
+        final RevealStrategy revealStrategy,
+        final Position start,
+        final Position exit
+    ) {
+        if (player == null || status == null || board == null || rules == null ||
+            revealStrategy == null || start == null || exit == null
+        ) {
+            throw new IllegalArgumentException("engine dependencies can't be null");
+        }
         this.player = player;
         this.status = status;
-        this.board = board;
-        this.rules = rules;
+        //this.start = start;
+        //this.exit = exit;
+        this.moveService = new MoveService(
+            board, 
+            rules, 
+            () -> this.player, 
+            p -> { 
+                this.player = p;
+                return p;
+            },
+            () -> this.status
+        );
+        this.revealService = new RevealService(
+            board, 
+            revealStrategy, 
+            () -> this.status, 
+            () -> this.player
+        );
     }
+
     @Override
     public Player player() {
         return this.player;
@@ -35,53 +67,17 @@ public class EngineImpl implements Engine{
 
     @Override
     public ActionResult reveal(Position p) {
-        /*if (p == null) {
-            throw new IllegalArgumentException("position can't be null");
-        }
-        if (!this.board.isPositionValid(p)) {
-            return new ActionResult(
-                ActionType.REVEAL,
-                StopReason.NONE,
-                this.status.levelState(),
-                ActionEffect.INVALID);
-        }
-        if (this.status.levelState() != LevelState.PLAYING) {
-            return new ActionResult(
-                ActionType.REVEAL,
-                StopReason.NONE,
-                this.status.levelState(),
-                ActionEffect.BLOCKED);
-        }
-        final RevealResult revealResult = this.board.reveal(p, this.player);    //reveal verrà da futuro import da Azzurra
-        return new ActionResult(
-                ActionType.REVEAL,
-                StopReason.NONE,
-                revealResult.newLevelState(),
-                revealResult.effect()); */
-        throw new IllegalArgumentException();   //inserita per compilazione funzionante, da rimuovere
+       return this.revealService.reveal(p);
     }
 
     @Override
     public ActionResult toggleFlag(Position p) {
-        if (p == null) {
-            throw new IllegalArgumentException("position can't be null");
-        }
-        if (!this.board.isPositionValid(p)) {
-            return new ActionResult(ActionType.FLAG, StopReason.NONE, this.status.levelState(), ActionEffect.INVALID);
-        }
-        final boolean changed = this.board.toggleFlag(p);
-        return new ActionResult(
-            ActionType.FLAG,
-            StopReason.NONE,
-            this.status.levelState(),
-            changed ? ActionEffect.APPLIED : ActionEffect.REMOVED
-        );
+       return this.revealService.toggleFlag(p);
     }
 
     @Override
-    public ActionResult move(Position target) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'move'");
+    public ActionResult move(final Position newPos) {
+       return this.moveService.move(newPos);
     }
-    
 }
+

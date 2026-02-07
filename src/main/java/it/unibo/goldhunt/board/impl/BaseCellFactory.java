@@ -27,6 +27,6 @@ public final class BaseCellFactory implements CellFactory {
     @Override
     public Cell createCell(final Optional<CellContent> content) {
         return new BaseCell(content);
-    }   
+    }
 
 }

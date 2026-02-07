@@ -19,7 +19,7 @@ public interface Board {
     List<Cell> getBoardCells();
 
     /**
-     * Returns the cell in the specified {@link Position}
+     * Returns the cell in the specified {@link Position}.
      * 
      * @param p the cell's position
      * @return the cell in position {@code p}
@@ -100,8 +100,8 @@ public interface Board {
      * @param p2 the second position
      * @return true if the positions are adjacent, false otherwise
      * @throws NullPointerException if {@code p1} or {@code p2} are {@code null}
-     * @throws IndexOutOfBoundException if at least one of the positions
-     * is out of the board's bounds
+     * @throws IndexOutOfBoundsException if at least one of the positions
+     *     is out of the board's bounds
      */
     boolean isAdjacent(Position p1, Position p2);
 

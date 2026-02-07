@@ -9,6 +9,11 @@ import it.unibo.goldhunt.board.api.Cell;
 import it.unibo.goldhunt.board.api.RevealStrategy;
 import it.unibo.goldhunt.engine.api.Position;
 
+/**
+ * This class implements RevealStrategy.
+ * With this reveal strategy, when a cell with no adjacent traps is revealed,
+ * all adjacent cells with no traps are revealed as well.
+ */
 public final class FloodReveal implements RevealStrategy {
 
     private static final int NO_ADJACENT_TRAPS = 0;
@@ -17,8 +22,9 @@ public final class FloodReveal implements RevealStrategy {
      * {@inheritDoc}
      */
     @Override
-    public void reveal(Board b, Position p) {
+    public void reveal(final Board b, final Position p) {
         Objects.requireNonNull(b);
+        Objects.requireNonNull(p);
 
         final Cell cell = b.getCell(p);
 
@@ -29,8 +35,9 @@ public final class FloodReveal implements RevealStrategy {
         cell.reveal();
         if (cell.getAdjacentTraps() == NO_ADJACENT_TRAPS) {
             b.getAdjacentCells(p).forEach(adjacent -> {
-                Position adjacentPosition = b.getCellPosition(adjacent);
-                reveal(b, adjacentPosition);});
+                final Position adjacentPosition = b.getCellPosition(adjacent);
+                reveal(b, adjacentPosition);
+                });
             }
         }
 

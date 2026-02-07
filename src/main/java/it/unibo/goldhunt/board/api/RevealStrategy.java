@@ -8,6 +8,7 @@ import it.unibo.goldhunt.engine.api.Position;
  * This interface models the strategy for revealing cells.
  * This interface can be implemented to create different reveal strategies.
  */
+@FunctionalInterface
 public interface RevealStrategy {
 
     /**
