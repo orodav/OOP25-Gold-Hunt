@@ -2,6 +2,7 @@ package it.unibo.goldhunt.shop.impl;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -88,8 +89,10 @@ public class ShopTest {
 
     @Test
     void constructorShouldThrowIfCatalogContainsNull() {
-        assertThrows(IllegalArgumentException.class,
-            () -> new ShopImpl(playerWithGold(10), List.of((ShopItem) null), 1)
+        final List<ShopItem> catalog = new ArrayList<>();
+        catalog.add(null);
+        assertThrows(IllegalArgumentException.class, 
+            () -> new ShopImpl(playerWithGold(10), catalog, 1)
         );
     }
 
