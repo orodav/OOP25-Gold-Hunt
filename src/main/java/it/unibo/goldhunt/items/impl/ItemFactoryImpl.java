@@ -22,7 +22,6 @@ public class ItemFactoryImpl implements ItemFactory{
         ITEMS.put("P", Pickaxe::new);
         ITEMS.put("S", Shield::new);
         ITEMS.put("X", GoldX3::new);
-
     }
     @Override
     public Item generateItem(final String item){

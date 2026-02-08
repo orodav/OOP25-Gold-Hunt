@@ -1,10 +1,10 @@
 package it.unibo.goldhunt.items.impl;
 
-import it.unibo.goldhunt.items.api.CellContent;
+import it.unibo.goldhunt.items.api.Revealable;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 
 //luca
-public class Trap implements CellContent{
+public class Trap implements Revealable{
 
     PlayerOperations playerop;
     public static final int DAMAGE = -1;
