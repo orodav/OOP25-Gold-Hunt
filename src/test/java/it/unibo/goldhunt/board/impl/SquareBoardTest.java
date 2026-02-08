@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,6 +37,56 @@ final class SquareBoardTest {
         this.board = new SquareBoardFactory(factory).createEmptyBoard(3);
         this.cells = new Cell[3][3];
         cellsSnapshot();
+    }
+
+    /**
+     * Tests that {@link SquareBoard#SquareBoard(int, CellFactory)}
+     * initializes the board with the correct number
+     * of non-null cells.
+     */
+    @Test
+    void testConstructorCreatesAllCells() {
+        final Board otherBoard = new SquareBoard(3, factory);
+
+        assertEquals(3, otherBoard.getBoardSize());
+        assertEquals(9, otherBoard.getBoardCells().size());
+        assertTrue(board.getBoardCells().stream().allMatch(Objects::nonNull));
+    }
+
+    /**
+     * Tests that {@link SquareBoard#SquareBoard(int, CellFactory)}
+     * associates each cell with its board position correctly.
+     */
+    @Test
+    void testConstructorSetCellPositionsCorrectly() {
+        final Board otherBoard = new SquareBoard(3, factory);
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                final Position position = new Position(i, j);
+                final Cell cell = otherBoard.getCell(position);
+                assertEquals(position, otherBoard.getCellPosition(cell));
+            }
+        }
+    }
+
+    /**
+     * Tests that {@link SquareBoard#SquareBoard(int, CellFactory)}
+     * does not create a board with a negative number or 0 cells.
+     */
+    @Test
+    void testConstructorThrowsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> new SquareBoard(0, factory));
+        assertThrows(IllegalArgumentException.class, () -> new SquareBoard(-1, factory));
+    }
+
+    /**
+     * Tests that {@link SquareBoard#SquareBoard(int, CellFactory)}
+     * throws {@link NullPointerException} correctly.
+     */
+    @Test
+    void testConstructorThrowsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> new SquareBoard(3, null));
     }
 
     /**
