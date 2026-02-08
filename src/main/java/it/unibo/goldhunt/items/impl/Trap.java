@@ -5,9 +5,15 @@ import it.unibo.goldhunt.player.api.PlayerOperations;
 
 //luca
 public class Trap implements Revealable{
+    
+    public static final int DAMAGE = -1;
 
     PlayerOperations playerop;
-    public static final int DAMAGE = -1;
+
+    Trap(PlayerOperations playerop){
+        this.playerop = playerop;
+    }
+
 
     @Override
     public boolean applyEffect() {

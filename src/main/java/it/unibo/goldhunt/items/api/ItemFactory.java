@@ -4,5 +4,5 @@ import it.unibo.goldhunt.items.impl.Item;
 
 public interface ItemFactory {
 
-    Item generateItem(String item);
+    Item generateItem(final String item);
 }
