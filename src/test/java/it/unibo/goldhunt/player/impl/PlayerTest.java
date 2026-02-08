@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import it.unibo.goldhunt.engine.api.Position;
+import it.unibo.goldhunt.items.api.ItemTypes;
 //import it.unibo.goldhunt.items.api.ItemTypes;
 import it.unibo.goldhunt.player.api.Inventory;
 
@@ -24,47 +25,70 @@ public class PlayerTest {
         return new PlayerImpl(pos(0, 0), 3, 0, emptyInventory());
     }
 
+    /**
+     * Nested Enum created for Player Testing class.
+     */
+    private enum StubItem implements ItemTypes {
+        SHIELD;
+
+        @Override
+        public boolean applyEffect() {
+            return false;
+        }
+
+        @Override
+        public String shortString() {
+            return "sh";
+        }
+
+        @Override
+        public String getName() {
+            return "shield";
+        }
+
+        
+    }
+
     // Testing Constructor Invariants
 
     @Test
     void shouldCreateValidPlayer() {
-        final var player = new PlayerImpl(pos(0, 0), 3, 0, emptyInventory());
+        final var inventory = emptyInventory();
+        final var player = new PlayerImpl(pos(0, 0), 3, 0, inventory);
         assertEquals(pos(0, 0), player.position());
         assertEquals(3, player.livesCount());
         assertEquals(0, player.goldCount());
-        assertNotNull(player.inventory());
+        assertSame(inventory, player.inventory());
     }
 
     @Test
     void shouldThrowIfLivesNegative() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new PlayerImpl(pos(0, 0), -1, 0, emptyInventory()));
+        assertThrows(IllegalArgumentException.class, 
+            () -> new PlayerImpl(pos(0, 0), -1, 0, emptyInventory()));
     }
 
     @Test
     void shouldThrowIfGoldNegative() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new PlayerImpl(pos(0, 0), 3, -1, emptyInventory()));
+        assertThrows(IllegalArgumentException.class, 
+            () -> new PlayerImpl(pos(0, 0), 3, -1, emptyInventory()));
     }
 
     @Test
     void shouldThrowIfPositionNull() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new PlayerImpl(null, 3, 0, emptyInventory()));
+        assertThrows(IllegalArgumentException.class, 
+            () -> new PlayerImpl(null, 3, 0, emptyInventory()));
     }
 
     @Test
     void shouldThrowIfInventoryNull() {
-        assertThrows(IllegalArgumentException.class, () -> 
-                new PlayerImpl(pos(0, 0), 3, 0, null));
+        assertThrows(IllegalArgumentException.class, 
+            () -> new PlayerImpl(pos(0, 0), 3, 0, null));
     }
 
-
-    // Testing Immutability and field preservation
-
     // _______________moveTo
+
     @Test
-    void moveToShouldReturnNewPlayer() {
+    void moveToShouldChangeOnlyPosition() {
         final var player = basicPlayer();
         final var newPos = pos(4, 7);
         final var updated = player.moveTo(newPos);
@@ -73,33 +97,21 @@ public class PlayerTest {
         assertEquals(player.livesCount(), updated.livesCount());
         assertEquals(player.goldCount(), updated.goldCount());
         assertEquals(player.inventory(), updated.inventory());
-        assertEquals(pos(0, 0), player.position());     //originale rimane invariato
-    }
-
-    @Test
-    void moveToChangePositionOnly() {
-        var player = new PlayerImpl(pos(0, 0), 3, 0, emptyInventory());
-        var newPos = pos(2, 4);
-        var updated = player.moveTo(newPos);
-        assertNotSame(player, updated);
-        assertEquals(newPos, updated.position());
-        assertEquals(3, updated.livesCount());
-        assertEquals(0, updated.goldCount());
-        assertEquals(player.inventory(), updated.inventory());
+        assertEquals(pos(0, 0), player.position());
     }
 
     @Test
     void moveToShouldThrowIfNullPosition() {
-        var player = new PlayerImpl(pos(0, 0), 3, 0, emptyInventory());
-        assertThrows(IllegalArgumentException.class, () ->
-                player.moveTo(null));
+        final var player = basicPlayer();
+        assertThrows(IllegalArgumentException.class, 
+            () -> player.moveTo(null));
     }
 
     
     @Test
     void moveToSamePositionStillReturnsNewInstance() {
-        var player = new PlayerImpl(pos(0,0), 3, 0, emptyInventory());
-        var updated = player.moveTo(pos(0,0));
+        final var player = basicPlayer();
+        final var updated = player.moveTo(pos(0,0));
         assertNotSame(player, updated);
         assertEquals(player, updated);
     }
@@ -108,94 +120,116 @@ public class PlayerTest {
 
     @Test
     void addGoldShouldIncreaseGoldWhenNumPositive() {
-        var player = basicPlayer();
-        var updated = player.addGold(3);
+        final var player = basicPlayer();
+        final var updated = player.addGold(3);
         assertNotSame(player, updated);
         assertEquals(3, updated.goldCount());
+        assertEquals(player.position(), updated.position());
+        assertEquals(player.livesCount(), updated.livesCount());
+        assertSame(player.inventory(), updated.inventory());
         assertEquals(0, player.goldCount());
     }
 
     @Test
     void addGoldShouldDecreaseGoldWhenNumNegative() {
-        var player = new PlayerImpl(pos(0, 0), 3, 4, emptyInventory());
-        var updated = player.addGold(-3);
+        final var player = new PlayerImpl(pos(0, 0), 3, 4, emptyInventory());
+        final var updated = player.addGold(-3);
         assertNotSame(player, updated);
         assertEquals(1, updated.goldCount());
+        assertEquals(player.position(), updated.position());
+        assertEquals(player.livesCount(), updated.livesCount());
+        assertSame(player.inventory(), updated.inventory());
         assertEquals(4, player.goldCount());
     }
 
     @Test
     void addGoldShouldThrowWhenResultNegative() {
-        var player = new PlayerImpl(pos(0, 0), 3, 0, emptyInventory());
-        assertThrows(IllegalArgumentException.class, () ->
-                player.addGold(-1));
+        final var player = basicPlayer();
+        assertThrows(IllegalArgumentException.class, 
+            () -> player.addGold(-1));
     }
 
     @Test
     void addGoldShouldAllowValueZero() {
-        var player = new PlayerImpl(pos(0, 0), 3, 2, emptyInventory());
-        var updated = player.addGold(-2);
+        final var player = new PlayerImpl(pos(0, 0), 3, 2, emptyInventory());
+        final var updated = player.addGold(-2);
         assertEquals(0, updated.goldCount());
+    }
+
+    @Test
+    void addGoldZeroShouldReturnSameNewInstance() {
+        final var player = new PlayerImpl(pos(3, 4), 2, 3, emptyInventory());
+        final var updated = player.addGold(0);
+        assertEquals(player, updated);
+        assertNotSame(player, updated);
     }
 
     //____________lives
 
     @Test
-    void addLivesShouldIncreaseByOne() {
-        var player = new PlayerImpl(pos(0, 0), 3, 0, emptyInventory());
-        var updated = player.addLives(1);
+    void addLivesShouldIncreaseWhenPositive() {
+        final var player = basicPlayer();
+        final var updated = player.addLives(1);
         assertNotSame(player, updated);
         assertEquals(4, updated.livesCount());
+        assertEquals(player.position(), updated.position());
+        assertEquals(player.goldCount(), updated.goldCount());
+        assertSame(player.inventory(), updated.inventory());
         assertEquals(3, player.livesCount());
     }
 
     @Test
-    void addLivesShouldDecreaseByOne() {
-        var player = new PlayerImpl(pos(0, 0), 3, 0, emptyInventory());
-        var updated = player.addLives(-1);
+    void addLivesShouldDecreaseWhenNegative() {
+        final var player = basicPlayer();
+        final var updated = player.addLives(-1);
         assertNotSame(player, updated);
         assertEquals(2, updated.livesCount());
+        assertEquals(player.position(), updated.position());
+        assertEquals(player.goldCount(), updated.goldCount());
+        assertSame(player.inventory(), updated.inventory());
         assertEquals(3, player.livesCount());
     }
 
     @Test
-    void addLivesShouldAllowReachingZero() {
+    void addLivesShouldNotAllowReachingZero() {
         var player = new PlayerImpl(pos(0, 0), 1, 0, emptyInventory());
         var updated = player.addLives(-1);
         assertEquals(0, updated.livesCount());
     }
 
     @Test
-    void addLivesShouldThrowWhenNegative() {
-        var player = new PlayerImpl(pos(0, 0), 0, 0, emptyInventory());
+    void addLivesShouldThrowWhenNegativeOrZero() {
+        final var player = new PlayerImpl(pos(0, 0), 0, 0, emptyInventory());
         assertThrows(IllegalArgumentException.class, () ->
                 player.addLives(-1));
     }
 
+    @Test
+    void addLivesWithZeroShouldReturnSameNewInstance() {
+        final var player = new PlayerImpl(pos(2, 3), 3, 2, emptyInventory());
+        final var updated = player.addLives(0);
+        assertNotSame(player, updated);
+        assertEquals(player, updated);
+    }
+    
+
     // ___________Inventory: delegation
 
-    /*
     @Test
     void addItemShouldUpdateInventory() {
         final var player = basicPlayer();
-        final var updated = player.addItem(ItemTypes.SHIELD, 1);
-        assertNotSame(player, updated);
-        assertEquals(player.position(), updated.position());
-        assertEquals(player.livesCount(), updated.livesCount());
-        assertEquals(player.goldCount(), updated.goldCount());
-        assertNotEquals(player.inventory(), updated.inventory());
+        final var updated = player.addItem(StubItem.SHIELD, 1);
+        assertEquals(0, player.inventory().quantity(StubItem.SHIELD));
+        assertEquals(1, updated.inventory().quantity(StubItem.SHIELD));        
     }
-    */
 
-    /*
     @Test
     void useItemShouldUpdateInventory() {
-        final var player = basicPlayer().addItem(ItemTypes.SHIELD, 1);
-        final var updated = player.useItem(ItemTypes.SHIELD, 1);
+        final var player = basicPlayer().addItem(StubItem.SHIELD, 1);
+        final var updated = player.useItem(StubItem.SHIELD, 1);
         assertNotSame(player, updated);
         assertNotEquals(player.inventory(), updated.inventory());
     }
-    */
 
     // ________equals e hashCode
 
@@ -209,13 +243,12 @@ public class PlayerTest {
     }
 
     @Test
-    void equalsShouldBeFalseIfFieldsDiffers() {
+    void equalsShouldBeFalseIfAnyFieldDiffers() {
         final var inventory = emptyInventory();
         final var base = new PlayerImpl(pos(1, 1), 3, 0, inventory);
         assertNotEquals(base, new PlayerImpl(pos(2, 1), 3, 0, inventory));
         assertNotEquals(base, new PlayerImpl(pos(1, 1), 4, 0, inventory));
         assertNotEquals(base, new PlayerImpl(pos(1, 1), 3, 4, inventory));
-        //assertNotEquals(base, new PlayerImpl(pos(1, 1), 3, 0, inventory.add(ItemTypes.SHIELD, 1)));
     }
 
     @Test
@@ -223,5 +256,16 @@ public class PlayerTest {
         final var player = basicPlayer();
         assertNotEquals(player, null);
         assertNotEquals(player, "not a player");
+    }
+
+    @Test
+    void toStringShouldContainKeyFields() {
+        final var player = new PlayerImpl(pos(1, 2), 3, 4, emptyInventory());
+        final var string = player.toString();
+        assertNotNull(string);
+        assertTrue(string.contains("lives="));
+        assertTrue(string.contains("gold="));
+        assertTrue(string.contains("position="));
+        assertTrue(string.contains("inventory="));
     }
 }

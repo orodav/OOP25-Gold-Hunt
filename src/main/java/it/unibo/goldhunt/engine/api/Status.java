@@ -1,7 +1,5 @@
 package it.unibo.goldhunt.engine.api;
 
-import java.util.logging.Level;
-
 //davv
 public interface Status {
 
