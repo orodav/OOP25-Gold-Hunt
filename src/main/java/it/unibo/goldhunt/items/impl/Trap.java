@@ -26,5 +26,11 @@ public class Trap implements Revealable{
         return "T";
     }
 
+
+    @Override
+    public boolean isTrap() {
+        return true;
+    }
+
     
 }
