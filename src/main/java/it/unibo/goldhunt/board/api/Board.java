@@ -39,16 +39,6 @@ public interface Board {
     Position getCellPosition(Cell cell);
 
     /**
-     * Places a cell in the specified position in the board.
-     * 
-     * @param cell the cell to place in the board
-     * @param p the position in which the cell is placed
-     * @throws NullPointerException if {@code cell} or {@code p} are null
-     * @throws IndexOutOfBoundsException if {@code p} is out of the board's bounds
-     */
-    void setCell(Cell cell, Position p);
-
-    /**
      * Returns a {@link List} containing the adjacent cells
      * of the cell in the specified position.
      * 

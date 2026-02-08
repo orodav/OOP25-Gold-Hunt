@@ -10,6 +10,7 @@ import java.util.Objects;
 
 import it.unibo.goldhunt.board.api.Board;
 import it.unibo.goldhunt.board.api.Cell;
+import it.unibo.goldhunt.board.api.CellFactory;
 import it.unibo.goldhunt.engine.api.Position;
 
 /**
@@ -27,30 +28,27 @@ public final class SquareBoard implements Board {
     private final Map<Cell, Position> cellPositions;
 
     /**
-     * SquareBoard's constructor.
-     * This constructor sets the board's size.
+     * This constructor creates a {@code SquareBoard} with empty cells.
      * 
-     * @param boardSize the board's size
-     * @throws IllegalArgumentException if {@code boardSize} is less than or equal to 0
+     * @param boardSize the board's width and height
+     * @param cellFactory the cell factory
      */
-    private SquareBoard(final int boardSize) {
+    SquareBoard(final int boardSize, final CellFactory cellFactory) {
         if (boardSize <= 0) {
             throw new IllegalArgumentException("The board size must be greater than 0");
         }
+        Objects.requireNonNull(cellFactory);
+
         this.board = new Cell[boardSize][boardSize];
         this.cellPositions = new HashMap<>();
-    }
 
-    /**
-     * Creates a board.
-     * This method is meant to be used by the board generator.
-     * 
-     * @param boardSize the board'size
-     * @return a new {@code SquareBoard}
-     * @throws IllegalArgumentException if {@code boardSize} is less than or equal to 0
-     */
-    public static Board create(final int boardSize) {
-        return new SquareBoard(boardSize);
+        for (int i = 0; i < boardSize; i++) {
+            for (int j = 0; j < boardSize; j++) {
+                final Cell cell = Objects.requireNonNull(cellFactory.createCell());
+                this.board[i][j] = cell;
+                this.cellPositions.put(cell, new Position(i, j));
+            }
+        }
     }
 
     /**
@@ -122,18 +120,6 @@ public final class SquareBoard implements Board {
         return getBoardCells().stream()
             .filter(cell -> isAdjacent(p, getCellPosition(cell)))
             .toList();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setCell(final Cell cell, final Position p) {
-        Objects.requireNonNull(cell, NULL_CELL_EXCEPTION);
-        checkValidPosition(p);
-
-        this.board[p.x()][p.y()] = cell;
-        this.cellPositions.put(cell, p);
     }
 
     /**

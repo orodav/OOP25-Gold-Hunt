@@ -27,10 +27,10 @@ final class FloodRevealTest {
 
     @BeforeEach
     void init() {
-        this.board = SquareBoard.create(3);
         this.factory = new BaseCellFactory();
+        this.board = new SquareBoardFactory(factory).createEmptyBoard(3);
         this.cells = new Cell[3][3];
-        fillBoard();
+        cellsSnapshot();
         cells[0][0].setAdjacentTraps(1);
         cells[0][1].setAdjacentTraps(1);
         cells[0][2].setAdjacentTraps(0);
@@ -136,12 +136,10 @@ final class FloodRevealTest {
         assertThrows(IndexOutOfBoundsException.class, () -> strategy.reveal(board, new Position(0, 3)));
     }
 
-    private void fillBoard() {
+    private void cellsSnapshot() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                final Cell c = factory.createCell();
-                this.board.setCell(c, new Position(i, j));
-                cells[i][j] = c;
+                cells[i][j] = board.getCell(new Position(i, j));
             }
         }
     }

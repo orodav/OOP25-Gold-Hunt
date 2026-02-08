@@ -26,10 +26,9 @@ final class SimpleRevealTest {
 
     @BeforeEach
     void init() {
-        this.board = SquareBoard.create(3);
         this.factory = new BaseCellFactory();
+        this.board = new SquareBoardFactory(factory).createEmptyBoard(3);
         this.strategy = new SimpleReveal();
-        fillBoard();
     }
 
     /**
@@ -61,15 +60,6 @@ final class SimpleRevealTest {
     void testRevealThrowsIndexOutOfBoundsException() {
         assertThrows(IndexOutOfBoundsException.class, () -> strategy.reveal(board, new Position(-1, 0)));
         assertThrows(IndexOutOfBoundsException.class, () -> strategy.reveal(board, new Position(0, 3)));
-    }
-
-    private void fillBoard() {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                final Cell c = factory.createCell();
-                this.board.setCell(c, new Position(i, j));
-            }
-        }
     }
 
 }
