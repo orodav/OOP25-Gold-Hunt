@@ -16,7 +16,7 @@ import it.unibo.goldhunt.board.api.RevealStrategy;
 import it.unibo.goldhunt.engine.api.Position;
 
 /**
- * This class tests SimpleReveal.
+ * This class tests {@link SimpleReveal}.
  */
 final class SimpleRevealTest {
 

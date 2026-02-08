@@ -16,7 +16,7 @@ import it.unibo.goldhunt.board.api.RevealStrategy;
 import it.unibo.goldhunt.engine.api.Position;
 
 /**
- * This class tests FloodReveal.
+ * This class tests {@link FloodReveal}.
  */
 final class FloodRevealTest {
 

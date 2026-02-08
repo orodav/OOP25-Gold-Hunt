@@ -19,7 +19,7 @@ import it.unibo.goldhunt.board.api.CellFactory;
 import it.unibo.goldhunt.engine.api.Position;
 
 /**
- * This class tests SquareBoard.
+ * This class tests {@link SquareBoard}.
  */
 final class SquareBoardTest {
 

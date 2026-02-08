@@ -16,7 +16,7 @@ import it.unibo.goldhunt.board.api.CellFactory;
 import it.unibo.goldhunt.items.api.CellContent;
 
 /**
- * This class tests BaseCellFactory.
+ * This class tests {@link BaseCellFactory}.
  */
 final class BaseCellFactoryTest {
 
