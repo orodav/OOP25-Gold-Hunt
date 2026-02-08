@@ -4,4 +4,8 @@ public interface CellContent{
     public boolean applyEffect();
 
     public String shortString();
+
+    default Boolean isTrap(){
+        return false;
+    }
 }

@@ -15,7 +15,10 @@ import it.unibo.goldhunt.board.api.Cell;
 import it.unibo.goldhunt.board.api.CellFactory;
 import it.unibo.goldhunt.items.api.CellContent;
 
-public final class BaseCellFactoryTest {
+/**
+ * This class tests BaseCellFactory.
+ */
+final class BaseCellFactoryTest {
 
     private CellFactory factory;
 
@@ -57,16 +60,6 @@ public final class BaseCellFactoryTest {
         assertEquals(0, cell3.getAdjacentTraps());
         assertTrue(cell3.hasContent());
         assertEquals(Optional.of(content), cell3.getContent());
-    }
-
-    private static final class TempCellContent implements CellContent {
-
-        @Override
-        public boolean applyEffect() { return true; }
-
-        @Override
-        public String shortString() { return "For testing only"; }
-
     }
  
 }

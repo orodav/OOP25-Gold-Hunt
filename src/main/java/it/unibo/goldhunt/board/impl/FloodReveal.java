@@ -24,6 +24,7 @@ public final class FloodReveal implements RevealStrategy {
     @Override
     public void reveal(final Board b, final Position p) {
         Objects.requireNonNull(b);
+        Objects.requireNonNull(p);
 
         final Cell cell = b.getCell(p);
 
@@ -34,8 +35,9 @@ public final class FloodReveal implements RevealStrategy {
         cell.reveal();
         if (cell.getAdjacentTraps() == NO_ADJACENT_TRAPS) {
             b.getAdjacentCells(p).forEach(adjacent -> {
-                Position adjacentPosition = b.getCellPosition(adjacent);
-                reveal(b, adjacentPosition);});
+                final Position adjacentPosition = b.getCellPosition(adjacent);
+                reveal(b, adjacentPosition);
+                });
             }
         }
 

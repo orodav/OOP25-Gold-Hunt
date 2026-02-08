@@ -10,13 +10,13 @@ import java.util.Objects;
 
 import it.unibo.goldhunt.board.api.Board;
 import it.unibo.goldhunt.board.api.Cell;
+import it.unibo.goldhunt.board.api.CellFactory;
 import it.unibo.goldhunt.engine.api.Position;
-import it.unibo.goldhunt.items.api.CellContent;
 
 /**
  * This class implements Board and it models a square board.
  */
-public class SquareBoard implements Board {
+public final class SquareBoard implements Board {
 
     private static final String CELL_NOT_IN_BOARD_EXCEPTION = "This cell is not in the board: ";
     private static final String INDEX_EXCEPTION_MESSAGE = "This index is not in the board: ";
@@ -28,30 +28,27 @@ public class SquareBoard implements Board {
     private final Map<Cell, Position> cellPositions;
 
     /**
-     * SquareBoard's constructor.
-     * This constructor sets the board's size.
+     * This constructor creates a {@code SquareBoard} with empty cells.
      * 
-     * @param boardSize the board's size
-     * @throws IllegalArgumentException if {@code boardSize} is less than or equal to 0
+     * @param boardSize the board's width and height
+     * @param cellFactory the cell factory
      */
-    private SquareBoard(final int boardSize) {
+    SquareBoard(final int boardSize, final CellFactory cellFactory) {
         if (boardSize <= 0) {
             throw new IllegalArgumentException("The board size must be greater than 0");
         }
+        Objects.requireNonNull(cellFactory);
+
         this.board = new Cell[boardSize][boardSize];
         this.cellPositions = new HashMap<>();
-    }
 
-    /**
-     * Creates a board.
-     * This method is meant to be used by the board generator.
-     * 
-     * @param boardSize the board'size
-     * @return a new {@code SquareBoard}
-     * @throws IllegalArgumentException if {@code boardSize} is less than or equal to 0
-     */
-    public static Board create(final int boardSize) {
-        return new SquareBoard(boardSize);
+        for (int i = 0; i < boardSize; i++) {
+            for (int j = 0; j < boardSize; j++) {
+                final Cell cell = Objects.requireNonNull(cellFactory.createCell());
+                this.board[i][j] = cell;
+                this.cellPositions.put(cell, new Position(i, j));
+            }
+        }
     }
 
     /**
@@ -119,7 +116,7 @@ public class SquareBoard implements Board {
     @Override
     public List<Cell> getAdjacentCells(final Position p) {
         checkValidPosition(p);
-        
+
         return getBoardCells().stream()
             .filter(cell -> isAdjacent(p, getCellPosition(cell)))
             .toList();
@@ -129,21 +126,9 @@ public class SquareBoard implements Board {
      * {@inheritDoc}
      */
     @Override
-    public void setCell(final Cell cell, final Position p) {
-        Objects.requireNonNull(cell, NULL_CELL_EXCEPTION);
-        checkValidPosition(p);
-
-        this.board[p.x()][p.y()] = cell;
-        this.cellPositions.put(cell, p);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public boolean isPositionValid(final Position p) {
         Objects.requireNonNull(p, NULL_POSITION_EXCEPTION);
-        
+
         final int x = p.x();
         final int y = p.y();
         return x >= 0 && x < board.length 
@@ -158,35 +143,10 @@ public class SquareBoard implements Board {
         checkValidPosition(p1);
         checkValidPosition(p2);
 
-        int dx = Math.abs(p1.x() - p2.x());
-        int dy = Math.abs(p1.y() - p2.y());
-        return (dx <= 1) && (dy <= 1) && !(dx == 0 && dy == 0);
+        final int dx = Math.abs(p1.x() - p2.x());
+        final int dy = Math.abs(p1.y() - p2.y());
+        return dx <= 1 && dy <= 1 && !(dx == 0 && dy == 0);
     }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < getBoardSize(); i++) {
-            for (int j = 0; j < getBoardSize(); j++) {
-                Cell c = board[i][j];
-
-                if (c.isFlagged()) {
-                    sb.append("F "); 
-                } else if (!c.isRevealed()) {
-                    sb.append(". "); 
-                } else if (c.hasContent()) {
-                    sb.append(c.getContent()
-                           .map(CellContent::shortString)
-                           .orElse("?")).append(" ");
-                } else {
-                    sb.append(c.getAdjacentTraps()).append(" ");
-                }
-            }
-            sb.append("\n");
-        }
-        return sb.toString();
-    }
-
 
     private void checkValidCell(final Cell cell) {
         if (!cellPositions.containsKey(cell)) {

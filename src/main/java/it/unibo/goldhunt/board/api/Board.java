@@ -19,7 +19,7 @@ public interface Board {
     List<Cell> getBoardCells();
 
     /**
-     * Returns the cell in the specified {@link Position}
+     * Returns the cell in the specified {@link Position}.
      * 
      * @param p the cell's position
      * @return the cell in position {@code p}
@@ -37,16 +37,6 @@ public interface Board {
      * @throws IllegalArgumentException if the cell is not in the board
      */
     Position getCellPosition(Cell cell);
-
-    /**
-     * Places a cell in the specified position in the board.
-     * 
-     * @param cell the cell to place in the board
-     * @param p the position in which the cell is placed
-     * @throws NullPointerException if {@code cell} or {@code p} are null
-     * @throws IndexOutOfBoundsException if {@code p} is out of the board's bounds
-     */
-    void setCell(Cell cell, Position p);
 
     /**
      * Returns a {@link List} containing the adjacent cells
@@ -101,7 +91,7 @@ public interface Board {
      * @return true if the positions are adjacent, false otherwise
      * @throws NullPointerException if {@code p1} or {@code p2} are {@code null}
      * @throws IndexOutOfBoundsException if at least one of the positions
-     * is out of the board's bounds
+     *     is out of the board's bounds
      */
     boolean isAdjacent(Position p1, Position p2);
 

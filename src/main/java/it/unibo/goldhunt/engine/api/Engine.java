@@ -15,5 +15,5 @@ public interface Engine {
 
     ActionResult toggleFlag(Position p);
 
-    ActionResult move(Position target);
+    ActionResult move(Position newPos);
 }
