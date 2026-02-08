@@ -60,6 +60,7 @@ public final class SquareBoard implements Board {
     public List<Cell> getBoardCells() {
         return Arrays.stream(board)
             .flatMap(Arrays::stream)
+            .filter(Objects::nonNull)
             .toList();
     }
 
