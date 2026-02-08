@@ -122,4 +122,13 @@ public final class PlayerImpl implements PlayerOperations {
     public PlayerImpl useItem(final ItemTypes item, final int quantity) {
         return new PlayerImpl(this.position, this.lives, this.gold, this.inventory.remove(item, quantity));
     }
+
+
+    @Override
+    public PlayerOperations withInventory(Inventory inventory) {
+        if (inventory == null) {
+            throw new IllegalArgumentException("inventory can't be null");
+        }
+        return new PlayerImpl(this.position, this.lives, this.gold, inventory);
+    }
 }

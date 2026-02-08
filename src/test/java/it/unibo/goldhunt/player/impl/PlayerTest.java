@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.items.api.ItemTypes;
-//import it.unibo.goldhunt.items.api.ItemTypes;
 import it.unibo.goldhunt.player.api.Inventory;
 
 public class PlayerTest {
@@ -267,5 +266,34 @@ public class PlayerTest {
         assertTrue(string.contains("gold="));
         assertTrue(string.contains("position="));
         assertTrue(string.contains("inventory="));
+    }
+
+    @Test
+    void withInventoryShouldThrowIfNull() {
+        final var player = basicPlayer();
+        assertThrows(IllegalArgumentException.class, 
+            () -> player.withInventory(null)
+        );
+    }
+
+    @Test
+    void withInventoryShouldReplaceInventoryInNewInstance() {
+        final var player = basicPlayer();
+        final Inventory newInv = emptyInventory().add(StubItem.SHIELD, 1);
+        final var updated = player.withInventory(newInv);
+        assertNotSame(player, updated);
+        assertSame(newInv, updated.inventory());
+    }
+
+    @Test
+    void withInventoryShouldNotChangeOtherFields() {
+        final var inventory = emptyInventory();
+        final var player = new PlayerImpl(pos(4, 7), 2, 8, inventory);
+        final Inventory newInv = emptyInventory().add(StubItem.SHIELD, 1);
+        final var updated = player.withInventory(newInv);
+        assertEquals(player.position(), updated.position());
+        assertEquals(player.livesCount(), updated.livesCount());
+        assertEquals(player.goldCount(), updated.goldCount());
+        assertSame(newInv, updated.inventory());
     }
 }

@@ -193,11 +193,6 @@ public class EngineTest {
         }
 
         @Override
-        public void setCell(Cell cell, Position p) {
-            throw new UnsupportedOperationException("Unimplemented method 'setCell'");
-        }
-
-        @Override
         public List<Cell> getAdjacentCells(Position p) {
             throw new UnsupportedOperationException("Unimplemented method 'getAdjacentCells'");
         }

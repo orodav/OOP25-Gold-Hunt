@@ -15,8 +15,10 @@ import it.unibo.goldhunt.board.api.Cell;
 import it.unibo.goldhunt.engine.api.MovementRules;
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.items.api.CellContent;
+import it.unibo.goldhunt.items.api.ItemTypes;
 import it.unibo.goldhunt.player.api.Inventory;
 import it.unibo.goldhunt.player.api.Player;
+import it.unibo.goldhunt.player.api.PlayerOperations;
 import it.unibo.goldhunt.player.impl.InventoryImpl;
 
 public class MovementRulesTest {
@@ -27,13 +29,30 @@ public class MovementRulesTest {
         return new Position(x, y);
     }
 
-    private static final class BasicPlayer implements Player {
+    private static final class BasicPlayer implements PlayerOperations {
 
         private final Position position;
+        private final Inventory inventory;
 
         BasicPlayer(final Position position) {
+            if (position == null) {
+                throw new IllegalArgumentException("position can't be null");
+            }
             this.position = position;
+            this.inventory = new InventoryImpl();
         }
+
+        BasicPlayer(final Position position, final Inventory inventory) {
+            if (position == null) {
+                throw new IllegalArgumentException("position can't be null");
+            }
+            if (inventory == null) {
+                throw new IllegalArgumentException("inventory can't be null");
+            }
+            this.position = position;
+            this.inventory = inventory;
+        }
+
         @Override
         public Position position() {
             return this.position;
@@ -51,7 +70,39 @@ public class MovementRulesTest {
 
         @Override
         public Inventory inventory() {
-            return new InventoryImpl();
+            return this.inventory;
+        }
+        @Override
+        public PlayerOperations withInventory(final Inventory inventory) {
+        if (inventory == null) {
+            throw new IllegalArgumentException("inventory can't be null");
+        }
+        return new BasicPlayer(this.position, inventory);
+    }
+
+        @Override
+        public PlayerOperations moveTo(Position p) {
+            throw new UnsupportedOperationException("Unimplemented method 'moveTo'");
+        }
+
+        @Override
+        public PlayerOperations addGold(int num) {
+            throw new UnsupportedOperationException("Unimplemented method 'addGold'");
+        }
+
+        @Override
+        public PlayerOperations addLives(int num) {
+            throw new UnsupportedOperationException("Unimplemented method 'addLives'");
+        }
+
+        @Override
+        public PlayerOperations addItem(ItemTypes item, int quantity) {
+            throw new UnsupportedOperationException("Unimplemented method 'addItem'");
+        }
+
+        @Override
+        public PlayerOperations useItem(ItemTypes item, int quantity) {
+            throw new UnsupportedOperationException("Unimplemented method 'useItem'");
         }
 
     }
@@ -160,11 +211,6 @@ public class MovementRulesTest {
                 throw new IllegalArgumentException("position can't be null");
             }
             return p;
-        }
-
-        @Override
-        public void setCell(Cell cell, Position p) {
-            throw new UnsupportedOperationException("Unimplemented method 'setCell'");
         }
 
         @Override
