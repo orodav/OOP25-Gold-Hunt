@@ -25,12 +25,4 @@ public class Trap implements Revealable{
     public String shortString() {
         return "T";
     }
-
-
-    @Override
-    public boolean isTrap() {
-        return true;
-    }
-
-    
 }
