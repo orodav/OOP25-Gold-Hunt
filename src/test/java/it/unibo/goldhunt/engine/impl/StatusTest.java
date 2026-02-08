@@ -19,62 +19,119 @@ public class StatusTest {
     }
 
     @Test
+    void shouldThrowIfConstructorDependenciesNull() {
+        assertThrows(IllegalArgumentException.class, 
+            () -> new StatusImpl(null, GameMode.LEVEL, 1)
+        );
+        assertThrows(IllegalArgumentException.class,
+            () -> new StatusImpl(LevelState.PLAYING, null, 1)
+        );
+    }
+
+    @Test
+    void shouldThrowIfConstructorLevelNegative() {
+        assertThrows(IllegalArgumentException.class, 
+            () -> new StatusImpl(LevelState.PLAYING, GameMode.LEVEL, -1)
+        );
+    }
+
+    @Test
     void shouldChangeLevelState() {
-        final StatusImpl prevState = (StatusImpl) StatusImpl.createStartingState();
+        final StatusImpl prevState = new StatusImpl(
+            LevelState.PLAYING,
+            GameMode.LEVEL,
+            1
+        );
         final Status updated = prevState.withLevelState(LevelState.WON);
         assertEquals(LevelState.WON, updated.levelState());
         assertEquals(prevState.gameMode(), updated.gameMode());
         assertEquals(prevState.levelNumber(), updated.levelNumber());
+        assertNotSame(prevState, updated);
+        assertEquals(LevelState.PLAYING, prevState.levelState());
     }
 
     @Test
     void shouldChangeGameMode() {
-        final StatusImpl prevState = (StatusImpl) StatusImpl.createStartingState();
+        final StatusImpl prevState = new StatusImpl(
+            LevelState.PLAYING, 
+            GameMode.LEVEL, 
+            1
+        );
         final Status updated = prevState.withGameMode(GameMode.DIFFICULTY);
         assertEquals(GameMode.DIFFICULTY, updated.gameMode());
         assertEquals(prevState.levelState(), updated.levelState());
         assertEquals(prevState.levelNumber(), updated.levelNumber());
+        assertNotEquals(prevState, updated);
+        assertEquals(GameMode.LEVEL, prevState.gameMode());
     }
 
     @Test
     void shouldChangeLevelNumber() {
-        final StatusImpl prevState = (StatusImpl) StatusImpl.createStartingState();
+        final StatusImpl prevState = new StatusImpl(
+            LevelState.PLAYING, 
+            GameMode.LEVEL, 
+            1
+        );
         final Status updated = prevState.withLevelNumber(3);
         assertEquals(3, updated.levelNumber());
         assertEquals(prevState.levelState(), updated.levelState());
         assertEquals(prevState.gameMode(), updated.gameMode());
+        assertNotSame(prevState, updated);
+        assertEquals(1, prevState.levelNumber());
     }
 
-    /*
     @Test
-    void shouldReturnNewInstanceWhenChangingState() {
-        final StatusImpl prevState = (StatusImpl) StatusImpl.createStartingState();
-        final Status updated = prevStatwith(LevelState.LOSS);
-        assertNotSame(prevState, updated);
-        assertEquals(LevelState.PLAYING, prevState.levelState());
-        assertEquals(LevelState.LOSS, updated.levelState());
-        assertEquals(1, prevState.levelNumber());
-    } */
-
-    /*@Test
-    void shouldChainUpdatesCorrectly() {
-        final StatusImpl prevState = (StatusImpl) StatusImpl.createStartingState();
-        final Status nextState = prevStatwith(LevelState.LOSS);
-        final Status nextMode = ((StatusImpl) nextState).withGameMode(GameMode.LEVEL);
-        final Status updated = ((StatusImpl) nextModewith(3);
-        assertEquals(LevelState.LOSS, updated.levelState());
-        assertEquals(GameMode.LEVEL, updated.gameMode());
-        assertEquals(3, updated.levelNumber());
-        assertEquals(LevelState.PLAYING, prevState.levelState());
-        assertEquals(GameMode.LEVEL, prevState.gameMode());
-        assertEquals(1, prevState.levelNumber());
-    } */
-
-    /* test per eventuali equals
-    @Test
-    void shouldBeEqualWhenSameState() {}
+    void withLevelStateShouldThrowIfNull() {
+        final StatusImpl status = new StatusImpl(
+            LevelState.PLAYING, 
+            GameMode.LEVEL, 
+            1
+        );
+        assertThrows(IllegalArgumentException.class, 
+            () -> status.withLevelState(null)
+        );
+    }
 
     @Test
-    void shouldNoteBeEqualWhenDifferentState() {}
-    */
+    void withGameModeShouldThrowIfNull() {
+        final StatusImpl status = new StatusImpl(
+            LevelState.PLAYING, 
+            GameMode.LEVEL, 
+            1
+        );
+        assertThrows(IllegalArgumentException.class, 
+            () -> status.withGameMode(null)
+        );
+    }
+
+    @Test
+    void withLevelNumberShouldThrowIfNegative() {
+        final StatusImpl status = new StatusImpl(
+            LevelState.PLAYING, 
+            GameMode.LEVEL, 
+            1
+        );
+        assertThrows(IllegalArgumentException.class, 
+            () -> status.withLevelNumber(-1)
+        );
+    }
+
+    @Test
+    void shouldChainUpdates() {
+        final StatusImpl prevStatus = new StatusImpl(
+            LevelState.PLAYING, 
+            GameMode.LEVEL, 
+            1
+        );
+        final Status updatedStatus = prevStatus
+            .withGameMode(GameMode.DIFFICULTY)
+            .withLevelNumber(3)
+            .withLevelState(LevelState.WON);
+        assertEquals(LevelState.WON, updatedStatus.levelState());
+        assertEquals(GameMode.DIFFICULTY, updatedStatus.gameMode());
+        assertEquals(3, updatedStatus.levelNumber());
+        assertEquals(LevelState.PLAYING, prevStatus.levelState());
+        assertEquals(GameMode.LEVEL, prevStatus.gameMode());
+        assertEquals(1, prevStatus.levelNumber());
+    }
 }

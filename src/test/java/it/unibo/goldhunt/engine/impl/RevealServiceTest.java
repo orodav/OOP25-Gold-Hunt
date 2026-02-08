@@ -16,65 +16,26 @@ import it.unibo.goldhunt.board.api.Cell;
 import it.unibo.goldhunt.board.api.RevealStrategy;
 import it.unibo.goldhunt.engine.api.ActionEffect;
 import it.unibo.goldhunt.engine.api.ActionResult;
+import it.unibo.goldhunt.engine.api.GameMode;
 import it.unibo.goldhunt.engine.api.LevelState;
-import it.unibo.goldhunt.engine.api.MovementRules;
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.engine.api.Status;
 import it.unibo.goldhunt.items.api.CellContent;
 import it.unibo.goldhunt.player.api.Inventory;
-import it.unibo.goldhunt.player.api.Player;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 import it.unibo.goldhunt.player.impl.InventoryImpl;
 import it.unibo.goldhunt.player.impl.PlayerImpl;
 
-public class EngineTest {
+public class RevealServiceTest {
 
-    private PlayerOperations player;
     private Status status;
     private TestBoard board;
-    private TestRules rules;
     private TestStrategy strategy;
-    private Position start;
-    private Position exit;
+    private PlayerOperations player;
 
     private static PlayerOperations makePlayer(final Position p) {
         final Inventory inventory = new InventoryImpl();
         return new PlayerImpl(p, 3, 0, inventory);
-    }
-
-    private static final class TestRules implements MovementRules {
-        Optional<List<Position>> path = Optional.empty();
-        boolean canEnter = true;
-        Set<Position> warnings = Set.of();
-
-        @Override
-        public Optional<List<Position>> pathCalculation(
-            final Position from,
-            final Position to,
-            final Player player
-        ) {
-            return path;
-        }
-
-        @Override
-        public boolean canEnter(final Position from, final Position to, final Player player) {
-            return canEnter;
-        }
-
-        @Override
-        public boolean mustStopOn(final Position p, final Player player) {
-            return warnings.contains(p);
-        }
-
-        @Override
-        public boolean isReachable(Position from, Position to, Player player) {
-            throw new UnsupportedOperationException("Unimplemented method 'isReachable'");
-        }
-
-        @Override
-        public Optional<Position> nextUnitaryStep(Position from, Position to, Player player) {
-            throw new UnsupportedOperationException("Unimplemented method 'nextUnitaryStep'");
-        }
     }
 
     private static final class TestStrategy implements RevealStrategy {
@@ -90,7 +51,6 @@ public class EngineTest {
     }
 
     private static final class TestCell implements Cell {
-
         private boolean flagged;
         private boolean revealed;
 
@@ -101,26 +61,26 @@ public class EngineTest {
 
         @Override
         public void reveal() {
-            if (!flagged) {
-                revealed = true;
+            if (!this.flagged) {
+                this.revealed = true;
             }
         }
 
         @Override
         public boolean isRevealed() {
-            return revealed;
+            return this.revealed;
         }
 
         @Override
         public void toggleFlag() {
-            if (!revealed) {
-                flagged = !flagged;
+            if (!this.revealed) {
+                this.flagged = !this.flagged;
             }
         }
 
         @Override
         public boolean isFlagged() {
-            return flagged;
+            return this.flagged;
         }
 
         @Override
@@ -226,137 +186,130 @@ public class EngineTest {
     @BeforeEach
     void init() {
         this.status = StatusImpl.createStartingState();
-        this.start = new Position(0, 0);
-        this.exit = new Position(0, 2);
-        this.player = makePlayer(this.start);
-        this.rules = new TestRules();
         this.strategy = new TestStrategy();
+        this.player = makePlayer(new Position(0, 0));
         final Position p00 = new Position(0, 0);
         final Position p01 = new Position(0, 1);
-        final Position p02 = new Position(0, 2);
-        this.board = new TestBoard(
-            Set.of(p00, p01, p02), 
-            Map.of(
-                p00, new TestCell(false, false),
-                p01, new TestCell(false, false),
-                p02, new TestCell(false, false)
-            )
+        final Map<Position, TestCell> cells = Map.of(
+            p00, new TestCell(false, false),
+            p01, new TestCell(false, false)
         );
+        this.board = new TestBoard(Set.of(p00, p01), cells);
     }
 
-    private EngineImpl makeEngine() {
-        return new EngineImpl(
-            this.player, 
-            this.status, 
+    private RevealService makeService() {
+        return new RevealService(
             this.board, 
-            this.rules, 
             this.strategy, 
-            this.start, 
-            this.exit
+            () -> this.status, 
+            () -> this.player
         );
     }
 
     @Test
-    void contructorShouldThrowIfAnyDependencyNull() {
+    void revealShouldThrowIfNull() {
         assertThrows(IllegalArgumentException.class, 
-            () -> new EngineImpl(
-                null,
-                this.status,
-                this.board,
-                this.rules,
-                this.strategy,
-                this.start,
-                this.exit
-            )
-        );
-        assertThrows(IllegalArgumentException.class, 
-            () -> new EngineImpl(
-                this.player,
-                null,
-                this.board,
-                this.rules,
-                this.strategy,
-                this.start,
-                this.exit
-            )
-        );
-        assertThrows(IllegalArgumentException.class, 
-            () -> new EngineImpl(
-                this.player,
-                this.status,
-                null,
-                this.rules,
-                this.strategy,
-                this.start,
-                this.exit
-            )
-        );
-        assertThrows(IllegalArgumentException.class, 
-            () -> new EngineImpl(
-                this.player,
-                this.status,
-                this.board,
-                null,
-                this.strategy,
-                this.start,
-                this.exit
-            )
-        );
-        assertThrows(IllegalArgumentException.class, 
-            () -> new EngineImpl(
-                this.player,
-                this.status,
-                this.board,
-                this.rules,
-                null,
-                this.start,
-                this.exit
-            )
-        );
-        assertThrows(IllegalArgumentException.class, 
-            () -> new EngineImpl(
-                this.player,
-                this.status,
-                this.board,
-                this.rules,
-                this.strategy,
-                null,
-                this.exit
-            )
-        );
-        assertThrows(IllegalArgumentException.class, 
-            () -> new EngineImpl(
-                this.player,
-                this.status,
-                this.board,
-                this.rules,
-                this.strategy,
-                this.start,
-                null
-            )
+            () -> makeService().reveal(null)
         );
     }
 
     @Test
-    void revealShouldCallStrategyAndReturnApplied() {
-        final EngineImpl engine = makeEngine();
-        final Position p = new Position(0, 1);
-        final ActionResult ar = engine.reveal(p);
+    void revealShouldReturnBlockedIfNotPlaying() {
+        this.status = new StatusImpl(LevelState.WON, GameMode.LEVEL, 1);
+        final ActionResult ar = makeService().reveal(new Position(0, 0));
+        assertEquals(LevelState.WON, ar.levelState());
+        assertEquals(ActionEffect.BLOCKED, ar.effect());
+        assertEquals(0, this.strategy.calls);
+    }
+
+    @Test
+    void revealShouldReturnInvalidIfOutOfBounds() {
+        final ActionResult ar = makeService().reveal(new Position(13, 22));
         assertEquals(LevelState.PLAYING, ar.levelState());
+        assertEquals(ActionEffect.INVALID, ar.effect());
+        assertEquals(0, this.strategy.calls);
+    }
+
+    @Test 
+    void revealShouldBlockIfCellAlreadyFlagged() {
+        final Position p = new Position(0,0);
+        final Map<Position, TestCell> newCells = new HashMap<>();
+        newCells.put(p, new TestCell(true, false));
+        newCells.put(new Position(0, 1), new TestCell(false, false));
+        this.board = new TestBoard(Set.of(p, new Position(0, 1)), newCells);
+        final ActionResult ar = makeService().reveal(p);
+        assertEquals(ActionEffect.BLOCKED, ar.effect());
+        assertEquals(0, this.strategy.calls);
+    }
+
+    @Test
+    void revealShouldBlockIfCellAlreadyRevealed() {
+        final Position p = new Position(0, 0);
+        final Map<Position, TestCell> newCells = new HashMap<>();
+        newCells.put(p, new TestCell(false, true));
+        newCells.put(new Position(0, 1), new TestCell(false, false));
+        this.board = new TestBoard(Set.of(p, new Position(0, 1)), newCells);
+        final ActionResult ar = makeService().reveal(p);
+        assertEquals(ActionEffect.BLOCKED, ar.effect());
+        assertEquals(0, this.strategy.calls);
+    }
+
+    @Test
+    void revealShouldApplyStrategyIfOk() {
+        final Position p = new Position(0, 0);
+        final ActionResult ar = makeService().reveal(p);
         assertEquals(ActionEffect.APPLIED, ar.effect());
         assertEquals(1, this.strategy.calls);
         assertEquals(p, this.strategy.lastPos);
     }
 
     @Test
-    void toggleFlagShouldFlipFlagAndReturnConsequential() {
-        final EngineImpl engine = makeEngine();
-        final Position p = new Position(0, 1);
-        final ActionResult firstAR = engine.toggleFlag(p);
-        assertEquals(ActionEffect.APPLIED, firstAR.effect());
-        assertTrue(this.board.getCell(p).isFlagged());
-        final ActionResult secondAR = engine.toggleFlag(p);
-        assertEquals(ActionEffect.REMOVED, secondAR.effect());
-        assertFalse(this.board.getCell(p).isFlagged());
+    void toggleFlagShouldThrowIfNull() {
+        assertThrows(IllegalArgumentException.class, 
+            () -> makeService().toggleFlag(null)
+        );
+    }
+
+    @Test
+    void toggleFlagShouldReturnBlockedIfNotPlaying() {
+        this.status = new StatusImpl(LevelState.WON, GameMode.LEVEL, 1);
+        final ActionResult ar = makeService().toggleFlag(new Position(0, 0));
+        assertEquals(LevelState.WON, ar.levelState());
+        assertEquals(ActionEffect.BLOCKED, ar.effect());
+    }
+
+    @Test
+    void toggleFlagShouldReturnInvalidIfOutOfBounds() {
+        final ActionResult ar = makeService().toggleFlag(new Position(12, 23));
+        assertEquals(ActionEffect.INVALID, ar.effect());
+    }
+
+    @Test
+    void toggleFlagShouldBlockIfCellRevealed() {
+        final Position p = new Position(0, 0);
+        final Map<Position, TestCell> newCells = new HashMap<>();
+        newCells.put(p, new TestCell(false, true));
+        newCells.put(new Position(0, 1), new TestCell(false, false));
+        this.board = new TestBoard(Set.of(p, new Position(0, 1)), newCells);
+        final ActionResult ar = makeService().reveal(p);
+        assertEquals(ActionEffect.BLOCKED, ar.effect());
+        assertFalse(((TestCell) this.board.getCell(p)).isFlagged());
+    }
+
+    @Test
+    void toggleFlagShouldApplyWhenAddingFlag() {
+        final Position p = new Position(0, 0);
+        final ActionResult ar = makeService().toggleFlag(p);
+        assertEquals(ActionEffect.APPLIED, ar.effect());
+        assertTrue(((TestCell) this.board.getCell(p)).isFlagged());
+    }
+
+    @Test
+    void toggleFlagShouldRemoveWhenRemovingFlag() {
+        final Position p = new Position(0, 0);
+        makeService().toggleFlag(p);
+        final ActionResult ar = makeService().toggleFlag(p);
+        assertEquals(ActionEffect.REMOVED, ar.effect());
+        assertFalse(((TestCell) this.board.getCell(p)).isFlagged());
     }
 }

@@ -12,4 +12,10 @@ public interface Status {
     GameMode gameMode();
 
     int levelNumber();
+
+    Status withLevelState(LevelState newState);
+
+    Status withGameMode(GameMode newMode);
+
+    Status withLevelNumber(int newLevel);
 }
