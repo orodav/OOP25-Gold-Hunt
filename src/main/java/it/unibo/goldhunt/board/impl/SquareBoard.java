@@ -32,6 +32,8 @@ public final class SquareBoard implements Board {
      * 
      * @param boardSize the board's width and height
      * @param cellFactory the cell factory
+     * @throws IllegalArgumentException if {@code boardSize} is less than or equal to 0
+     * @throws NullPointerException if {@code cellFactory} is {@code null}
      */
     SquareBoard(final int boardSize, final CellFactory cellFactory) {
         if (boardSize <= 0) {
