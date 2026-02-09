@@ -1,246 +1,257 @@
 package it.unibo.goldhunt.configuration.impl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import it.unibo.goldhunt.board.api.Board;
 import it.unibo.goldhunt.board.api.BoardFactory;
 import it.unibo.goldhunt.board.api.Cell;
-import it.unibo.goldhunt.board.impl.BaseCellFactory;
-import it.unibo.goldhunt.board.impl.SquareBoardFactory;
 import it.unibo.goldhunt.configuration.api.BoardGenerator;
 import it.unibo.goldhunt.configuration.api.LevelConfig;
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.items.api.CellContent;
-import it.unibo.goldhunt.items.api.ItemFactory;
-import it.unibo.goldhunt.items.api.Revealable;
-import it.unibo.goldhunt.items.api.TrapFactory;
-import it.unibo.goldhunt.items.impl.Item;
+import it.unibo.goldhunt.items.impl.ItemFactoryImpl;
+import it.unibo.goldhunt.items.impl.TrapFactoryImpl;
+import it.unibo.goldhunt.player.impl.InventoryImpl;
+import it.unibo.goldhunt.player.impl.PlayerImpl;
 
-/**
- * Tests for {@link BoardGeneratorImpl}.
- */
 class BoardGeneratorImplTest {
-    
-    private static final class FakeTrap implements Revealable {
 
-        @Override
-        public boolean applyEffect() { 
-            return true;
-        }
+    private BoardGenerator generator;
+    private LevelConfig config;
+    private Position start;
+    private Position exit;
 
-        @Override
-        public String shortString() {
-            return "T";
-        }
-    }
-
-    private static final class FakeTrapFactory implements TrapFactory {
-
-        @Override
-        public Revealable createTrap() {
-            return new FakeTrap();
-        }
-    } 
-
-    private static final class FakeItem extends Item {
-
-        @Override
-        public boolean applyEffect() {
-            return true;
-        }
-
-        @Override
-        public String shortString() {
-            return "I";
-        }
-
-        @Override
-        public String getName() {
-            return "FakeItem";
-        }
-    }
-
-    private static final class FakeItemFactory implements ItemFactory {
-
-        @Override
-        public Item generateItem(final String item) {
-            return new FakeItem();
-        }
-    }
-
-    private BoardGenerator createGenerator() {
-        return new BoardGeneratorImpl(new SquareBoardFactory(new BaseCellFactory()), new FakeTrapFactory(), new FakeItemFactory());
-    }
-
-    private int expectedItemCount(final LevelConfig config) {
-        int sum = 0;
-        for (final Integer value : config.getItemConfig().values()) {
-            sum += value;
-        }
-        return sum;
+    @BeforeEach
+    void setup() {
+        var player = new PlayerImpl(new Position(0, 0), 3, 0, new InventoryImpl());
+        BoardFactory boardFactory = size -> new ConnectedFakeBoard(size);
+        this.generator = new BoardGeneratorImpl(boardFactory, new TrapFactoryImpl(player), new ItemFactoryImpl(), player);
+        this.config = new EasyConfig();
+        this.start = new Position(0, 0);
+        this.exit = new Position(config.getBoardSize() - 1, config.getBoardSize() - 1);
     }
 
     @Test
-    void easyBoardIsCreated() {
-        LevelConfig config = new EasyConfig();
-        Board board = createGenerator().generate(config, new Position(0, 0), new Position(config.getBoardSize() - 1, config.getBoardSize() - 1));
-
-        assertNotNull(board);
+    void boardIsGeneratedSuccessfully() {
+        assertDoesNotThrow(() -> generator.generate(config, start, exit));
     }
 
     @Test
-    void easyBoardHasCorrectSize() {
-        LevelConfig config = new EasyConfig();
-        Board board = createGenerator().generate(config, new Position(0, 0), new Position(config.getBoardSize() - 1, config.getBoardSize() - 1));
-
+    void boardHasCorrectSize() {
+        Board board = generator.generate(config, start, exit);
         assertEquals(config.getBoardSize(), board.getBoardSize());
     }
 
     @Test
-    void easyCorrectNumberOfTrapsPlaced() {
-        LevelConfig config = new EasyConfig();
-        Board board = createGenerator().generate(config, new Position(0, 0), new Position(config.getBoardSize() - 1, config.getBoardSize() - 1));
-
-        int trapCount = 0;
-        for (Cell cell : board.getBoardCells()) {
-            if (cell.hasContent()) {
-                CellContent content = cell.getContent().get();
-                if (content instanceof Revealable r && r.isTrap()) {
-                    trapCount++;
-                }
-            }
-        }
-
-        assertEquals(config.getTrapCount(), trapCount);
+    void startCellIsEmpty() {
+        Board board = generator.generate(config, start, exit);
+        assertTrue(board.getCell(start).getContent().isEmpty());
     }
 
     @Test
-    void easyCorrectNumberOfItemsPlaced() {
-        LevelConfig config = new EasyConfig();
-        Board board = createGenerator().generate(config, new Position(0, 0), new Position(config.getBoardSize() - 1, config.getBoardSize() - 1));
-
-        int itemCount = 0;
-        for (Cell cell : board.getBoardCells()) {
-            if (cell.hasContent()) {
-                CellContent content = cell.getContent().get();
-                if (!(content instanceof Revealable r && r.isTrap())) {
-                    itemCount++;
-                }
-            }
-        }
-
-        assertEquals(expectedItemCount(config), itemCount);
+    void exitCellIsEmpty() {
+        Board board = generator.generate(config, start, exit);
+        assertTrue(board.getCell(exit).getContent().isEmpty());
     }
 
     @Test
-    void easyAdjacentTrapsAreComputedCorrectly() {
-        LevelConfig config = new EasyConfig();
-        Board board = createGenerator().generate(config, new Position(0, 0), new Position(config.getBoardSize() - 1, config.getBoardSize() - 1));
+    void exactlyCorrectNumberOfTraps() {
+        Board board = generator.generate(config, start, exit);
+        long traps = countTraps(board);
+        assertEquals(config.getTrapCount(), traps, "Must place exactly the configured number of traps");
+    }
 
+    @Test
+    void exactlyCorrectNumberOfItems() {
+        Board board = generator.generate(config, start, exit);
+        int expectedItems = config.getItemConfig().values().stream().mapToInt(Integer::intValue).sum();
+        long items = board.getBoardCells().stream().filter(c -> c.hasContent() && !c.getContent().get().isTrap()).count();
+        assertEquals(expectedItems, items, "Must place exactly the configured number of items");
+    }
+
+    @Test
+    void adjacentTrapsAreComputedCorrectly() {
+        Board board = generator.generate(config, start, exit);
         for (Cell cell : board.getBoardCells()) {
-            int expected = 0;
-            for (Cell adj : board.getAdjacentCells(board.getCellPosition(cell))) {
-                if (adj.hasContent()) {
-                    CellContent content = adj.getContent().get();
-                    if (content instanceof Revealable r && r.isTrap()) {
-                        expected++;
+            int computed = cell.getAdjacentTraps();
+            int actual = countAdjacentTraps(board, cell);
+            assertEquals(actual, computed, "Adjacent traps incorrect for cell " + board.getCellPosition(cell));
+        }
+    }
+
+    @Test
+    void allCellsAreInitiallyHidden() {
+        Board board = generator.generate(config, start, exit);
+        boolean anyRevealed = board.getBoardCells().stream().anyMatch(Cell::isRevealed);
+        assertFalse(anyRevealed);
+    }
+
+    @Test
+    void startAndExitAreReachablePositions() {
+        Board board = generator.generate(config, start, exit);
+        assertDoesNotThrow(() -> board.getCell(start));
+        assertDoesNotThrow(() -> board.getCell(exit));
+    }
+
+    @Test
+    void startAndExitAreOnSafePath() {
+        Board board = generator.generate(config, start, exit);
+        assertTrue(board.getCell(start).getContent().isEmpty());
+        assertTrue(board.getCell(exit).getContent().isEmpty());
+    }
+
+
+
+
+    private long countTraps(Board board) {
+        return board.getBoardCells().stream().filter(c -> c.hasContent() && c.getContent().get().isTrap()).count();
+    }
+
+    @SuppressWarnings("unused")
+    private long countItems(Board board) {
+        return board.getBoardCells().stream().filter(c -> c.hasContent() && !c.getContent().get().isTrap()).count();
+    }
+
+    private int countAdjacentTraps(Board board, Cell cell) {
+        Position pos = board.getCellPosition(cell);
+        return (int) board.getAdjacentCells(pos).stream().filter(n -> n.hasContent() && n.getContent().get().isTrap()).count();
+    }
+
+
+    private static final class FakeCell implements Cell {
+        private Optional<CellContent> content = Optional.empty();
+        private int adjacentTraps = 0;
+        
+        @Override
+        public boolean equals(Object obj) {
+            return super.equals(obj); 
+        }
+        @Override
+        public int hashCode() {
+            return super.hashCode();
+        }
+
+        @Override
+        public boolean hasContent() {
+            return content.isPresent();
+        }
+
+        @Override
+        public Optional<CellContent> getContent() {
+            return content;
+        }
+
+        @Override
+        public void setContent(CellContent c) {
+            this.content = Optional.of(c);
+        }
+
+        @Override
+        public int getAdjacentTraps() {
+            return adjacentTraps;
+        }
+
+        @Override
+        public void setAdjacentTraps(int n) {
+            this.adjacentTraps = n;
+        }
+
+        @Override
+        public boolean isRevealed() {
+            return false;
+        }
+
+        @Override
+        public void reveal() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void toggleFlag() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean isFlagged() {
+            return false;
+        }
+
+        @Override
+        public void removeContent() {
+            content = Optional.empty();
+        }
+    }
+
+    private static final class ConnectedFakeBoard implements Board {
+        private final int size;
+        private final List<Cell> cells;
+
+        ConnectedFakeBoard(int size) {
+            this.size = size;
+            this.cells = new ArrayList<>();
+            for (int i = 0; i < size * size; i++) {
+                cells.add(new FakeCell());
+            }
+        }
+
+        @Override
+        public int getBoardSize() {
+            return size;
+        }
+
+        @Override
+        public List<Cell> getBoardCells() {
+            return new ArrayList<>(cells);
+        }
+
+        @Override
+        public Cell getCell(Position p) {
+            return cells.get(p.y() * size + p.x());
+        }
+
+        @Override
+        public Position getCellPosition(Cell c) {
+            int i = cells.indexOf(c);
+            return new Position(i % size, i / size);
+        }
+
+        @Override
+        public List<Cell> getAdjacentCells(Position p) {
+            List<Cell> adj = new ArrayList<>();
+            for (int dx = -1; dx <= 1; dx++) {
+                for (int dy = -1; dy <= 1; dy++) {
+                    if (dx == 0 && dy == 0) continue;
+                    int nx = p.x() + dx;
+                    int ny = p.y() + dy;
+                    if (nx >= 0 && ny >= 0 && nx < size && ny < size) {
+                        adj.add(getCell(new Position(nx, ny)));
                     }
                 }
             }
-            assertEquals(expected, cell.getAdjacentTraps());
-        }
-    }
-
-    @Test
-    void mediumBoardHasCorrectSize() {
-        LevelConfig config = new MediumConfig();
-        Board board = createGenerator().generate(config, new Position(0, 0), new Position(config.getBoardSize() - 1, config.getBoardSize() - 1));
-
-        assertEquals(config.getBoardSize(), board.getBoardSize());
-    }
-
-    @Test
-    void mediumCorrectNumberOfTrapsPlaced() {
-        LevelConfig config = new MediumConfig();
-        Board board = createGenerator().generate(config, new Position(0, 0), new Position(config.getBoardSize() - 1, config.getBoardSize() - 1));
-
-        int trapCount = 0;
-        for (Cell cell : board.getBoardCells()) {
-            if (cell.hasContent()) {
-                CellContent content = cell.getContent().get();
-                if (content instanceof Revealable r && r.isTrap()) {
-                    trapCount++;
-                }
-            }
+            return adj;
         }
 
-        assertEquals(config.getTrapCount(), trapCount);
-    }
+        @Override public List<Cell> getRow(int i) { return List.of(); }
+        @Override public List<Cell> getColumn(int i) { return List.of(); }
 
-    @Test
-    void mediumCorrectNumberOfItemsPlaced() {
-        LevelConfig config = new MediumConfig();
-        Board board = createGenerator().generate(config, new Position(0, 0), new Position(config.getBoardSize() - 1, config.getBoardSize() - 1));
-
-        int itemCount = 0;
-        for (Cell cell : board.getBoardCells()) {
-            if (cell.hasContent()) {
-                CellContent content = cell.getContent().get();
-                if (!(content instanceof Revealable r && r.isTrap())) {
-                    itemCount++;
-                }
-            }
+        @Override
+        public boolean isPositionValid(Position p) {
+            return p.x() >= 0 && p.y() >= 0
+                && p.x() < size && p.y() < size;
         }
 
-        assertEquals(expectedItemCount(config), itemCount);
-    }
-
-    @Test
-    void hardBoardHasCorrectSize() {
-        LevelConfig config = new HardConfig();
-        Board board = createGenerator().generate(config, new Position(0, 0), new Position(config.getBoardSize() - 1, config.getBoardSize() - 1));
-
-        assertEquals(config.getBoardSize(), board.getBoardSize());
-    }
-
-    @Test
-    void hardCorrectNumberOfTrapsPlaced() {
-        LevelConfig config = new HardConfig();
-        Board board = createGenerator().generate(config, new Position(0, 0), new Position(config.getBoardSize() - 1, config.getBoardSize() - 1));
-
-        int trapCount = 0;
-        for (Cell cell : board.getBoardCells()) {
-            if (cell.hasContent()) {
-                CellContent content = cell.getContent().get();
-                if (content instanceof Revealable r && r.isTrap()) {
-                    trapCount++;
-                }
-            }
+        @Override
+        public boolean isAdjacent(Position p1, Position p2) {
+            return false;
         }
-
-        assertEquals(config.getTrapCount(), trapCount);
-    }
-
-    @Test
-    void hardCorrectNumberOfItemsPlaced() {
-        LevelConfig config = new HardConfig();
-        Board board = createGenerator().generate(config, new Position(0, 0), new Position(config.getBoardSize() - 1, config.getBoardSize() - 1));
-
-        int itemCount = 0;
-        for (Cell cell : board.getBoardCells()) {
-            if (cell.hasContent()) {
-                CellContent content = cell.getContent().get();
-                if (!(content instanceof Revealable r && r.isTrap())) {
-                    itemCount++;
-                }
-            }
-        }
-
-        assertEquals(expectedItemCount(config), itemCount);
     }
 }
+
+

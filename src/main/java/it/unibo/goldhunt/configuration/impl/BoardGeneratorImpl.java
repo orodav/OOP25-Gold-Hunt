@@ -3,6 +3,7 @@ package it.unibo.goldhunt.configuration.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -17,16 +18,19 @@ import it.unibo.goldhunt.configuration.api.LevelConfig;
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.items.api.ItemFactory;
 import it.unibo.goldhunt.items.api.TrapFactory;
-import it.unibo.goldhunt.items.api.CellContent;
+import it.unibo.goldhunt.player.api.PlayerOperations;
 
 /**
  * This class is the implementation of BoardGenerator.
  */
 public class BoardGeneratorImpl implements BoardGenerator {
+
+    private static final int MAX_SAFE_PATH_ATTEMPTS = 100;
     
     private final BoardFactory boardFactory;
     private final TrapFactory trapFactory;
     private final ItemFactory itemFactory;
+    private final PlayerOperations player;
     
     /**
      * Creates a new {@code BoardGeneratorImpl}.
@@ -34,10 +38,11 @@ public class BoardGeneratorImpl implements BoardGenerator {
      * @param boardFactory the factory used to create board cells
      * @param itemFactory the factory used to create items placed on the board
      */
-    public BoardGeneratorImpl(BoardFactory boardFactory, TrapFactory trapFactory, ItemFactory itemFactory) {
-        this.boardFactory = boardFactory;
-        this.trapFactory = trapFactory;
-        this.itemFactory = itemFactory;
+    public BoardGeneratorImpl(final BoardFactory boardFactory, final TrapFactory trapFactory, final ItemFactory itemFactory, final PlayerOperations player) {
+        this.boardFactory = Objects.requireNonNull(boardFactory);
+        this.trapFactory = Objects.requireNonNull(trapFactory);
+        this.itemFactory = Objects.requireNonNull(itemFactory);
+        this.player = Objects.requireNonNull(player);
     }
 
     /**
@@ -45,26 +50,66 @@ public class BoardGeneratorImpl implements BoardGenerator {
      */
     @Override
     public Board generate(LevelConfig config, Position start, Position exit) {
-        Objects.requireNonNull(config);
-        Objects.requireNonNull(start);
-        Objects.requireNonNull(exit);
 
         final Board board = boardFactory.createEmptyBoard(config.getBoardSize());
 
-        final Set<Cell> safePath = computeSafePath(board, start, exit);
+        final int requiredCells = computeRequiredCells(config);
+        final int boardCells = config.getBoardSize() * config.getBoardSize();
 
-        final Set<Cell> occupiedCells = new HashSet<>(safePath);
+        if (requiredCells >= boardCells - 2) {
+            throw new IllegalStateException("Configuration requires too many occupied cells");
+        }
 
-        placeTraps(board, occupiedCells, config);
-        placeItems(board, occupiedCells, config);
+        final int maxPathLength = boardCells - requiredCells;
 
+        Set<Cell> safePath = Set.of();
+        boolean pathFound = false;
+
+        for (int attempt = 0; attempt < MAX_SAFE_PATH_ATTEMPTS && !pathFound; attempt++) {
+            try {
+                safePath = computeSafePath(board, start, exit, maxPathLength);
+                pathFound = true;
+            } catch (IllegalStateException e) {
+
+            }
+        }
+
+        if (!pathFound) {
+            throw new IllegalStateException("Unable to compute a valid safe path after retries");
+        }
+
+        final List<Cell> availableCells = new ArrayList<>();
+        for (Cell cell : board.getBoardCells()) {
+            if (!safePath.contains(cell)) {
+                availableCells.add(cell);
+            }
+        }
+
+        Collections.shuffle(availableCells);
+
+        placeTraps(availableCells, config.getTrapCount());
+        placeItems(availableCells, config.getItemConfig());
+        
         computeAdjacentTraps(board);
 
         return board;
     }
+
+    /**
+     * 
+     * @param config
+     * @return
+     */
+    private int computeRequiredCells(final LevelConfig config) {
+        int required = config.getTrapCount();
+        for (Integer quantity : config.getItemConfig().values()) {
+            required += quantity;
+        }
+        return required;
+    }
     
     /**
-     * Computes a safe path by using a DFS algorithm and stores it 
+     * Computes a safe path by using a BFS algorithm and stores it 
      * in a {@link Set} of {@link Cell}.
      * 
      * @param board the board on which the safepath is computed
@@ -73,14 +118,19 @@ public class BoardGeneratorImpl implements BoardGenerator {
      * @return a {@link Set} containing all cells belonging to the safe path
      * @throws IllegalStateException if no safe path can be found
      */
-    private Set<Cell> computeSafePath(final Board board, final Position start, final Position exit) {
-        
-        final Set<Cell> safePath = new HashSet<>();
-        
-        if (!dfs(board, start, exit, safePath)) {
+    private Set<Cell> computeSafePath(final Board board, final Position start, final Position exit, int maxPathLength) {
+                
+        final List<Position> path = bfs(board, start, exit, maxPathLength);
+
+        if (path.isEmpty()) {
             throw new IllegalStateException("No safe path could be computed");
         }
-        
+
+        final Set<Cell> safePath = new HashSet<>();
+        for (Position p : path) {
+            safePath.add(board.getCell(p));
+        }
+
         return safePath;
     }
 
@@ -97,42 +147,57 @@ public class BoardGeneratorImpl implements BoardGenerator {
      * @param safePath the {@link Set} collecting the cells of the safe path
      * @return true if a path to the exit has been found, false otherwise
      */
-    private boolean dfs(final Board board, final Position current, final Position exit, final Set<Cell> safePath) {
+    private List<Position> bfs(final Board board, final Position start, final Position exit, int maxPathLength) {
         
-        final Cell currentCell = board.getCell(current);
-        safePath.add(currentCell);
+        final List<Position> queue = new ArrayList<>();
+        final Map<Position, Position> parent = new HashMap<>();
+        final Set<Position> visited = new HashSet<>();
 
-        if (current.equals(exit)) {             
-            return true;
-        }
+        queue.add(start);
+        visited.add(start);
 
-        final List<Cell> neighbors = new ArrayList<>(board.getAdjacentCells(current));
-        Collections.shuffle(neighbors);
+        int index = 0;
+        while (index < queue.size()) {
+            final Position current = queue.get(index);
 
-        for (final Cell neighbor : neighbors) {
-            if (!safePath.contains(neighbor)) {
-                final Position neighborPos = board.getCellPosition(neighbor);
-                if (dfs(board, neighborPos, exit, safePath)) {
-                    return true;
+            if (current.equals(exit)) {
+                break;
+            }
+
+            final List<Cell> neighbors = new ArrayList<>(board.getAdjacentCells(current));
+            Collections.shuffle(neighbors);
+
+            for (Cell neighbor : neighbors) {
+                final Position next = board.getCellPosition(neighbor);
+
+                if (!visited.contains(next)) {
+                    visited.add(next);
+                    parent.put(next, current);
+                    queue.add(next);
                 }
             }
+            index++;
         }
 
-        safePath.remove(currentCell);           
-        return false;    
-    }
+        if (!visited.contains(exit)) {
+            return List.of();
+        }
 
-    /**
-     * Returns the cells that are not yet occupied.
-     * 
-     * @param board
-     * @param safePath
-     * @return
-     */
-    private List<Cell> getAvailableCells(final Board board, final Set<Cell> occupiedCells) {
-        return board.getBoardCells().stream().filter(cell -> !occupiedCells.contains(cell)).toList();
-    }
+        final List<Position> path = new ArrayList<>();
+        Position step = exit;
 
+        while (step != null) {
+            path.add(0, step);
+            if (step.equals(start)) break;
+            step = parent.get(step);
+        }
+
+        if (path.size() > maxPathLength) {
+            return List.of();
+        }
+
+        return path;    
+    }
 
     /**
      * Places traps randomly on the board, avoiding the cells of the safe path.
@@ -141,24 +206,16 @@ public class BoardGeneratorImpl implements BoardGenerator {
      * @param safePath the {@link Set} of {@link Cell} that must remain trap-free
      * @param config the level configuration providing the number of traps
      */
-    private void placeTraps(final Board board, final Set<Cell> occupiedCells, final LevelConfig config) {
-        
-        final List<Cell> availableCells = new ArrayList<>(getAvailableCells(board, occupiedCells));
+    private void placeTraps(final List<Cell> availableCells, final int trapCount) {
     
-        Collections.shuffle(availableCells);
-
-        int trapCount = config.getTrapCount();
-
         if (trapCount > availableCells.size()) {
-            throw new IllegalStateException("Not enough free cells for traps");
+            throw new IllegalStateException("Not enough space for traps");
         }
 
         for (int i = 0; i < trapCount; i++) {
-            final Cell cell = availableCells.get(i);
-            cell.setContent(trapFactory.createTrap());
-            occupiedCells.add(cell);
+            availableCells.remove(0).setContent(trapFactory.createTrap(player));
         }
-    }
+    } 
 
     /**
      * Places items randomly on the board, avoiding the cells of the safe path.
@@ -167,29 +224,17 @@ public class BoardGeneratorImpl implements BoardGenerator {
      * @param safePath the {@link Set} of {@link Cell} that must remain trap-free
      * @param config the level configuration providing the number of traps
      */
-    private void placeItems(final Board board, final Set<Cell> occupiedCells, final LevelConfig config) {
+    private void placeItems(List<Cell> available, Map<String, Integer> itemsConfig) {
         
-        final List<Cell> availableCells = new ArrayList<>(getAvailableCells(board, occupiedCells));
+        for (Map.Entry<String, Integer> entry : itemsConfig.entrySet()) {
+            final String symbol = entry.getKey();
+            final int quantity = entry.getValue();
 
-        Collections.shuffle(availableCells);
-
-        Map<String, Integer> items = config.getItemConfig();
-
-        int index = 0;
-        for (final Map.Entry<String, Integer> entry : items.entrySet()) {
-            String symbol = entry.getKey();
-            int quantity = entry.getValue();
-            
             for (int i = 0; i < quantity; i++) {
-                if (index >= availableCells.size()) {
-                    throw new IllegalStateException("Not enough free cells for items");
+                if (available.isEmpty()) {
+                    throw new IllegalStateException("Not enough space for item: " + symbol);
                 }
-
-                final Cell cell = availableCells.get(index);
-                final CellContent content = itemFactory.generateItem(symbol);
-                cell.setContent(content);
-                occupiedCells.add(cell);
-                index++;
+                available.remove(0).setContent(itemFactory.generateItem(symbol));
             }
         }
     }
@@ -201,10 +246,13 @@ public class BoardGeneratorImpl implements BoardGenerator {
      */
     private void computeAdjacentTraps(final Board board) {
         
-        for (final Cell cell : board.getBoardCells()) {
+        for (Cell cell : board.getBoardCells()) {
             int count = 0;
         
-            for (final Cell neighbor : board.getAdjacentCells(board.getCellPosition(cell))) {
+            final Position pos = board.getCellPosition(cell);
+            final List<Cell> neighbors = board.getAdjacentCells(pos);
+            
+            for (Cell neighbor : neighbors) {
                 if (neighbor.hasContent() && neighbor.getContent().get().isTrap()) {
                     count++;
                 }
