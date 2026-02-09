@@ -5,7 +5,7 @@ import java.util.Objects;
 import it.unibo.goldhunt.configuration.api.Difficulty;
 import it.unibo.goldhunt.configuration.api.Level;
 import it.unibo.goldhunt.engine.api.ActionResult;
-import it.unibo.goldhunt.engine.api.Engine;
+import it.unibo.goldhunt.engine.api.EngineWithState;
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.engine.api.Status;
 import it.unibo.goldhunt.player.api.Player;
@@ -15,13 +15,13 @@ public final class GameSession {
 
     private final Difficulty difficulty;
     private final Level level;
-    private final Engine engine;
+    private final EngineWithState engine;
     private final Shop shop;
 
     public GameSession(
         final Difficulty difficulty,
         final Level level,
-        final Engine engine,
+        final EngineWithState engine,
         final Shop shop
     ) {
         this.difficulty = Objects.requireNonNull(difficulty, "difficulty can't be null");
@@ -38,7 +38,7 @@ public final class GameSession {
         return this.level;
     }
 
-    public Engine engine() {
+    public EngineWithState engine() {
         return this.engine;
     }
 
@@ -47,11 +47,11 @@ public final class GameSession {
     }
 
     public Player player() {
-        return this.engine.player();
+        return this.engine.state().player();
     }
 
     public Status status() {
-        return this.engine.status();
+        return this.engine.state().status();
     }
 
     public ActionResult move(final Position p) {

@@ -16,9 +16,4 @@ public interface Engine {
     ActionResult toggleFlag(Position p);
 
     ActionResult move(Position newPos);
-
-    /**
-     * Returns a read-only view of the current game state.
-     */
-    GameState state();
 }

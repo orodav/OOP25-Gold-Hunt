@@ -2,16 +2,18 @@ package it.unibo.goldhunt.engine.impl;
 
 import it.unibo.goldhunt.board.api.Board;
 import it.unibo.goldhunt.board.api.RevealStrategy;
+import it.unibo.goldhunt.engine.api.ActionEffect;
 import it.unibo.goldhunt.engine.api.ActionResult;
-import it.unibo.goldhunt.engine.api.Engine;
+import it.unibo.goldhunt.engine.api.EngineWithState;
 import it.unibo.goldhunt.engine.api.GameState;
+import it.unibo.goldhunt.engine.api.LevelState;
 import it.unibo.goldhunt.engine.api.MovementRules;
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.engine.api.Status;
 import it.unibo.goldhunt.player.api.Player;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 
-public class EngineImpl implements Engine{
+public class EngineImpl implements EngineWithState {
 
     private PlayerOperations player;
     private Status status;
@@ -68,6 +70,14 @@ public class EngineImpl implements Engine{
         return this.status;
     }
 
+    Position start() {
+        return this.start;
+    }
+
+    Position exit() {
+        return this.exit;
+    }
+
     @Override
     public ActionResult reveal(Position p) {
        return this.revealService.reveal(p);
@@ -80,12 +90,29 @@ public class EngineImpl implements Engine{
 
     @Override
     public ActionResult move(final Position newPos) {
-       return this.moveService.move(newPos);
+        final ActionResult result = this.moveService.move(newPos);
+        if (result.effect() != ActionEffect.APPLIED) {
+            return result;
+        }
+        if (this.player.position().equals(this.exit)) {
+        this.status = this.status.withLevelState(LevelState.WON);
+            return new ActionResult(
+                result.type(),
+                result.reason(),
+                this.status.levelState(),
+                result.effect()
+            );
+       }
+       return result;
     }
 
     @Override
     public GameState state() {
-        return new GameStateImpl(this.board, this.player, this.status);
+        return new GameStateImpl(
+            new ReadOnlyBoardAdapter(this.board),
+            this.player,
+            this.status
+        );
     }
 }
 
