@@ -4,6 +4,7 @@ import it.unibo.goldhunt.board.api.Board;
 import it.unibo.goldhunt.board.api.RevealStrategy;
 import it.unibo.goldhunt.engine.api.ActionResult;
 import it.unibo.goldhunt.engine.api.Engine;
+import it.unibo.goldhunt.engine.api.GameState;
 import it.unibo.goldhunt.engine.api.MovementRules;
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.engine.api.Status;
@@ -14,8 +15,9 @@ public class EngineImpl implements Engine{
 
     private PlayerOperations player;
     private Status status;
-    //private final Position start;
-    //private final Position exit;
+    private final Board board;
+    private final Position start;
+    private final Position exit;
     private final MoveService moveService;
     private final RevealService revealService;
 
@@ -35,8 +37,9 @@ public class EngineImpl implements Engine{
         }
         this.player = player;
         this.status = status;
-        //this.start = start;
-        //this.exit = exit;
+        this.board = board;
+        this.start = start;
+        this.exit = exit;
         this.moveService = new MoveService(
             board, 
             rules, 
@@ -78,6 +81,11 @@ public class EngineImpl implements Engine{
     @Override
     public ActionResult move(final Position newPos) {
        return this.moveService.move(newPos);
+    }
+
+    @Override
+    public GameState state() {
+        return new GameStateImpl(this.board, this.player, this.status);
     }
 }
 
