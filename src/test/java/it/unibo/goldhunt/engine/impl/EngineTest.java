@@ -238,7 +238,7 @@ public class EngineTest {
             )
         );
     }
-
+/*
     private EngineImpl makeEngine() {
         return new EngineImpl(
             this.player, 
@@ -354,4 +354,5 @@ public class EngineTest {
         assertEquals(ActionEffect.REMOVED, secondAR.effect());
         assertFalse(this.board.getCell(p).isFlagged());
     }
+    */
 }

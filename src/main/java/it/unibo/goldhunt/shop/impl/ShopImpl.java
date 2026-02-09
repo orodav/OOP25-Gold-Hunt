@@ -45,6 +45,7 @@ public final class ShopImpl implements Shop {
         if (maxPurchases < 0) {
             throw new IllegalArgumentException("maxPurchases must be >= 0");
         }
+        
 
         this.player = player;
         this.maxPurchases = maxPurchases;
@@ -61,6 +62,9 @@ public final class ShopImpl implements Shop {
             }
             if (item.price() <= 0) {
                 throw new IllegalArgumentException("price must be > 0");
+            }
+            if (map.containsKey(item.type())) {
+                throw new IllegalArgumentException("duplicate item in catalog: " + item.type());
             }
             map.put(item.type(), item);
         }

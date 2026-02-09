@@ -13,12 +13,20 @@ import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.engine.api.Status;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 
+/**
+ * 
+ * 
+ * 
+ * 
+ * 
+ * check if there must be a connection with player
+ */
+
 public class RevealService {
 
     private final Board board;
     private final RevealStrategy revealStrategy;
     private final Supplier<Status> status;
-    //private final Supplier<PlayerOperations> player;
 
     RevealService(
         final Board board,
@@ -32,7 +40,6 @@ public class RevealService {
         this.board = board;
         this.revealStrategy = revealStrategy;
         this.status = status;
-        //this.player = player;
     }
 
     ActionResult reveal(final Position p) {

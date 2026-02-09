@@ -32,9 +32,10 @@ import it.unibo.goldhunt.player.api.Inventory;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 import it.unibo.goldhunt.player.impl.InventoryImpl;
 import it.unibo.goldhunt.player.impl.PlayerImpl;
-import it.unibo.goldhunt.shop.api.Shop;
+import it.unibo.goldhunt.shop.api.ShopFactory;
 import it.unibo.goldhunt.shop.api.ShopItem;
-import it.unibo.goldhunt.shop.impl.ShopImpl;
+import it.unibo.goldhunt.shop.impl.DefaultShopCatalog;
+import it.unibo.goldhunt.shop.impl.DefaultShopFactory;
 
 public class GameFactory {
 
@@ -46,6 +47,7 @@ public class GameFactory {
     private final CellFactory cellFactory;
     private final RevealStrategy revealStrategy;
     private final ItemFactory itemFactory;
+    private final ShopFactory shopFactory;
     private final List<ShopItem> shopCatalog;
     private final int shopMaxPurchases;
 
@@ -57,7 +59,8 @@ public class GameFactory {
         this.cellFactory = new BaseCellFactory();
         this.revealStrategy = new FloodReveal();
         this.itemFactory = new ItemFactoryImpl();
-        this.shopCatalog = List.of();
+        this.shopFactory = new DefaultShopFactory();
+        this.shopCatalog = DefaultShopCatalog.create();
         this.shopMaxPurchases = DEFAULT_SHOP_MAX_PURCHASES;
     }
 
@@ -91,13 +94,11 @@ public class GameFactory {
             rules, 
             this.revealStrategy, 
             level.getStart(), 
-            level.getExit()
-        );
-        final Shop shop = new ShopImpl(
-            level.getPlayer(), 
-            this.shopCatalog, 
+            level.getExit(),
+            this.shopFactory,
+            this.shopCatalog,
             this.shopMaxPurchases
         );
-        return new GameSession(difficulty, level, engine, shop);
+        return new GameSession(difficulty, level, engine);
     }
 }
