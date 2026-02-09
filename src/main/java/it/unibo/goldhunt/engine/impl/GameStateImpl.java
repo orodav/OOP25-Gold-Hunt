@@ -5,10 +5,10 @@ import java.util.Objects;
 import it.unibo.goldhunt.engine.api.GameState;
 import it.unibo.goldhunt.engine.api.Status;
 import it.unibo.goldhunt.player.api.Player;
-import it.unibo.goldhunt.board.api.Board;
+import it.unibo.goldhunt.board.api.ReadOnlyBoard;
 
 public record GameStateImpl(
-    Board board,
+    ReadOnlyBoard board,
     Player player,
     Status status
 ) implements GameState {

@@ -8,15 +8,14 @@ import it.unibo.goldhunt.board.api.Cell;
 import it.unibo.goldhunt.board.api.ReadOnlyBoard;
 import it.unibo.goldhunt.board.api.ReadOnlyCell;
 import it.unibo.goldhunt.engine.api.Position;
-import it.unibo.goldhunt.board.api.CellContent;
 
 
 
-public class ReadOnlyBoardAdapter implements ReadOnlyBoard {
+public final class ReadOnlyBoardAdapter implements ReadOnlyBoard {
 
     private final Board board;
 
-    ReadOnlyBoardAdapter(final Board board) {
+    public ReadOnlyBoardAdapter(final Board board) {
         this.board = Objects.requireNonNull(board, "board can't be null");
     }
 
@@ -24,6 +23,11 @@ public class ReadOnlyBoardAdapter implements ReadOnlyBoard {
         Objects.requireNonNull(p, "position can't be null");
         final Cell cell = this.board.getCell(p);
         return new ReadOnlyCellAdapter(cell);
+    }
+
+    @Override
+    public int boardSize() {
+        return this.board.getBoardSize();
     }
 
     private static final class ReadOnlyCellAdapter implements ReadOnlyCell {
@@ -51,7 +55,7 @@ public class ReadOnlyBoardAdapter implements ReadOnlyBoard {
 
         @Override
         public Optional<String> contentID() {
-            return this.cell.getContent().map(CellContent::shortString);
+            return this.cell.getContent().map(c -> c.shortString());
         }
     }
 }

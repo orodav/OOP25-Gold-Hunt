@@ -18,6 +18,7 @@ public class EngineImpl implements EngineWithState {
     private PlayerOperations player;
     private Status status;
     private final Board board;
+    //private final Shop shop;
     private final Position start;
     private final Position exit;
     private final MoveService moveService;
