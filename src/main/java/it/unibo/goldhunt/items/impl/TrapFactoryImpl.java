@@ -6,13 +6,15 @@ import it.unibo.goldhunt.player.api.PlayerOperations;
 
 public class TrapFactoryImpl implements TrapFactory{
 
-    private final PlayerOperations playerop;
+    PlayerOperations playerop;
 
     public TrapFactoryImpl(PlayerOperations playerop){
         this.playerop = playerop;
     }
     @Override
-    public Revealable createTrap() {
-        return new Trap(this.playerop);
+    public Revealable createTrap(PlayerOperations playerop) {
+        var trap = new Trap();
+        trap.bind(playerop);
+        return trap;
     }
 }

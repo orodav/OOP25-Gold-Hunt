@@ -17,6 +17,11 @@ public class Pickaxe extends Item implements ClearCells{
 
     @Override
     public boolean applyEffect() {
+        if(context == null){
+            throw new IllegalStateException("cannot bind items");
+        }
+
+        var board = context.board();
         Random random = new Random();
         int idx = random.nextInt(board.getBoardSize());
         List<Cell> cells = random.nextBoolean() 

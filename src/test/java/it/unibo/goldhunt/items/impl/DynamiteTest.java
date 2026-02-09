@@ -14,8 +14,9 @@ import it.unibo.goldhunt.board.api.Board;
 import it.unibo.goldhunt.board.api.Cell;
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.items.api.CellContent;
+import it.unibo.goldhunt.items.api.ItemContext;
+import it.unibo.goldhunt.items.api.ItemTypes;
 import it.unibo.goldhunt.player.api.Inventory;
-import it.unibo.goldhunt.player.api.Player;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 
 public class DynamiteTest {
@@ -31,8 +32,7 @@ public class DynamiteTest {
         player = new FakePlayer(new Position(2,2));
         dynamite = new Dynamite();
 
-        dynamite.board = board;
-        dynamite.player = player;
+        dynamite.context = new ItemContext(board, player, null);
     }
 
     @Test
@@ -99,8 +99,7 @@ public class DynamiteTest {
             
         };
 
-        dynamite.board = emptyBoard;
-
+        dynamite.context = new ItemContext(emptyBoard, player, null);
         assertThrows(IllegalStateException.class, () -> {
             dynamite.applyEffect();
         }, "should throw exception when no cells are nearby");
@@ -247,7 +246,7 @@ public class DynamiteTest {
         
     }
 
-    private static final class FakePlayer implements Player{
+    private static final class FakePlayer implements PlayerOperations{
 
         private Position pos;
 
@@ -278,6 +277,31 @@ public class DynamiteTest {
         @Override
         public PlayerOperations withInventory(Inventory inventory) {
             throw new UnsupportedOperationException("Unimplemented method 'withInventory'");
+        }
+
+        @Override
+        public PlayerOperations moveTo(Position p) {
+            throw new UnsupportedOperationException("Unimplemented method 'moveTo'");
+        }
+
+        @Override
+        public PlayerOperations addGold(int num) {
+            throw new UnsupportedOperationException("Unimplemented method 'addGold'");
+        }
+
+        @Override
+        public PlayerOperations addLives(int num) {
+            throw new UnsupportedOperationException("Unimplemented method 'addLives'");
+        }
+
+        @Override
+        public PlayerOperations addItem(ItemTypes item, int quantity) {
+            throw new UnsupportedOperationException("Unimplemented method 'addItem'");
+        }
+
+        @Override
+        public PlayerOperations useItem(ItemTypes item, int quantity) {
+            throw new UnsupportedOperationException("Unimplemented method 'useItem'");
         }
 
     }

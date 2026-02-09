@@ -12,7 +12,21 @@ public class Gold extends Item{
 
     @Override
     public boolean applyEffect() {
-        inventory.add(gold, ADDED_GOLD);
+        if(context == null){
+            throw new IllegalStateException("item cannot bound");
+        }
+
+        var playerop = context.playerop();
+        var inventory = context.inventory();
+        int multiplier = 1;
+
+        if(inventory.hasAtLeast(new LuckyClover(), MAX_QUANTITY_CLOVER)){
+            multiplier = LUCKY_CLOVER_MULTIPLIER;
+
+        }
+
+        playerop.addGold(ADDED_GOLD * multiplier);
+
         return true;
     }
 

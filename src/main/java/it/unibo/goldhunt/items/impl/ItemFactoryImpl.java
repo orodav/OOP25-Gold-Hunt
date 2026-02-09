@@ -5,7 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import it.unibo.goldhunt.board.api.Board;
+import it.unibo.goldhunt.items.api.ItemContext;
 import it.unibo.goldhunt.items.api.ItemFactory;
+import it.unibo.goldhunt.player.api.Inventory;
+import it.unibo.goldhunt.player.api.PlayerOperations;
 
 
 public class ItemFactoryImpl implements ItemFactory{
@@ -24,12 +28,22 @@ public class ItemFactoryImpl implements ItemFactory{
         ITEMS.put("X", GoldX3::new);
     }
     @Override
-    public Item generateItem(final String item){
+    public Item generateItem(String item, Board board, PlayerOperations playerop, Inventory inventory){
         Supplier<Item> constructor = ITEMS.get(item);
 
         if(constructor == null){
             throw new IllegalArgumentException();
         }
+        Item obj = constructor.get();
+        obj.bind(new ItemContext(board, playerop, inventory));
+        return obj;
+    }
+    @Override
+    public Item generateItem(String item) {
+        Supplier<Item> constructor = ITEMS.get(item);
+            if (constructor == null) {
+            throw new IllegalArgumentException("Unknown item symbol");
+            }
         return constructor.get();
     }
 

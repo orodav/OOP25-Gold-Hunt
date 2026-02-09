@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import it.unibo.goldhunt.engine.api.Position;
+import it.unibo.goldhunt.items.api.ItemContext;
 import it.unibo.goldhunt.items.api.ItemTypes;
 import it.unibo.goldhunt.items.api.Revealable;
 import it.unibo.goldhunt.player.api.Inventory;
@@ -25,7 +26,9 @@ public class ShieldTest {
         Objects.requireNonNull(playerOp);
         shield = new Shield();
         Objects.requireNonNull(shield);
-        shield.playerop = playerOp;
+
+        ItemContext itemContext = new ItemContext(null, playerOp, null);
+        shield.bind(itemContext);
         shield.trap = new TrapFake(true);
     }
 

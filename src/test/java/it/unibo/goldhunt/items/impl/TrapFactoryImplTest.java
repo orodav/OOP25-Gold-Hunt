@@ -22,22 +22,22 @@ public class TrapFactoryImplTest {
     @BeforeEach
     void init(){
         playerop = new PlayerOpFake();
-        Objects.requireNonNull(playerop);
         trapFactory = new TrapFactoryImpl(playerop);
         Objects.requireNonNull(trapFactory);
     }
 
     @Test
     void testTrapNonNull(){
-        Revealable trap = trapFactory.createTrap();
+        Revealable trap = trapFactory.createTrap(playerop);
         assertNotNull(trap, "should not create an empty trap");
     }
 
     @Test
     void trapIsTrap(){
-        Revealable trap = trapFactory.createTrap();
+        Revealable trap = trapFactory.createTrap(playerop);
         assertTrue(trap instanceof Revealable, "should create an instance of Trap");
     }
+
 
      private static class PlayerOpFake implements PlayerOperations{
 

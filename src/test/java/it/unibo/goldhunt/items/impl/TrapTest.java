@@ -18,14 +18,16 @@ public class TrapTest {
     @BeforeEach
     void init(){
         playerop = new PlayerOpFake();
-        trap = new Trap(playerop);
+        trap = new Trap();
+
+        trap.bind(playerop);
     }
 
     @Test
     void testEffect(){
         int defaultLives = playerop.livesCount();
         trap.applyEffect();
-        assertEquals(defaultLives - Trap.DAMAGE * -1, playerop.livesCount(),  "trap should reduce life by DAMAGE");
+        assertEquals(defaultLives + Trap.DAMAGE , playerop.livesCount(),  "trap should reduce life by DAMAGE");
     }
 
     @Test

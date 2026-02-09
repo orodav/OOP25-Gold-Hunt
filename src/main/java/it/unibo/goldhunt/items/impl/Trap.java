@@ -10,13 +10,21 @@ public class Trap implements Revealable{
 
     PlayerOperations playerop;
 
-    Trap(PlayerOperations playerop){
+    Trap(){
+
+    }
+    public void bind(PlayerOperations playerop){
         this.playerop = playerop;
     }
+    
 
 
     @Override
     public boolean applyEffect() {
+        if(playerop == null){
+            throw new IllegalStateException("cannot bind items");
+        }
+        
         playerop.addLives(DAMAGE);
         return true;
     }
