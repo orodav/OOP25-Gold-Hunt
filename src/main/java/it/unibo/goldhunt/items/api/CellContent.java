@@ -5,7 +5,7 @@ public interface CellContent{
 
     public String shortString();
 
-    default Boolean isTrap(){
+    default boolean isTrap(){
         return false;
     }
 }

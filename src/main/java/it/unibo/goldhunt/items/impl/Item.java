@@ -4,9 +4,9 @@ package it.unibo.goldhunt.items.impl;
 import it.unibo.goldhunt.board.api.Board;
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.items.api.ItemTypes;
+import it.unibo.goldhunt.player.api.Inventory;
 import it.unibo.goldhunt.player.api.Player;
 import it.unibo.goldhunt.player.api.PlayerOperations;
-import it.unibo.goldhunt.player.impl.InventoryImpl;
 
 public abstract class Item implements ItemTypes{
 
@@ -20,7 +20,7 @@ public abstract class Item implements ItemTypes{
     public static final int RADIUS = 2;
     public static final int LUCKY_CLOVER_MULTIPLIER = 1;
 
-    public InventoryImpl inventory;
+    public Inventory inventory;
     public Position position;
     public Player player;
     public PlayerOperations playerop;
