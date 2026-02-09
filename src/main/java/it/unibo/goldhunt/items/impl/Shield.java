@@ -16,6 +16,12 @@ public class Shield extends Item{
 
     @Override
     public boolean applyEffect() {
+        if(context == null){
+            throw new IllegalStateException("cannot bound item");
+        }
+
+        var playerop = context.playerop();
+
         if(trap != null){
             int lives = playerop.livesCount();
             trap.applyEffect();
@@ -30,4 +36,7 @@ public class Shield extends Item{
         return "S";
     }
 
+    public void bindTrap(Revealable trap){
+        this.trap = trap;
+    }
 }

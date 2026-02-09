@@ -16,9 +16,10 @@ import it.unibo.goldhunt.board.api.Board;
 import it.unibo.goldhunt.board.api.Cell;
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.items.api.CellContent;
+import it.unibo.goldhunt.items.api.ItemContext;
+import it.unibo.goldhunt.items.api.ItemTypes;
 import it.unibo.goldhunt.items.api.Revealable;
 import it.unibo.goldhunt.player.api.Inventory;
-import it.unibo.goldhunt.player.api.Player;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 
 public class ChartTest {
@@ -29,9 +30,10 @@ public class ChartTest {
     @BeforeEach
     void init() {
         board = new FakeBoard(5);
+        FakePlayer player = new FakePlayer(new Position(2,2));
         chart = new Chart();
-        chart.player = new FakePlayer(new Position(2, 2));
-        chart.board = board;
+
+        chart.context = new ItemContext(board, player, null);
     }
 
     @Test
@@ -169,7 +171,7 @@ public class ChartTest {
 
     }
 
-    static class FakePlayer implements Player {
+    static class FakePlayer implements PlayerOperations {
         private Position pos; 
 
         FakePlayer(Position pos){
@@ -195,6 +197,26 @@ public class ChartTest {
         public PlayerOperations withInventory(Inventory inventory) {
             throw new UnsupportedOperationException("Unimplemented method 'withInventory'");
         }
+        @Override
+        public PlayerOperations moveTo(Position p) {
+            throw new UnsupportedOperationException("Unimplemented method 'moveTo'");
+        }
+        @Override
+        public PlayerOperations addGold(int num) {
+            throw new UnsupportedOperationException("Unimplemented method 'addGold'");
+        }
+        @Override
+        public PlayerOperations addLives(int num) {
+            throw new UnsupportedOperationException("Unimplemented method 'addLives'");
+        }
+        @Override
+        public PlayerOperations addItem(ItemTypes item, int quantity) {
+            throw new UnsupportedOperationException("Unimplemented method 'addItem'");
+        }
+        @Override
+        public PlayerOperations useItem(ItemTypes item, int quantity) {
+            throw new UnsupportedOperationException("Unimplemented method 'useItem'");
+        }
         
     }
 
@@ -217,5 +239,7 @@ public class ChartTest {
         return revealed;
         }
     }
+
+
 }
    

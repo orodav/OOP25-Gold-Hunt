@@ -12,7 +12,13 @@ public class Lifes extends Item{
 
     @Override
     public boolean applyEffect() {
-        if(player.livesCount() < MAX_QUANTITY_LIVES){
+        if(context == null){
+            throw new IllegalStateException("item cannot bound");
+        }
+
+        var playerop = context.playerop();
+
+        if(playerop.livesCount() < MAX_QUANTITY_LIVES){
             playerop.addLives(PLUS_LIFE);
             return true;
         }

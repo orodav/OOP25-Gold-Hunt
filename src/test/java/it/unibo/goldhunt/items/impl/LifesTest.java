@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import it.unibo.goldhunt.engine.api.Position;
+import it.unibo.goldhunt.items.api.ItemContext;
 import it.unibo.goldhunt.items.api.ItemTypes;
 import it.unibo.goldhunt.player.api.Inventory;
 import it.unibo.goldhunt.player.api.Player;
@@ -25,15 +26,14 @@ public class LifesTest {
 
     @Test
     void testBelowMax(){
-        PlayerFake player = new PlayerFake(2);
-        Objects.requireNonNull(player);
         PlayerOpFake playerop = new PlayerOpFake(2);
         Objects.requireNonNull(playerop);
 
-        lifes.player = player;
-        lifes.playerop = playerop;
+        
 
+        lifes.bind(new ItemContext(null, playerop, null));
         boolean res = lifes.applyEffect();
+
         assertTrue(res);
         assertEquals(3, playerop.livesCount());
     }
@@ -45,9 +45,7 @@ public class LifesTest {
         PlayerOpFake playerop = new PlayerOpFake(Item.MAX_QUANTITY_LIVES);
         Objects.requireNonNull(playerop);
 
-        lifes.player = player;
-        lifes.playerop = playerop;
-
+        lifes.bind(new ItemContext(null, playerop, null));
         boolean res = lifes.applyEffect();
 
         assertFalse(res);

@@ -1,6 +1,6 @@
 package it.unibo.goldhunt.items.impl;
 
-import java.util.List;
+import it.unibo.goldhunt.player.api.Inventory;
 
 public class LuckyClover extends Item{
 
@@ -13,22 +13,9 @@ public class LuckyClover extends Item{
 
     @Override
     public boolean applyEffect() {
-        List<Item> collected = List.of(gold, goldX3).stream()
-        .filter(Item::applyEffect)
-        .toList();
-
-        collected.forEach(this::applyBonus);
-
-        return !collected.isEmpty();
-        }
-
-    
-    
-
-    private void applyBonus(Item goldtype){
-        if(inventory.hasAtLeast(luckyclover, MAX_QUANTITY_CLOVER)){
-            inventory.add(goldtype, LUCKY_CLOVER_MULTIPLIER);
-        }
+        Inventory inventory = context.inventory();
+        inventory.add(this, MAX_QUANTITY_CLOVER);
+        return true;
     }
 
     @Override

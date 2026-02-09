@@ -19,7 +19,15 @@ public class Dynamite extends Item implements ClearCells{
 
     @Override
     public boolean applyEffect() {
-        Cell currentCell = board.getCell(player.position());
+
+        if(context == null){
+            throw new IllegalStateException("item cannot bound");
+        }
+
+        var board = context.board();
+        var playerop = context.playerop();
+
+        Cell currentCell = board.getCell(playerop.position());
         
         List<Cell> adjacent = board.getAdjacentCells(board.getCellPosition(currentCell));
         if(adjacent == null || adjacent.isEmpty()){

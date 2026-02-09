@@ -6,8 +6,18 @@ public class GoldX3 extends Item {
 
     @Override
     public boolean applyEffect(){
+        if(context == null){
+            throw new IllegalStateException("item cannot bound");
+        }
+        var playerop = context.playerop();
 
-        inventory.add(gold, ADDED_GOLDX3);
+        int multiplier = 1;
+        if(playerop.inventory().hasAtLeast(new LuckyClover(), MAX_QUANTITY_CLOVER)){
+            multiplier = LUCKY_CLOVER_MULTIPLIER;
+        }
+        
+        playerop.addGold(ADDED_GOLDX3 * multiplier);
+        
         return true;
     }
 
