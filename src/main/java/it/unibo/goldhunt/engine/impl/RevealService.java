@@ -2,6 +2,7 @@ package it.unibo.goldhunt.engine.impl;
 
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 import it.unibo.goldhunt.board.api.Board;
 import it.unibo.goldhunt.board.api.Cell;
@@ -11,6 +12,7 @@ import it.unibo.goldhunt.engine.api.ActionResult;
 import it.unibo.goldhunt.engine.api.LevelState;
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.engine.api.Status;
+import it.unibo.goldhunt.items.api.CellContent;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 
 /**
@@ -26,20 +28,31 @@ public class RevealService {
 
     private final Board board;
     private final RevealStrategy revealStrategy;
+    private final Supplier<PlayerOperations> player;
+    private final UnaryOperator<PlayerOperations> setPlayer;
     private final Supplier<Status> status;
+    private final UnaryOperator<Status> setStatus;
 
     RevealService(
         final Board board,
         final RevealStrategy revealStrategy,
+        final Supplier<PlayerOperations> player,
+        final UnaryOperator<PlayerOperations> setPlayer,
         final Supplier<Status> status,
-        final Supplier<PlayerOperations> player
+        final UnaryOperator<Status> setStatus
     ) {
-        if (board == null || revealStrategy == null || status == null || player == null) {
+        if (
+            board == null || revealStrategy == null || player == null 
+            || setPlayer == null || status == null || setStatus == null
+        ) {
             throw new IllegalArgumentException("dependencies can't be null");
         }
         this.board = board;
         this.revealStrategy = revealStrategy;
+        this.player = player;
+        this.setPlayer = setPlayer;
         this.status = status;
+        this.setStatus = setStatus;
     }
 
     ActionResult reveal(final Position p) {
@@ -52,8 +65,7 @@ public class RevealService {
             return ActionResultsFactory.reveal(this.status.get(), ActionEffect.BLOCKED);
         }
         this.revealStrategy.reveal(this.board, p);
-        // read cell content and apply effects to player/status
-        // reveal to lose ?
+        
         return ActionResultsFactory.reveal(this.status.get(), ActionEffect.APPLIED);
     }
 
