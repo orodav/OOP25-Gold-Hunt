@@ -34,10 +34,11 @@ public class LuckyCloverTest {
 
     @Test
     void applyEffect(){
+        PlayerOperations playerop = new FakePlayer(inventory);
         inventory.hasEnough = true;
-        boolean used = clover.applyEffect();
+        PlayerOperations used = clover.applyEffect(playerop);
 
-        assertTrue(used);
+        assertTrue(used != null);
         assertEquals(LuckyClover.MAX_QUANTITY_CLOVER, inventory.added, "should be in inventory");
     }
 
@@ -70,8 +71,8 @@ public class LuckyCloverTest {
     
     private static class Pyrite extends Gold {
         @Override
-        public boolean applyEffect() {
-        return true;
+        public PlayerOperations applyEffect(PlayerOperations playerop) {
+        return playerop;
         }
         @Override public String getName() {
             return "Gold"; 
@@ -83,8 +84,8 @@ public class LuckyCloverTest {
 
     private static class PyriteX3 extends GoldX3 {
     @Override
-    public boolean applyEffect() {
-        return true;
+    public PlayerOperations applyEffect(PlayerOperations playerop) {
+        return playerop;
     }
     @Override public String getName() {
         return "GoldX3"; 
@@ -143,7 +144,10 @@ private static final class FakePlayer implements PlayerOperations{
 
     @Override
     public PlayerOperations addItem(ItemTypes item, int quantity) {
-        throw new UnsupportedOperationException("Unimplemented method 'addItem'");
+        if(inventory != null){
+            inventory.add(item, quantity);
+        }
+        return this;
     }
 
     @Override

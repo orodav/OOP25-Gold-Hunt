@@ -36,9 +36,9 @@ public class ShieldTest {
     void applyWhenTrapActivated(){
         int livesBefore = playerOp.lives;
 
-        boolean used = shield.applyEffect();
+        PlayerOperations used = shield.applyEffect(playerOp);
 
-        assertTrue(used, "shield should be used");
+        assertTrue(used != null, "shield should be used");
         assertEquals(livesBefore, playerOp.lives);
     }
 
@@ -47,9 +47,9 @@ public class ShieldTest {
         shield.trap = null;
 
         int livesBef = playerOp.livesCount();
-        boolean used = shield.applyEffect();
+        PlayerOperations used = shield.applyEffect(playerOp);
 
-        assertEquals(false, used, "the shield should not be used when no trap is activated");
+        assertEquals(null, used, "the shield should not be used when no trap is activated");
         assertEquals(livesBef, playerOp.livesCount(), "lives shoul remain the same");
     }
 
@@ -59,16 +59,21 @@ public class ShieldTest {
 
         TrapFake(boolean effect){
             this.effect = effect;
-        }
-
-        @Override
-        public boolean applyEffect() {
-            return effect;
+            getEffect();
         }
 
         @Override
         public String shortString() {
             return "T";
+        }
+
+        @Override
+        public PlayerOperations applyEffect(PlayerOperations playerop) {
+            return playerop;
+        }
+
+        private boolean getEffect(){
+            return effect;
         }
         
     }

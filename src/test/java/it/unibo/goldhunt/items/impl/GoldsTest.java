@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.items.api.ItemContext;
 import it.unibo.goldhunt.items.api.ItemTypes;
+import it.unibo.goldhunt.items.api.KindOfItem;
 import it.unibo.goldhunt.player.api.Inventory;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 
@@ -37,30 +38,30 @@ public class GoldsTest {
 
     @Test
     void effectAppliedGoldX3(){
-        boolean applied = goldX3.applyEffect();
+        PlayerOperations applied = goldX3.applyEffect(player);
 
-        assertTrue(applied, "gold x3 effect should return true");
+        assertTrue(applied != null, "gold x3 effect should return true");
         assertEquals(GoldX3.ADDED_GOLDX3, inventory.added, "should return the correct amount");
     }
 
     @Test
     void effectAppliedGold(){
-        boolean applied = gold.applyEffect();
+        PlayerOperations applied = gold.applyEffect(player);
 
-        assertTrue(applied, "gold effect should return true");
+        assertTrue(applied != null, "gold effect should return true");
         assertEquals(Gold.ADDED_GOLD, inventory.added, "should return the correct amount");
     }
 
     @Test
     void effectAppliedGoldBonus(){
         inventory.setClover(false);
-        gold.applyEffect();
+        gold.applyEffect(player);
         assertEquals(Gold.ADDED_GOLD, inventory.added, "if the lucky clover is not in the inventory the gold should not be doubled");
 
         inventory.added = 0;
 
         inventory.hasClover = true;
-        gold.applyEffect();
+        gold.applyEffect(player);
 
         int expected = Gold.ADDED_GOLD * 2;
         assertEquals(expected, inventory.added, "gold with lucky clover should be doubled");
@@ -70,13 +71,13 @@ public class GoldsTest {
     @Test
     void effectAppliedGoldX3Bonus(){
         inventory.setClover(false);
-        goldX3.applyEffect();
+        goldX3.applyEffect(player);
         assertEquals(GoldX3.ADDED_GOLDX3, inventory.added, "if the lucky clover is not in the inventory the gold should not be doubled");
 
         inventory.added = 0;
 
         inventory.hasClover = true;
-        goldX3.applyEffect();
+        goldX3.applyEffect(player);
 
         int expected = GoldX3.ADDED_GOLDX3 * 2;
         assertEquals(expected, inventory.added, "gold with lucky clover should be doubled");
@@ -104,7 +105,7 @@ public class GoldsTest {
 
         @Override
         public int quantity(ItemTypes item) {
-            if(item instanceof LuckyClover){
+            if(item == KindOfItem.LUCKYCLOVER){
                return hasClover ? 1 : 0; 
             }
             return 0;

@@ -42,9 +42,10 @@ public class ChartTest {
         TrapFake trap = new TrapFake();
         Position trapPos = new Position(2, 3);
         Cell targetCell = board.getCell(trapPos);
+        PlayerOperations playerop = new FakePlayer(trapPos);
         targetCell.setContent(trap);
 
-        chart.applyEffect();
+        chart.applyEffect(playerop);
 
         assertTrue(targetCell.isFlagged(), "Trap should be revealed (flagged)");
     }
@@ -53,8 +54,9 @@ public class ChartTest {
     void testApplyEffectNormalCells() {
         Position emptyPos = new Position(1, 1);
         Cell emptyCell = board.getCell(emptyPos);
-
-        chart.applyEffect();
+        FakePlayer player = new FakePlayer(emptyPos);
+        
+        chart.applyEffect(player);
 
         assertFalse(emptyCell.isFlagged(), "Empty cells should not be flagged");
     }
@@ -225,18 +227,17 @@ public class ChartTest {
         private boolean revealed = false;
 
         @Override
-        public boolean applyEffect() {
-            revealed = true;
-            return true;
-        }
-
-        @Override
         public String shortString() {
             return "T";
         }
 
         public boolean revealed(){
         return revealed;
+        }
+
+        @Override
+        public PlayerOperations applyEffect(PlayerOperations playerop) {
+            return playerop;
         }
     }
 

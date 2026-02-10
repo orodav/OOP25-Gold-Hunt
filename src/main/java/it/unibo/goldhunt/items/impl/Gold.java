@@ -21,7 +21,7 @@ public class Gold extends Item{
         var inventory = context.inventory();
         int multiplier = 1;
 
-        if(inventory.hasAtLeast(KindOfItem.LUCKYCLOVER, MAX_QUANTITY_CLOVER)){
+        if(inventory.quantity(KindOfItem.LUCKYCLOVER)>0){
             multiplier = LUCKY_CLOVER_MULTIPLIER;
 
         }
