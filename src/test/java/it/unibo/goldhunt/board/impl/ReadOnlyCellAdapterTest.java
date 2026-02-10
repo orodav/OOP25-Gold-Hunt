@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import it.unibo.goldhunt.board.api.Cell;
+import it.unibo.goldhunt.board.api.ReadOnlyCell;
 
 /**
  * This class tests {@link ReadOnlyCellAdapter}.
@@ -16,7 +17,7 @@ import it.unibo.goldhunt.board.api.Cell;
 final class ReadOnlyCellAdapterTest {
 
     private Cell cell;
-    private ReadOnlyCellAdapter adapter;
+    private ReadOnlyCell adapter;
 
     @BeforeEach
     void init() {
