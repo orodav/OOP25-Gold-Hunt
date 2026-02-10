@@ -86,8 +86,9 @@ public class EngineImpl implements EngineWithShopActions {
         this.revealService = new RevealService(
             board, 
             revealStrategy, 
-            () -> this.status, 
-            () -> this.player
+            () -> this.player, 
+            p -> { this.player = p; return p;},
+            () -> this.status
         );
     }
 
@@ -111,7 +112,17 @@ public class EngineImpl implements EngineWithShopActions {
 
     @Override
     public ActionResult reveal(Position p) {
-       return this.revealService.reveal(p);
+        final ActionResult res = this.revealService.reveal(p);
+        if (res.effect() == ActionEffect.APPLIED) {
+            this.updateLossIfNeeded();
+            return new ActionResult(
+                res.type(),
+                res.reason(),
+                this.status.levelState(),
+                res.effect()
+            );
+        }
+        return res;
     }
 
     @Override
@@ -125,9 +136,19 @@ public class EngineImpl implements EngineWithShopActions {
         if (result.effect() != ActionEffect.APPLIED) {
             return result;
         }
+        this.updateLossIfNeeded();
+        if (this.status.levelState() == LevelState.LOSS) {
+            return new ActionResult(
+                result.type(),
+                result.reason(),
+                this.status.levelState(),
+                result.effect()
+            );
+        }
         if (!this.player.position().equals(this.exit)) {
             return result;
         }
+        this.updateLossIfNeeded();
         this.status = this.status
             .withLevelState(LevelState.WON)
             .withGameMode(GameMode.SHOP);
@@ -167,12 +188,9 @@ public class EngineImpl implements EngineWithShopActions {
         final Shop currentShop = this.shop.get();
         final ShopActionResult res = currentShop.buy(type);
         if (res.effect() == ShopActionEffect.APPLIED) {
-<<<<<<< HEAD
             this.player = res.player();
-=======
-            this.player = (PlayerOperations) res.player();
->>>>>>> origin/feature/engine-player
             this.shop = Optional.of(res.shop());
+            this.updateLossIfNeeded();
         }
         return res;
     }
@@ -199,6 +217,12 @@ public class EngineImpl implements EngineWithShopActions {
                 .filter(i -> i != excluded)
                 .mapToObj(this.globalCatalog::get)
                 .toList();
+    }
+
+    private void updateLossIfNeeded() {
+        if (this.status.levelState() == LevelState.PLAYING && this.player.livesCount() <= 0) {
+            this.status = this.status.withLevelState(LevelState.LOSS);
+        }
     }
 }
 

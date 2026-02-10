@@ -15,15 +15,6 @@ import it.unibo.goldhunt.engine.api.Status;
 import it.unibo.goldhunt.items.api.CellContent;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 
-/**
- * 
- * 
- * 
- * 
- * 
- * check if there must be a connection with player
- */
-
 public class RevealService {
 
     private final Board board;
@@ -31,19 +22,17 @@ public class RevealService {
     private final Supplier<PlayerOperations> player;
     private final UnaryOperator<PlayerOperations> setPlayer;
     private final Supplier<Status> status;
-    private final UnaryOperator<Status> setStatus;
 
     RevealService(
         final Board board,
         final RevealStrategy revealStrategy,
         final Supplier<PlayerOperations> player,
         final UnaryOperator<PlayerOperations> setPlayer,
-        final Supplier<Status> status,
-        final UnaryOperator<Status> setStatus
+        final Supplier<Status> status
     ) {
         if (
             board == null || revealStrategy == null || player == null 
-            || setPlayer == null || status == null || setStatus == null
+            || setPlayer == null || status == null
         ) {
             throw new IllegalArgumentException("dependencies can't be null");
         }
@@ -52,7 +41,6 @@ public class RevealService {
         this.player = player;
         this.setPlayer = setPlayer;
         this.status = status;
-        this.setStatus = setStatus;
     }
 
     ActionResult reveal(final Position p) {
@@ -65,7 +53,7 @@ public class RevealService {
             return ActionResultsFactory.reveal(this.status.get(), ActionEffect.BLOCKED);
         }
         this.revealStrategy.reveal(this.board, p);
-        
+        applyContentIfAny(p);
         return ActionResultsFactory.reveal(this.status.get(), ActionEffect.APPLIED);
     }
 
@@ -84,6 +72,23 @@ public class RevealService {
             this.status.get(),
             wasFlagged ? ActionEffect.REMOVED : ActionEffect.APPLIED
         );
+    }
+
+    private void applyContentIfAny(final Position p) {
+        final Cell cell = this.board.getCell(p);
+        final Optional<CellContent> optionalCell = cell.getContent();
+        if (optionalCell.isEmpty()) {
+            return;
+        }
+        final CellContent cellContent = optionalCell.get();
+        final PlayerOperations currentPlayer = this.player.get();
+        final PlayerOperations updatedPlayer = cellContent.applyEffect(currentPlayer);
+        if (updatedPlayer == null) {
+            throw new IllegalStateException(
+                "applyEffect returned null for " + cellContent.getClass().getSimpleName());
+        }
+        this.setPlayer.apply(updatedPlayer);
+        cell.removeContent();
     }
 
     private Optional<ActionResult> checkRevealPreconditions(final Position p) {
