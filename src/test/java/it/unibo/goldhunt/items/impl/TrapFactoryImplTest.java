@@ -1,7 +1,6 @@
 package it.unibo.goldhunt.items.impl;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Objects;
 
@@ -48,7 +47,7 @@ class TrapFactoryImplTest {
     @Test
     void trapIsTrap() {
         final Revealable trap = trapFactory.createTrap(playerop);
-        assertTrue(trap instanceof Revealable, "should create an instance of Trap");
+        assertNotNull(trap, "the trap should not be null");
     }
 
      /**

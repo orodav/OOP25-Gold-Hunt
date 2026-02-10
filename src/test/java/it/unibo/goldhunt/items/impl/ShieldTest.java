@@ -35,7 +35,7 @@ class ShieldTest {
         Objects.requireNonNull(shield);
         final ItemContext itemContext = new ItemContext(null, playerOp, null);
         shield.bind(itemContext);
-        shield.trap = new TrapFake(true);
+        shield.trap = new TrapFake();
     }
 
     /**
@@ -68,11 +68,8 @@ class ShieldTest {
      */
     private static final class TrapFake implements Revealable {
 
-        private final boolean effect;
-
-        TrapFake(final boolean effect) {
-            this.effect = effect;
-            isEffect();
+        TrapFake() {
+            //empty constructor
         }
 
         @Override
@@ -83,10 +80,6 @@ class ShieldTest {
         @Override
         public PlayerOperations applyEffect(final PlayerOperations playerop) {
             return playerop;
-        }
-
-        private boolean isEffect() {
-            return effect;
         }
     }
 

@@ -20,19 +20,18 @@ class LuckyCloverTest {
 
     private LuckyClover clover;
     private InventoryFake inventory;
-    private Pyrite gold;
-    private PyriteX3 goldX3;
+
 
     /**
      * Sets up the test environment with fake player, inventory, and gold items.
      */
     @BeforeEach
     void init() {
+        final Pyrite gold = new Pyrite();
+        final PyriteX3 goldX3 = new PyriteX3();
         inventory = new InventoryFake();
         final var playerop = new FakePlayer(inventory);
         clover = new LuckyClover();
-        gold = new Pyrite();
-        goldX3 = new PyriteX3();
         gold.bind(new ItemContext(null, playerop, inventory));
         goldX3.bind(new ItemContext(null, playerop, inventory));
         clover.bind(new ItemContext(null, playerop, inventory));

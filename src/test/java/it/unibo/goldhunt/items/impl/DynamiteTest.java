@@ -62,6 +62,7 @@ class DynamiteTest {
     void noAdjCells() {
         player.pos = new Position(0, 0);
         final Cell fakecell = new FakeCell();
+        board.setForceEmptyAdj(true);
 
         final Board emptyBoard = new Board() {
 
@@ -134,6 +135,10 @@ class DynamiteTest {
                     cells[i][j] = new FakeCell();
                 }
             }
+        }
+
+        void setForceEmptyAdj(final boolean forceEmptyAdj) {
+            this.forceEmptyAdj = forceEmptyAdj;
         }
 
         @Override

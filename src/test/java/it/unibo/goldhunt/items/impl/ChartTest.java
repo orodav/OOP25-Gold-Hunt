@@ -51,7 +51,7 @@ class ChartTest {
      */
     @Test
     void testApplyEffectTrap() {
-        final TrapFake trap = new TrapFake();
+        final TrapFake trap = new TrapFake(false);
         final Position trapPos = new Position(PLAYER_POS_COORD, ADJACENT_COORD);
         final Cell targetCell = board.getCell(trapPos);
         final PlayerOperations playerop = new FakePlayer(trapPos);
@@ -165,7 +165,7 @@ class ChartTest {
         @Override
         public Position getCellPosition(final Cell cell) {
             for (final Map.Entry<Position, Cell> entry : cells.entrySet()) {
-                if (entry.equals(cell)) {
+                if (entry.getValue().equals(cell)) {
                     return entry.getKey();
                 }
             }
@@ -270,7 +270,11 @@ class ChartTest {
      * Mock implementation of a Trap (Revealable) for testing purposes.
      */
     static class TrapFake implements Revealable {
-        private boolean revealed;
+        private final boolean revealed;
+
+        TrapFake(final boolean initStatus) {
+            this.revealed = initStatus;
+        }
 
         @Override
         public String shortString() {
