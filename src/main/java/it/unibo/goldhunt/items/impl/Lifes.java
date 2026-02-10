@@ -23,7 +23,7 @@ public class Lifes extends Item{
             return playerop.addLives(PLUS_LIFE);
         
         }
-        return playerop;
+        return null;
     }
 
     @Override

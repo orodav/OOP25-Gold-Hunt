@@ -22,6 +22,10 @@ public class Shield extends Item{
             throw new IllegalStateException("cannot bound item");
         }
 
+        if(trap == null){
+            return null;
+        }
+
         final int before = playerop.livesCount();
         final PlayerOperations afterTrap = trap.applyEffect(playerop);
         final int damageTaken = before - afterTrap.livesCount();
