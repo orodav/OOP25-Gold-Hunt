@@ -14,8 +14,23 @@ import it.unibo.goldhunt.player.api.PlayerOperations;
  */
 public interface ItemFactory {
 
-
+    /**
+     * Generates an item using full context 
+     * 
+     * @param item the item id
+     * @param board the game board
+     * @param playerop the player using the item
+     * @param inventory player's inventory
+     * @return the generated item 
+     */
     Item generateItem(String item, Board board, PlayerOperations playerop, Inventory inventory);
+    
+    /**
+     * Generates an item using only the id
+     * 
+     * @param item the item id
+     * @return the generated item
+     */
     Item generateItem(String item);
     
 }

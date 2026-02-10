@@ -17,14 +17,25 @@ import it.unibo.goldhunt.items.api.ItemTypes;
 import it.unibo.goldhunt.player.api.Inventory;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 
+/**
+ * Test suite for ItemFactoryImpl.
+ * Ensures that items are created correctly based on string keys and that 
+ * their context is properly bound.
+ */
 public class ItemFactoryImplTest {
     private ItemFactoryImpl itemFactoryImpl;
 
+    /**
+     * Initializes the factory before each test.
+     */
     @BeforeEach
     void init(){
         itemFactoryImpl = new ItemFactoryImpl();
     }
 
+    /**
+     * Verifies that each valid key produces the correct item instance.
+     */
     @Test
     void testCorrectItem(){
         assertTrue(itemFactoryImpl.generateItem("M") instanceof Chart);
@@ -38,6 +49,9 @@ public class ItemFactoryImplTest {
 
     }
 
+    /**
+     * Ensures the factory returns a non-null item for all valid keys.
+     */
     @Test
     void generateItems(){
         String key[] = {"M", "D", "G", "L", "C", "P", "S", "X"};
@@ -47,11 +61,18 @@ public class ItemFactoryImplTest {
         }
     }
 
+    /**
+     * Verifies that providing an invalid key throws an IllegalArgumentException.
+     */
     @Test
     void generateWrongItem(){
         assertThrows(IllegalArgumentException.class, () -> itemFactoryImpl.generateItem("Q"));
     }
 
+    /**
+     * Ensures that the factory creates a new object instance every time 
+     * (no shared/singleton instances).
+     */
     @Test
     void testObjectsAreDiff(){
         Item firsItem = itemFactoryImpl.generateItem("M");
@@ -59,7 +80,10 @@ public class ItemFactoryImplTest {
         assertNotSame(firsItem, secondItem, "every call should return a different object");
     }
 
-
+    /**
+     * Checks if the overloaded generateItem correctly binds the 
+     * game context (board, player, inventory) to the created item.
+     */
     @Test
     void testItemContextBound(){
         Board board = new FakeBoard();
@@ -71,7 +95,9 @@ public class ItemFactoryImplTest {
         assertNotNull( item.context, "item should have a bound context");
     }
 
-
+    /**
+     * Empty mock of Board for context binding tests.
+     */
     private static final class FakeBoard implements Board{
 
         @Override
@@ -121,7 +147,9 @@ public class ItemFactoryImplTest {
         
     }
 
-
+    /**
+     * Empty mock of PlayerOperations for context binding tests.
+     */
     private static final class FakePlayer implements PlayerOperations{
 
         @Override
@@ -176,7 +204,9 @@ public class ItemFactoryImplTest {
         
     }
 
-
+    /**
+     * Empty mock of Inventory for context binding tests.
+     */
     private static final class FakeInventory implements Inventory{
 
         @Override

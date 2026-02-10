@@ -22,11 +22,18 @@ import it.unibo.goldhunt.items.api.Revealable;
 import it.unibo.goldhunt.player.api.Inventory;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 
+/**
+ * Test suite for the Chart item.
+ * Verifies that the chart correctly identifies and flags adjacent traps.
+ */
 public class ChartTest {
 
     private Chart chart;
     private Board board;
 
+    /**
+     * Setup for each test: initializes a fake board, player, and the chart context.
+     */
     @BeforeEach
     void init() {
         board = new FakeBoard(5);
@@ -36,6 +43,9 @@ public class ChartTest {
         chart.context = new ItemContext(board, player, null);
     }
 
+    /**
+     * Tests if the chart flags a cell when a trap is located in an adjacent position.
+     */
     @Test
     void testApplyEffectTrap() {
 
@@ -50,6 +60,9 @@ public class ChartTest {
         assertTrue(targetCell.isFlagged(), "Trap should be revealed (flagged)");
     }
 
+    /**
+     * Verifies that the chart does not flag cells that do not contain traps.
+     */
     @Test
     void testApplyEffectNormalCells() {
         Position emptyPos = new Position(1, 1);
@@ -61,6 +74,9 @@ public class ChartTest {
         assertFalse(emptyCell.isFlagged(), "Empty cells should not be flagged");
     }
 
+    /**
+     * Mock implementation of a Cell for testing purposes.
+     */
     static class CellFake implements Cell {
         private CellContent content;
         private boolean flagged = false;
@@ -105,6 +121,9 @@ public class ChartTest {
         }
     }
 
+    /**
+     * Mock implementation of the Board for testing purposes.
+     */
     static class FakeBoard implements Board {
         private final int size;
         private final Map<Position, Cell> cells = new HashMap<>();
@@ -173,6 +192,9 @@ public class ChartTest {
 
     }
 
+    /**
+     * Mock implementation of PlayerOperations for testing purposes.
+     */
     static class FakePlayer implements PlayerOperations {
         private Position pos; 
 
@@ -222,6 +244,9 @@ public class ChartTest {
         
     }
 
+    /**
+     * Mock implementation of a Trap (Revealable) for testing purposes.
+     */
     static class TrapFake implements Revealable {
 
         private boolean revealed = false;

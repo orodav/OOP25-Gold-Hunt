@@ -15,6 +15,10 @@ import it.unibo.goldhunt.items.api.KindOfItem;
 import it.unibo.goldhunt.player.api.Inventory;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 
+/**
+ * Test suite for Gold items (Gold and GoldX3).
+ * Checks if gold is added correctly and if the Lucky Clover bonus works.
+ */
 public class GoldsTest {
 
     private Gold gold;
@@ -22,6 +26,9 @@ public class GoldsTest {
     private FakeInventory inventory;
     private FakePlayer player;
 
+    /**
+     * Initializes the player, inventory, and gold items before each test.
+     */
     @BeforeEach
     void init(){
         inventory = new FakeInventory();
@@ -36,6 +43,9 @@ public class GoldsTest {
         goldX3.context = new ItemContext(null, player, inventory);
     }
 
+    /**
+     * Verifies that GoldX3 adds the correct tripled amount of gold.
+     */
     @Test
     void effectAppliedGoldX3(){
         PlayerOperations applied = goldX3.applyEffect(player);
@@ -44,6 +54,9 @@ public class GoldsTest {
         assertEquals(GoldX3.ADDED_GOLDX3, inventory.added, "should return the correct amount");
     }
 
+    /**
+     * Verifies that a standard Gold item adds the correct base amount of gold.
+     */
     @Test
     void effectAppliedGold(){
         PlayerOperations applied = gold.applyEffect(player);
@@ -52,6 +65,9 @@ public class GoldsTest {
         assertEquals(Gold.ADDED_GOLD, inventory.added, "should return the correct amount");
     }
 
+    /**
+     * Tests if the Lucky Clover correctly doubles the gold received from a normal Gold item.
+     */
     @Test
     void effectAppliedGoldBonus(){
         inventory.setClover(false);
@@ -68,6 +84,9 @@ public class GoldsTest {
 
     }
 
+    /**
+     * Tests if the Lucky Clover correctly doubles the gold received from a GoldX3 item.
+     */
     @Test
     void effectAppliedGoldX3Bonus(){
         inventory.setClover(false);
@@ -83,6 +102,9 @@ public class GoldsTest {
         assertEquals(expected, inventory.added, "gold with lucky clover should be doubled");
     }
 
+    /**
+     * Mock implementation of the Inventory to track added gold and clover presence.
+     */
     private static final class FakeInventory implements Inventory{
 
         int added = 0;
@@ -118,6 +140,10 @@ public class GoldsTest {
             return false;
         }
     }
+
+    /**
+     * Mock implementation of PlayerOperations to interact with the fake inventory.
+     */
     private final static class FakePlayer implements PlayerOperations{
 
         private final Inventory inventory;

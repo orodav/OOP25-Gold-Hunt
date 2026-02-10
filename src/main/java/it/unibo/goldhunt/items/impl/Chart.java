@@ -41,6 +41,14 @@ public class Chart extends Item{
         return ITEM_NAME;
     }
 
+    /**
+     * Recursively collects cells within a certai radius.
+     * 
+     * @param pos starting cell
+     * @param radius remining radius
+     * @param collected set of collected cells
+     * @param board game board
+     */
     private void recursiveCollect(Cell pos, int radius, Set<Cell> collected, Board board){
         collected.add(pos);
 
@@ -55,11 +63,23 @@ public class Chart extends Item{
         }
     }
 
+    /**
+     * Returns a short string representation of the item.
+     * 
+     * @return "M"
+     */
     @Override
     public String shortString() {
         return "M";
     }
 
+    /**
+     * Apply the effect to reveal traps nearby
+     * 
+     * @param playerop the player using the item
+     * @return the same PlayerOperations object after the effect
+     * @throws IllegalStateException if the item context is not bound  
+     */
     @Override
     public PlayerOperations applyEffect(PlayerOperations playerop) {
         if (context == null) {
@@ -77,6 +97,11 @@ public class Chart extends Item{
         return playerop;
     }
 
+    /**
+     * Returns the type of this item
+     * 
+     * @return {@link KindOfItem#CHART}
+     */
     @Override
     public KindOfItem getItem() {
         return KindOfItem.CHART;

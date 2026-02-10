@@ -4,7 +4,7 @@ package it.unibo.goldhunt.items.api;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 
 /**
- * Represents the content and effects of an item.
+ * Represents the content and effects of an item in game.
  * <p>
  * A {@code CellContent} can apply an effect when activated
  * and provides a short textual representation.
@@ -13,10 +13,10 @@ import it.unibo.goldhunt.player.api.PlayerOperations;
 public interface CellContent{
 
     /**
-     * Applies the effect associated with this cell content.
+     * Applies the effect to the player.
      *
-     * @return {@code true} if the effect was successfully applied,
-     *         {@code false} otherwise
+     * @param playerop the player
+     * @return the updated PlayerOperations if applied or null.
      */
     public PlayerOperations applyEffect(PlayerOperations playerop);
 

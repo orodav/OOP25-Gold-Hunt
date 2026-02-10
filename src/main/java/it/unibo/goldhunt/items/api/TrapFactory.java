@@ -10,6 +10,11 @@ import it.unibo.goldhunt.player.api.PlayerOperations;
  */
 public interface TrapFactory {
 
-
+    /**
+     * Creates a new trap instance for the given player.
+     * 
+     * @param playerop the player context for the trap
+     * @return a new {@link Revealable} trap 
+     */
     Revealable createTrap(PlayerOperations playerop);
 }

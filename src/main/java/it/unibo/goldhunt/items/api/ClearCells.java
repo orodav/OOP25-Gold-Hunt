@@ -8,7 +8,7 @@ import it.unibo.goldhunt.items.impl.Trap;
 /**
  * Provides an interface for clearing and revealing cells.
  * <p>
- * The default method removes any {@link Trap} contained
+ * The default method removes any {@link Trap} instance contained
  * in the given cells and then reveals them.
  */
 public interface ClearCells {

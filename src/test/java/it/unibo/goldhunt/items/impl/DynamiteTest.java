@@ -19,6 +19,10 @@ import it.unibo.goldhunt.items.api.ItemTypes;
 import it.unibo.goldhunt.player.api.Inventory;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 
+/**
+ * Test suite for the Dynamite item.
+ * Verifies that the dynamite correctly disarms all adjacent cells.
+ */
 public class DynamiteTest {
 
     private Dynamite dynamite;
@@ -26,6 +30,9 @@ public class DynamiteTest {
     private FakePlayer player;
 
 
+    /**
+     * Sets up the test environment with a fake board, player, and dynamite context.
+     */
     @BeforeEach
     void init(){
         board = new FakeBoard(8);
@@ -35,6 +42,9 @@ public class DynamiteTest {
         dynamite.context = new ItemContext(board, player, null);
     }
 
+    /**
+     * Tests that applying dynamite disarms all adjacent cells.
+     */
     @Test
     void testEffectDynamite(){
         PlayerOperations used = dynamite.applyEffect(player);
@@ -44,6 +54,10 @@ public class DynamiteTest {
         adj.forEach(cell-> assertTrue(((FakeCell) cell ).disarmed, "cell should be disarmed"));
     }
 
+    /**
+     * Verifies that an exception is thrown if the dynamite is used where 
+     * no adjacent cells are available.
+     */
     @Test
     void noAdjCells(){
         player.pos = new Position(0,0);
@@ -105,7 +119,9 @@ public class DynamiteTest {
         }, "should throw exception when no cells are nearby");
     }
 
-    
+    /**
+     * Mock implementation of a Board for testing dynamite logic.
+     */
     private static final class FakeBoard implements Board{
 
         private final int size;
@@ -188,6 +204,9 @@ public class DynamiteTest {
         
     }
 
+    /**
+     * Mock implementation of a Cell that tracks if it has been disarmed.
+     */
     private final static class FakeCell implements Cell{
 
         boolean disarmed = false;
@@ -246,6 +265,9 @@ public class DynamiteTest {
         
     }
 
+    /**
+     * Mock implementation of PlayerOperations for testing purposes.
+     */
     private static final class FakePlayer implements PlayerOperations{
 
         private Position pos;
