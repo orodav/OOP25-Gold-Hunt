@@ -26,7 +26,11 @@ import it.unibo.goldhunt.player.api.PlayerOperations;
  * Test suite for the Chart item.
  * Verifies that the chart correctly identifies and flags adjacent traps.
  */
-public class ChartTest {
+class ChartTest {
+
+    private static final int DEFAULT_BOARD_SIZE = 5;
+    private static final int PLAYER_POS_COORD = 2;
+    private static final int ADJACENT_COORD = 3;
 
     private Chart chart;
     private Board board;
@@ -36,11 +40,10 @@ public class ChartTest {
      */
     @BeforeEach
     void init() {
-        board = new FakeBoard(5);
-        FakePlayer player = new FakePlayer(new Position(2,2));
+        board = new FakeBoard(DEFAULT_BOARD_SIZE);
+        final FakePlayer player = new FakePlayer(new Position(PLAYER_POS_COORD, PLAYER_POS_COORD));
         chart = new Chart();
-
-        chart.context = new ItemContext(board, player, null);
+        chart.bind(new ItemContext(board, player, null));
     }
 
     /**
@@ -48,11 +51,10 @@ public class ChartTest {
      */
     @Test
     void testApplyEffectTrap() {
-
-        TrapFake trap = new TrapFake();
-        Position trapPos = new Position(2, 3);
-        Cell targetCell = board.getCell(trapPos);
-        PlayerOperations playerop = new FakePlayer(trapPos);
+        final TrapFake trap = new TrapFake();
+        final Position trapPos = new Position(PLAYER_POS_COORD, ADJACENT_COORD);
+        final Cell targetCell = board.getCell(trapPos);
+        final PlayerOperations playerop = new FakePlayer(trapPos);
         targetCell.setContent(trap);
 
         chart.applyEffect(playerop);
@@ -65,10 +67,9 @@ public class ChartTest {
      */
     @Test
     void testApplyEffectNormalCells() {
-        Position emptyPos = new Position(1, 1);
-        Cell emptyCell = board.getCell(emptyPos);
-        FakePlayer player = new FakePlayer(emptyPos);
-        
+        final Position emptyPos = new Position(1, 1);
+        final Cell emptyCell = board.getCell(emptyPos);
+        final FakePlayer player = new FakePlayer(emptyPos);
         chart.applyEffect(player);
 
         assertFalse(emptyCell.isFlagged(), "Empty cells should not be flagged");
@@ -79,45 +80,54 @@ public class ChartTest {
      */
     static class CellFake implements Cell {
         private CellContent content;
-        private boolean flagged = false;
+        private boolean flagged;
 
         @Override
         public void reveal() {
         }
+
         @Override
         public boolean isRevealed() {
-            return false; 
-            }
+            return false;
+        }
+
         @Override
         public void toggleFlag() {
-            flagged = !flagged; 
-            }
+            flagged = !flagged;
+        }
+
         @Override
         public boolean isFlagged() {
-            return flagged; 
+            return flagged;
         }
+
         @Override
-        public int getAdjacentTraps() { 
-            return 0; 
+        public int getAdjacentTraps() {
+            return 0;
         }
+
         @Override
-        public void setAdjacentTraps(int n) {
+        public void setAdjacentTraps(final int n) {
         }
+
         @Override
-        public boolean hasContent() { 
-            return content != null; 
+        public boolean hasContent() {
+            return content != null;
         }
+
         @Override
-        public Optional<CellContent> getContent() { 
-            return Optional.ofNullable(content); 
+        public Optional<CellContent> getContent() {
+            return Optional.ofNullable(content);
         }
+
         @Override
-        public void setContent(CellContent content) { 
-            this.content = content; 
+        public void setContent(final CellContent content) {
+            this.content = content;
         }
+
         @Override
-        public void removeContent() { 
-            content = null; 
+        public void removeContent() {
+            content = null;
         }
     }
 
@@ -128,20 +138,24 @@ public class ChartTest {
         private final int size;
         private final Map<Position, Cell> cells = new HashMap<>();
 
-        public FakeBoard(int size) {
-            this.size = size; 
-            }
+        FakeBoard(final int size) {
+            this.size = size;
+        }
 
         @Override
-        public Cell getCell(Position p) {
+        public Cell getCell(final Position p) {
             return cells.computeIfAbsent(p, k -> new CellFake());
         }
-        @Override public int getBoardSize() {
-            return size; 
-            }
-        @Override public boolean isPositionValid(Position p) {
-            return p.x() >= 0 && p.x() < size && p.y() >= 0 && p.y() < size; 
-            }
+
+        @Override
+        public int getBoardSize() {
+            return size;
+        }
+
+        @Override
+        public boolean isPositionValid(final Position p) {
+            return p.x() >= 0 && p.x() < size && p.y() >= 0 && p.y() < size;
+        }
 
         @Override
         public List<Cell> getBoardCells() {
@@ -149,9 +163,9 @@ public class ChartTest {
         }
 
         @Override
-        public Position getCellPosition(Cell cell) {
-            for (Map.Entry<Position, Cell> entry : cells.entrySet()) {
-                if (entry.getValue() == cell) {
+        public Position getCellPosition(final Cell cell) {
+            for (final Map.Entry<Position, Cell> entry : cells.entrySet()) {
+                if (entry.equals(cell)) {
                     return entry.getKey();
                 }
             }
@@ -159,15 +173,15 @@ public class ChartTest {
         }
 
         @Override
-        public List<Cell> getAdjacentCells(Position p) {
-            List<Cell> adj = new ArrayList<>();
-            int[] dx = {-1, 0, 1, 0};
-            int[] dy = {0, -1, 0, 1};
+        public List<Cell> getAdjacentCells(final Position p) {
+            final List<Cell> adj = new ArrayList<>();
+            final int[] dx = {-1, 0, 1, 0};
+            final int[] dy = {0, -1, 0, 1};
 
             for (int i = 0; i < 4; i++) {
-                int nborx = p.x() + dx[i];
-                int nbory = p.y() + dy[i];
-                Position nborp = new Position(nborx, nbory);
+                final int nborx = p.x() + dx[i];
+                final int nbory = p.y() + dy[i];
+                final Position nborp = new Position(nborx, nbory);
                 if (isPositionValid(nborp)) {
                     adj.add(getCell(nborp));
                 }
@@ -176,96 +190,100 @@ public class ChartTest {
         }
 
         @Override
-        public List<Cell> getRow(int index) {
+        public List<Cell> getRow(final int index) {
             throw new UnsupportedOperationException("Unimplemented method 'getRow'");
         }
 
         @Override
-        public List<Cell> getColumn(int index) {
+        public List<Cell> getColumn(final int index) {
             throw new UnsupportedOperationException("Unimplemented method 'getColumn'");
         }
 
         @Override
-        public boolean isAdjacent(Position p1, Position p2) {
+        public boolean isAdjacent(final Position p1, final Position p2) {
             throw new UnsupportedOperationException("Unimplemented method 'isAdjacent'");
         }
-
     }
 
     /**
      * Mock implementation of PlayerOperations for testing purposes.
      */
     static class FakePlayer implements PlayerOperations {
-        private Position pos; 
+        private final Position pos;
 
-        FakePlayer(Position pos){
+        FakePlayer(final Position pos) {
             this.pos = pos;
-        }  
+        }
+
         @Override
         public Position position() {
             return this.pos;
         }
+
         @Override
         public int livesCount() {
             throw new UnsupportedOperationException("Unimplemented method 'livesCount'");
         }
+
         @Override
         public int goldCount() {
             throw new UnsupportedOperationException("Unimplemented method 'goldCount'");
         }
+
         @Override
         public Inventory inventory() {
             throw new UnsupportedOperationException("Unimplemented method 'inventory'");
         }
+
         @Override
-        public PlayerOperations withInventory(Inventory inventory) {
+        public PlayerOperations withInventory(final Inventory inventory) {
             throw new UnsupportedOperationException("Unimplemented method 'withInventory'");
         }
+
         @Override
-        public PlayerOperations moveTo(Position p) {
+        public PlayerOperations moveTo(final Position p) {
             throw new UnsupportedOperationException("Unimplemented method 'moveTo'");
         }
+
         @Override
-        public PlayerOperations addGold(int num) {
+        public PlayerOperations addGold(final int num) {
             throw new UnsupportedOperationException("Unimplemented method 'addGold'");
         }
+
         @Override
-        public PlayerOperations addLives(int num) {
+        public PlayerOperations addLives(final int num) {
             throw new UnsupportedOperationException("Unimplemented method 'addLives'");
         }
+
         @Override
-        public PlayerOperations addItem(ItemTypes item, int quantity) {
+        public PlayerOperations addItem(final ItemTypes item, final int quantity) {
             throw new UnsupportedOperationException("Unimplemented method 'addItem'");
         }
+
         @Override
-        public PlayerOperations useItem(ItemTypes item, int quantity) {
+        public PlayerOperations useItem(final ItemTypes item, final int quantity) {
             throw new UnsupportedOperationException("Unimplemented method 'useItem'");
         }
-        
     }
 
     /**
      * Mock implementation of a Trap (Revealable) for testing purposes.
      */
     static class TrapFake implements Revealable {
-
-        private boolean revealed = false;
+        private boolean revealed;
 
         @Override
         public String shortString() {
             return "T";
         }
 
-        public boolean revealed(){
-        return revealed;
+        public boolean revealed() {
+            return revealed;
         }
 
         @Override
-        public PlayerOperations applyEffect(PlayerOperations playerop) {
+        public PlayerOperations applyEffect(final PlayerOperations playerop) {
             return playerop;
         }
     }
-
-
 }
-   

@@ -30,7 +30,7 @@ public class Lifes extends Item{
      * @throws IllegalStateException if the item context is missing.
      */
     @Override
-    public PlayerOperations applyEffect(PlayerOperations playerop) {
+    public PlayerOperations applyEffect(final PlayerOperations playerop) {
         if(context == null){
             throw new IllegalStateException("item cannot bound");
         }

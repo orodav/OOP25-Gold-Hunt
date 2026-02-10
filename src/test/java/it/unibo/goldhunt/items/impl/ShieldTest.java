@@ -15,51 +15,64 @@ import it.unibo.goldhunt.items.api.Revealable;
 import it.unibo.goldhunt.player.api.Inventory;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 
-public class ShieldTest {
+/**
+ * Test class for {@link Shield} item.
+ * Verifies that the shield protects the player from traps.
+ */
+class ShieldTest {
 
     private Shield shield;
     private PlayerOpFake playerOp;
 
+    /**
+     * Sets up the test environment with a fake player and a bound shield.
+     */
     @BeforeEach
-    void init(){
+    void init() {
         playerOp = new PlayerOpFake(2);
         Objects.requireNonNull(playerOp);
         shield = new Shield();
         Objects.requireNonNull(shield);
-
-        ItemContext itemContext = new ItemContext(null, playerOp, null);
+        final ItemContext itemContext = new ItemContext(null, playerOp, null);
         shield.bind(itemContext);
         shield.trap = new TrapFake(true);
     }
 
+    /**
+     * Tests that the shield is used and lives are preserved when a trap is triggered.
+     */
     @Test
-    void applyWhenTrapActivated(){
-        int livesBefore = playerOp.lives;
-
-        PlayerOperations used = shield.applyEffect(playerOp);
+    void applyWhenTrapActivated() {
+        final int livesBefore = playerOp.lives;
+        final PlayerOperations used = shield.applyEffect(playerOp);
 
         assertTrue(used != null, "shield should be used");
         assertEquals(livesBefore, playerOp.lives);
     }
 
+    /**
+     * Tests that the shield is not consumed if no trap is present.
+     */
     @Test
-    void noTrapEffect(){
+    void noTrapEffect() {
         shield.trap = null;
-
-        int livesBef = playerOp.livesCount();
-        PlayerOperations used = shield.applyEffect(playerOp);
+        final int livesBef = playerOp.livesCount();
+        final PlayerOperations used = shield.applyEffect(playerOp);
 
         assertEquals(null, used, "the shield should not be used when no trap is activated");
         assertEquals(livesBef, playerOp.livesCount(), "lives shoul remain the same");
     }
 
-    private static final class TrapFake implements Revealable{
+    /**
+     * Fake trap implementation used to simulate a threat for the shield.
+     */
+    private static final class TrapFake implements Revealable {
 
         private final boolean effect;
 
-        TrapFake(boolean effect){
+        TrapFake(final boolean effect) {
             this.effect = effect;
-            getEffect();
+            isEffect();
         }
 
         @Override
@@ -68,21 +81,23 @@ public class ShieldTest {
         }
 
         @Override
-        public PlayerOperations applyEffect(PlayerOperations playerop) {
+        public PlayerOperations applyEffect(final PlayerOperations playerop) {
             return playerop;
         }
 
-        private boolean getEffect(){
+        private boolean isEffect() {
             return effect;
         }
-        
     }
 
-    private static final class PlayerOpFake implements PlayerOperations{
+    /**
+     * Fake PlayerOperations implementation to track life changes during trap events.
+     */
+    private static final class PlayerOpFake implements PlayerOperations {
 
         private int lives;
-        
-        PlayerOpFake(int lives){
+
+        PlayerOpFake(final int lives) {
             this.lives = lives;
         }
 
@@ -107,35 +122,34 @@ public class ShieldTest {
         }
 
         @Override
-        public PlayerOperations withInventory(Inventory inventory) {
+        public PlayerOperations withInventory(final Inventory inventory) {
             throw new UnsupportedOperationException("Unimplemented method 'withInventory'");
         }
 
         @Override
-        public PlayerOperations moveTo(Position p) {
+        public PlayerOperations moveTo(final Position p) {
             throw new UnsupportedOperationException("Unimplemented method 'moveTo'");
         }
 
         @Override
-        public PlayerOperations addGold(int num) {
+        public PlayerOperations addGold(final int num) {
             throw new UnsupportedOperationException("Unimplemented method 'addGold'");
         }
 
         @Override
-        public PlayerOperations addLives(int num) {
+        public PlayerOperations addLives(final int num) {
             lives += num;
             return this;
         }
 
         @Override
-        public PlayerOperations addItem(ItemTypes item, int quantity) {
+        public PlayerOperations addItem(final ItemTypes item, final int quantity) {
             throw new UnsupportedOperationException("Unimplemented method 'addItem'");
         }
 
         @Override
-        public PlayerOperations useItem(ItemTypes item, int quantity) {
+        public PlayerOperations useItem(final ItemTypes item, final int quantity) {
             throw new UnsupportedOperationException("Unimplemented method 'useItem'");
         }
-        
     }
 }

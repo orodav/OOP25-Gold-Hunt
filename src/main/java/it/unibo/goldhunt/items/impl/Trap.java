@@ -14,14 +14,14 @@ public class Trap implements Revealable{
      * Private constructor
      */
     Trap(){
-
+        //empty constructor for factory instantiation
     }
 
     /**
      * Binds a player to this trap.
      * @param playerop the player to bind.
      */
-    public void bind(PlayerOperations playerop){
+    public void bind(final PlayerOperations playerop){
         this.playerop = playerop;
     }
     

@@ -18,7 +18,7 @@ import it.unibo.goldhunt.player.api.PlayerOperations;
  */
 public class ItemFactoryImpl implements ItemFactory{
 
-    private final static Map<String, Supplier<Item>> ITEMS = new HashMap<>();
+    private static final Map<String, Supplier<Item>> ITEMS = new HashMap<>();
 
 
     static{
@@ -43,13 +43,13 @@ public class ItemFactoryImpl implements ItemFactory{
      * @throws IllegalArgumentException if the symbol is unknown
      */
     @Override
-    public Item generateItem(String item, Board board, PlayerOperations playerop, Inventory inventory){
-        Supplier<Item> constructor = ITEMS.get(item);
+    public Item generateItem(final String item, final Board board, final PlayerOperations playerop, final Inventory inventory){
+        final Supplier<Item> constructor = ITEMS.get(item);
 
         if(constructor == null){
             throw new IllegalArgumentException();
         }
-        Item obj = constructor.get();
+        final Item obj = constructor.get();
         obj.bind(new ItemContext(board, playerop, inventory));
         return obj;
     }
@@ -62,8 +62,8 @@ public class ItemFactoryImpl implements ItemFactory{
      * @throws IllegalArgumentException if the symbol is unknown
      */
     @Override
-    public Item generateItem(String item) {
-        Supplier<Item> constructor = ITEMS.get(item);
+    public Item generateItem(final String item) {
+        final Supplier<Item> constructor = ITEMS.get(item);
             if (constructor == null) {
             throw new IllegalArgumentException("Unknown item symbol");
             }

@@ -14,32 +14,47 @@ import it.unibo.goldhunt.items.api.Revealable;
 import it.unibo.goldhunt.player.api.Inventory;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 
-public class TrapFactoryImplTest {
+/**
+ * Test class for {@link TrapFactoryImpl}.
+ * Verifies the correct creation and typing of trap items.
+ */
+class TrapFactoryImplTest {
 
     private TrapFactoryImpl trapFactory;
     private PlayerOpFake playerop;
 
+    /**
+     * Initializes the factory and the fake player before each test.
+     */
     @BeforeEach
-    void init(){
+    void init() {
         playerop = new PlayerOpFake();
         trapFactory = new TrapFactoryImpl(playerop);
         Objects.requireNonNull(trapFactory);
     }
 
+    /**
+     * Verifies that the factory does not return null when creating a trap.
+     */
     @Test
-    void testTrapNonNull(){
-        Revealable trap = trapFactory.createTrap(playerop);
+    void testTrapNonNull() {
+        final Revealable trap = trapFactory.createTrap(playerop);
         assertNotNull(trap, "should not create an empty trap");
     }
 
+    /**
+     * Ensures that the created trap is a valid instance of {@link Revealable}.
+     */
     @Test
-    void trapIsTrap(){
-        Revealable trap = trapFactory.createTrap(playerop);
+    void trapIsTrap() {
+        final Revealable trap = trapFactory.createTrap(playerop);
         assertTrue(trap instanceof Revealable, "should create an instance of Trap");
     }
 
-
-     private static class PlayerOpFake implements PlayerOperations{
+     /**
+      * Fake PlayerOperations implementation to satisfy factory dependencies.
+      */
+     private static final class PlayerOpFake implements PlayerOperations {
 
         private int lives = 3;
 
@@ -64,35 +79,34 @@ public class TrapFactoryImplTest {
         }
 
         @Override
-        public PlayerOperations moveTo(Position p) {
+        public PlayerOperations moveTo(final Position p) {
             throw new UnsupportedOperationException("Unimplemented method 'moveTo'");
         }
 
         @Override
-        public PlayerOperations addGold(int num) {
+        public PlayerOperations addGold(final int num) {
             throw new UnsupportedOperationException("Unimplemented method 'addGold'");
         }
 
         @Override
-        public PlayerOperations addLives(int num) {
+        public PlayerOperations addLives(final int num) {
             this.lives += num;
             return this;
         }
 
         @Override
-        public PlayerOperations addItem(ItemTypes item, int quantity) {
+        public PlayerOperations addItem(final ItemTypes item, final int quantity) {
             throw new UnsupportedOperationException("Unimplemented method 'addItem'");
         }
 
         @Override
-        public PlayerOperations useItem(ItemTypes item, int quantity) {
+        public PlayerOperations useItem(final ItemTypes item, final int quantity) {
             throw new UnsupportedOperationException("Unimplemented method 'useItem'");
         }
 
         @Override
-        public PlayerOperations withInventory(Inventory inventory) {
+        public PlayerOperations withInventory(final Inventory inventory) {
             throw new UnsupportedOperationException("Unimplemented method 'withInventory'");
         }
-
     }
 }

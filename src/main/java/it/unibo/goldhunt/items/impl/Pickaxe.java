@@ -10,7 +10,7 @@ import it.unibo.goldhunt.player.api.PlayerOperations;
 
 public class Pickaxe extends Item implements ClearCells{
 
-    private final static String ITEM_NAME = "Pickaxe";
+    private static final String ITEM_NAME = "Pickaxe";
     
     /**
      * Returns the name of the item
@@ -30,15 +30,15 @@ public class Pickaxe extends Item implements ClearCells{
      * @throws IllegalStateException if the context is not set.
      */
     @Override
-    public PlayerOperations applyEffect(PlayerOperations playerop) {
-        if(context == null){
+    public PlayerOperations applyEffect(final PlayerOperations playerop) {
+        if(context == null) {
             throw new IllegalStateException("cannot bind items");
         }
 
-        var board = context.board();
-        Random random = new Random();
-        int idx = random.nextInt(board.getBoardSize());
-        List<Cell> cells = random.nextBoolean() 
+        final var board = context.board();
+        final Random random = new Random();
+        final int idx = random.nextInt(board.getBoardSize());
+        final List<Cell> cells = random.nextBoolean() 
         ? board.getRow(idx) 
         : board.getColumn(idx);
 

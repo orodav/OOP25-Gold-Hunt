@@ -7,7 +7,7 @@ import it.unibo.goldhunt.player.api.PlayerOperations;
 //luca
 public class Shield extends Item{
 
-    private final static String ITEM_NAME = "Shield";
+    private static final String ITEM_NAME = "Shield";
 
     public Revealable trap;
 
@@ -29,7 +29,7 @@ public class Shield extends Item{
      * @throws IllegalStateException if the context is missing
      */
     @Override
-    public PlayerOperations applyEffect(PlayerOperations playerop) {
+    public PlayerOperations applyEffect(final PlayerOperations playerop) {
         if(context == null){
             throw new IllegalStateException("cannot bound item");
         }
@@ -62,7 +62,7 @@ public class Shield extends Item{
      * Connects a trap to this shield.
      * @param trap the trap to bind.
      */
-    public void bindTrap(Revealable trap){
+    public void bindTrap(final Revealable trap){
         this.trap = trap;
     }
 

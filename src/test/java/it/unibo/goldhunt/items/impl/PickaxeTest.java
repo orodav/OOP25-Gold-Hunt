@@ -19,23 +19,33 @@ import it.unibo.goldhunt.items.api.ItemTypes;
 import it.unibo.goldhunt.player.api.Inventory;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 
-public class PickaxeTest {
+/**
+ * Test class for {@link Pickaxe} item.
+ * Verifies that the pickaxe correctly reveals and disarms rows or columns on the board.
+ */
+class PickaxeTest {
     private Pickaxe pick;
     private FakeBoard board;
     private FakePlayer player;
-    
 
+    /**
+     * Sets up the test environment with a fake board and player.
+     */
     @BeforeEach
-    void init(){
+    void init() {
         board = new FakeBoard(10);
         pick = new Pickaxe();
         player = new FakePlayer();
-        ItemContext context = new ItemContext(board, null, null);
+        final ItemContext context = new ItemContext(board, null, null);
         pick.bind(context);
     }
 
+    /**
+     * Tests multiple times that applying the pickaxe effect disarms at least 
+     * one full row or column.
+     */
     @RepeatedTest(10)
-    void effectPick(){
+    void effectPick() {
         pick.applyEffect(player);
         boolean found = false;
 
@@ -47,18 +57,23 @@ public class PickaxeTest {
         }
         assertTrue(found, "pickaxe should reveal and disarm a row or a column");
     }
-    
+
+    /**
+     * Verifies the pickaxe behavior when used on cells containing traps.
+     */
     @Test
-    void pickOnTrap(){
+    void pickOnTrap() {
         board.getRow(0).forEach(c -> c.setContent(new FakeTrap()));
-    
         pick.applyEffect(player);
     }
 
-    private final static class FakeTrap implements CellContent{
+    /**
+     * Fake trap content for testing disarming logic.
+     */
+    private static final class FakeTrap implements CellContent {
 
         @Override
-        public PlayerOperations applyEffect(PlayerOperations playerop) {
+        public PlayerOperations applyEffect(final PlayerOperations playerop) {
             return playerop;
         }
 
@@ -66,27 +81,29 @@ public class PickaxeTest {
         public String shortString() {
             return "T";
         }
+
         @Override
-        public boolean isTrap(){
+        public boolean isTrap() {
             return true;
         }
-        
     }
 
-    private static final class FakeBoard implements Board{
+    /**
+     * Mock board implementation to track cell states (disarmed/revealed).
+     */
+    private static final class FakeBoard implements Board {
 
         private final int size;
         private final Cell[][] cell;
 
-        FakeBoard(int size){
+        FakeBoard(final int size) {
             this.size = size;
             cell = new Cell[size][size];
-            for (int i = 0; i < size; i++){
-                for (int j = 0; j < size; j++){
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
                     cell[i][j] = new FakeCell();
 
                 }
-
             }
         }
 
@@ -96,29 +113,37 @@ public class PickaxeTest {
         }
 
         @Override
-        public Cell getCell(Position p) {
+        public Cell getCell(final Position p) {
             throw new UnsupportedOperationException("Unimplemented method 'getCell'");
         }
 
         @Override
-        public Position getCellPosition(Cell cell) {
+        public Position getCellPosition(final Cell pCell) {
             throw new UnsupportedOperationException("Unimplemented method 'getCellPosition'");
         }
 
         @Override
-        public List<Cell> getAdjacentCells(Position p) {
+        public List<Cell> getAdjacentCells(final Position p) {
             throw new UnsupportedOperationException("Unimplemented method 'getAdjacentCells'");
         }
 
-        boolean isRowDisarmed(int row) {
-            for (Cell c : getRow(row)) if (!((FakeCell)c).disarmed) return false;
-            return true;
-        }
-        boolean isColumnDisarmed(int col) {
-            for (Cell c : getColumn(col)) if (!((FakeCell)c).disarmed) return false;
+        boolean isRowDisarmed(final int row) {
+            for (final Cell c : getRow(row)) {
+                if (!((FakeCell) c).disarmed) {
+                    return false;
+                }
+            }
             return true;
         }
 
+        boolean isColumnDisarmed(final int col) {
+            for (final Cell c : getColumn(col)) {
+                if (!((FakeCell) c).disarmed) {
+                    return false;
+                }
+            }
+            return true;
+        }
 
         @Override
         public int getBoardSize() {
@@ -126,40 +151,42 @@ public class PickaxeTest {
         }
 
         @Override
-        public List<Cell> getRow(int index) {
-            List<Cell> row = new ArrayList<>();
-            for(int j = 0; j < size; j++){
+        public List<Cell> getRow(final int index) {
+            final List<Cell> row = new ArrayList<>();
+            for (int j = 0; j < size; j++) {
                 row.add(cell[index][j]);
             }
             return row;
         }
 
         @Override
-        public List<Cell> getColumn(int index) {
-            List<Cell> col = new ArrayList<>();
-            for(int i = 0; i < size; i++){
+        public List<Cell> getColumn(final int index) {
+            final List<Cell> col = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
                 col.add(cell[i][index]);
             }
             return col;
         }
 
         @Override
-        public boolean isPositionValid(Position p) {
+        public boolean isPositionValid(final Position p) {
             throw new UnsupportedOperationException("Unimplemented method 'isPositionValid'");
         }
 
         @Override
-        public boolean isAdjacent(Position p1, Position p2) {
+        public boolean isAdjacent(final Position p1, final Position p2) {
             throw new UnsupportedOperationException("Unimplemented method 'isAdjacent'");
         }
-        
     }
 
-    private static final class FakeCell implements Cell{
+    /**
+     * Mock cell implementation to simulate revealing and content management.
+     */
+    private static final class FakeCell implements Cell {
 
-        boolean disarmed = false;
+        private boolean disarmed;
         private CellContent content;
-        private boolean revealed = false;
+        private boolean revealed;
 
         @Override
         public void reveal() {
@@ -188,7 +215,7 @@ public class PickaxeTest {
         }
 
         @Override
-        public void setAdjacentTraps(int n) {
+        public void setAdjacentTraps(final int n) {
             throw new UnsupportedOperationException("Unimplemented method 'setAdjacentTraps'");
         }
 
@@ -203,7 +230,7 @@ public class PickaxeTest {
         }
 
         @Override
-        public void setContent(CellContent content) {
+        public void setContent(final CellContent content) {
             this.content = content;
         }
 
@@ -211,10 +238,12 @@ public class PickaxeTest {
         public void removeContent() {
             this.content = null;
         }
-        
     }
 
-    private final static class FakePlayer implements PlayerOperations{
+    /**
+     * Fake player implementation for effect application tests.
+     */
+    private static final class FakePlayer implements PlayerOperations {
 
         @Override
         public Position position() {
@@ -241,40 +270,39 @@ public class PickaxeTest {
         }
 
         @Override
-        public PlayerOperations withInventory(Inventory inventory) {
+        public PlayerOperations withInventory(final Inventory inventory) {
 
             throw new UnsupportedOperationException("Unimplemented method 'withInventory'");
         }
 
         @Override
-        public PlayerOperations moveTo(Position p) {
+        public PlayerOperations moveTo(final Position p) {
 
             throw new UnsupportedOperationException("Unimplemented method 'moveTo'");
         }
 
         @Override
-        public PlayerOperations addGold(int num) {
+        public PlayerOperations addGold(final int num) {
 
             throw new UnsupportedOperationException("Unimplemented method 'addGold'");
         }
 
         @Override
-        public PlayerOperations addLives(int num) {
+        public PlayerOperations addLives(final int num) {
 
             throw new UnsupportedOperationException("Unimplemented method 'addLives'");
         }
 
         @Override
-        public PlayerOperations addItem(ItemTypes item, int quantity) {
+        public PlayerOperations addItem(final ItemTypes item, final int quantity) {
 
             throw new UnsupportedOperationException("Unimplemented method 'addItem'");
         }
 
         @Override
-        public PlayerOperations useItem(ItemTypes item, int quantity) {
+        public PlayerOperations useItem(final ItemTypes item, final int quantity) {
 
             throw new UnsupportedOperationException("Unimplemented method 'useItem'");
         }
-        
     }
 }

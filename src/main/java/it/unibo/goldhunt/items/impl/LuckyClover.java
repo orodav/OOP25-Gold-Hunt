@@ -5,7 +5,7 @@ import it.unibo.goldhunt.player.api.PlayerOperations;
 
 public class LuckyClover extends Item{
 
-    private final static String ITEM_NAME = "Lucky clover";
+    private static final String ITEM_NAME = "Lucky clover";
 
     /**
      * Returns the name of the item
@@ -25,7 +25,7 @@ public class LuckyClover extends Item{
      * @throws IllegalArgumentException if player or context is null.
      */
     @Override
-    public PlayerOperations applyEffect(PlayerOperations playerop) {
+    public PlayerOperations applyEffect(final PlayerOperations playerop) {
         if(playerop == null){
             throw new IllegalArgumentException();
         }

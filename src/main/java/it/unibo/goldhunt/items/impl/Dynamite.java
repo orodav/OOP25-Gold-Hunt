@@ -19,7 +19,7 @@ public class Dynamite extends Item implements ClearCells{
     
 
     /**
-     * Returns the name of the item
+     * Returns the name of the item.
      * 
      * @return "Dynamite"
      */
@@ -29,7 +29,7 @@ public class Dynamite extends Item implements ClearCells{
     }
 
     /**
-     * Applies the Dynamite effect, clearing traps in the adjacent cells
+     * Applies the Dynamite effect, clearing traps in the adjacent cells.
      * 
      * @param playerop the player using the item 
      * @return the same PlayerOperations object after the effect

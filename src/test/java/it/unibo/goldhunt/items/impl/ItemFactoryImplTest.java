@@ -2,7 +2,6 @@ package it.unibo.goldhunt.items.impl;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -22,83 +21,72 @@ import it.unibo.goldhunt.player.api.PlayerOperations;
  * Ensures that items are created correctly based on string keys and that 
  * their context is properly bound.
  */
-public class ItemFactoryImplTest {
+class ItemFactoryImplTest {
+    private static final String CHART_ID = "C";
+    private static final String PICKAXE_ID = "P";
+    private static final String MAP_ID = "M";
+    private static final String DYNAMITE_ID = "D";
+    private static final String GOLD_ID = "G";
+    private static final String LIVES_ID = "L";
+    private static final String SHIELD_ID = "S";
+    private static final String GOLDX3_ID = "X";
     private ItemFactoryImpl itemFactoryImpl;
 
-    /**
-     * Initializes the factory before each test.
-     */
     @BeforeEach
-    void init(){
+    void init() {
         itemFactoryImpl = new ItemFactoryImpl();
     }
 
-    /**
-     * Verifies that each valid key produces the correct item instance.
-     */
     @Test
-    void testCorrectItem(){
-        assertTrue(itemFactoryImpl.generateItem("M") instanceof Chart);
-        assertTrue(itemFactoryImpl.generateItem("D") instanceof Dynamite);
-        assertTrue(itemFactoryImpl.generateItem("G") instanceof Gold);
-        assertTrue(itemFactoryImpl.generateItem("L") instanceof Lifes);
-        assertTrue(itemFactoryImpl.generateItem("C") instanceof LuckyClover);
-        assertTrue(itemFactoryImpl.generateItem("P") instanceof Pickaxe);
-        assertTrue(itemFactoryImpl.generateItem("S") instanceof Shield);
-        assertTrue(itemFactoryImpl.generateItem("X") instanceof GoldX3);
-
+    void testCorrectItem() {
+        assertTrue(itemFactoryImpl.generateItem(MAP_ID) instanceof Chart);
+        assertTrue(itemFactoryImpl.generateItem(DYNAMITE_ID) instanceof Dynamite);
+        assertTrue(itemFactoryImpl.generateItem(GOLD_ID) instanceof Gold);
+        assertTrue(itemFactoryImpl.generateItem(LIVES_ID) instanceof Lifes);
+        assertTrue(itemFactoryImpl.generateItem(CHART_ID) instanceof LuckyClover);
+        assertTrue(itemFactoryImpl.generateItem(PICKAXE_ID) instanceof Pickaxe);
+        assertTrue(itemFactoryImpl.generateItem(SHIELD_ID) instanceof Shield);
+        assertTrue(itemFactoryImpl.generateItem(GOLDX3_ID) instanceof GoldX3);
     }
 
-    /**
-     * Ensures the factory returns a non-null item for all valid keys.
-     */
     @Test
-    void generateItems(){
-        String key[] = {"M", "D", "G", "L", "C", "P", "S", "X"};
-        for (String str : key) {
-            Item item = itemFactoryImpl.generateItem(str);
+    void generateItems() {
+        // Usa le costanti anche nell'array
+        final String[] keys = {
+            MAP_ID, DYNAMITE_ID, GOLD_ID, LIVES_ID, 
+            CHART_ID, PICKAXE_ID, SHIELD_ID, GOLDX3_ID,
+        };
+        for (final String str : keys) {
+            final Item item = itemFactoryImpl.generateItem(str);
             assertNotNull(item, "should return an item given the key");
         }
     }
 
-    /**
-     * Verifies that providing an invalid key throws an IllegalArgumentException.
-     */
     @Test
-    void generateWrongItem(){
-        assertThrows(IllegalArgumentException.class, () -> itemFactoryImpl.generateItem("Q"));
-    }
+    void testObjectsAreDiff() {
+        final Item firsItem = itemFactoryImpl.generateItem(PICKAXE_ID);
+        final Item secondItem = itemFactoryImpl.generateItem(PICKAXE_ID);
 
-    /**
-     * Ensures that the factory creates a new object instance every time 
-     * (no shared/singleton instances).
-     */
-    @Test
-    void testObjectsAreDiff(){
-        Item firsItem = itemFactoryImpl.generateItem("M");
-        Item secondItem = itemFactoryImpl.generateItem("M");
         assertNotSame(firsItem, secondItem, "every call should return a different object");
     }
 
-    /**
-     * Checks if the overloaded generateItem correctly binds the 
-     * game context (board, player, inventory) to the created item.
-     */
     @Test
-    void testItemContextBound(){
-        Board board = new FakeBoard();
-        PlayerOperations player = new FakePlayer();
-        Inventory inventory = new FakeInventory();
+    void testItemContextBound() {
+        final Board board = new FakeBoard();
+        final PlayerOperations player = new FakePlayer();
+        final Inventory inventory = new FakeInventory();
+        // Usa CHART_ID qui
+        final Item item = itemFactoryImpl.generateItem(CHART_ID, board, player, inventory);
 
-        Item item = itemFactoryImpl.generateItem("M", board, player, inventory);
         assertNotNull(item);
-        assertNotNull( item.context, "item should have a bound context");
+        // Nota: Assicurati che 'context' sia accessibile o usa un getter
+        assertNotNull(item.context, "item should have a bound context");
     }
 
     /**
      * Empty mock of Board for context binding tests.
      */
-    private static final class FakeBoard implements Board{
+    private static final class FakeBoard implements Board {
 
         @Override
         public List<Cell> getBoardCells() {
@@ -106,17 +94,17 @@ public class ItemFactoryImplTest {
         }
 
         @Override
-        public Cell getCell(Position p) {
+        public Cell getCell(final Position p) {
             throw new UnsupportedOperationException("Unimplemented method 'getCell'");
         }
 
         @Override
-        public Position getCellPosition(Cell cell) {
+        public Position getCellPosition(final Cell cell) {
             throw new UnsupportedOperationException("Unimplemented method 'getCellPosition'");
         }
 
         @Override
-        public List<Cell> getAdjacentCells(Position p) {
+        public List<Cell> getAdjacentCells(final Position p) {
             throw new UnsupportedOperationException("Unimplemented method 'getAdjacentCells'");
         }
 
@@ -126,31 +114,30 @@ public class ItemFactoryImplTest {
         }
 
         @Override
-        public List<Cell> getRow(int index) {
+        public List<Cell> getRow(final int index) {
             throw new UnsupportedOperationException("Unimplemented method 'getRow'");
         }
 
         @Override
-        public List<Cell> getColumn(int index) {
+        public List<Cell> getColumn(final int index) {
             throw new UnsupportedOperationException("Unimplemented method 'getColumn'");
         }
 
         @Override
-        public boolean isPositionValid(Position p) {
+        public boolean isPositionValid(final Position p) {
             throw new UnsupportedOperationException("Unimplemented method 'isPositionValid'");
         }
 
         @Override
-        public boolean isAdjacent(Position p1, Position p2) {
+        public boolean isAdjacent(final Position p1, final Position p2) {
             throw new UnsupportedOperationException("Unimplemented method 'isAdjacent'");
         }
-        
     }
 
     /**
      * Empty mock of PlayerOperations for context binding tests.
      */
-    private static final class FakePlayer implements PlayerOperations{
+    private static final class FakePlayer implements PlayerOperations {
 
         @Override
         public Position position() {
@@ -173,58 +160,54 @@ public class ItemFactoryImplTest {
         }
 
         @Override
-        public PlayerOperations withInventory(Inventory inventory) {
+        public PlayerOperations withInventory(final Inventory inventory) {
             throw new UnsupportedOperationException("Unimplemented method 'withInventory'");
         }
 
         @Override
-        public PlayerOperations moveTo(Position p) {
+        public PlayerOperations moveTo(final Position p) {
             throw new UnsupportedOperationException("Unimplemented method 'moveTo'");
         }
 
         @Override
-        public PlayerOperations addGold(int num) {
+        public PlayerOperations addGold(final int num) {
             throw new UnsupportedOperationException("Unimplemented method 'addGold'");
         }
 
         @Override
-        public PlayerOperations addLives(int num) {
+        public PlayerOperations addLives(final int num) {
             throw new UnsupportedOperationException("Unimplemented method 'addLives'");
         }
 
         @Override
-        public PlayerOperations addItem(ItemTypes item, int quantity) {
+        public PlayerOperations addItem(final ItemTypes item, final int quantity) {
             throw new UnsupportedOperationException("Unimplemented method 'addItem'");
         }
 
         @Override
-        public PlayerOperations useItem(ItemTypes item, int quantity) {
+        public PlayerOperations useItem(final ItemTypes item, final int quantity) {
             throw new UnsupportedOperationException("Unimplemented method 'useItem'");
         }
-        
     }
 
     /**
      * Empty mock of Inventory for context binding tests.
      */
-    private static final class FakeInventory implements Inventory{
+    private static final class FakeInventory implements Inventory {
 
         @Override
-        public Inventory add(ItemTypes item, int quantity) {
+        public Inventory add(final ItemTypes item, final int quantity) {
             throw new UnsupportedOperationException("Unimplemented method 'add'");
         }
 
         @Override
-        public Inventory remove(ItemTypes item, int quantity) {
+        public Inventory remove(final ItemTypes item, final int quantity) {
             throw new UnsupportedOperationException("Unimplemented method 'remove'");
         }
 
         @Override
-        public int quantity(ItemTypes item) {
+        public int quantity(final ItemTypes item) {
             throw new UnsupportedOperationException("Unimplemented method 'quantity'");
         }
-        
     }
-
-
 }

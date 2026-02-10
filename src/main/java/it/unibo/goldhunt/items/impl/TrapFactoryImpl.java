@@ -15,7 +15,7 @@ public class TrapFactoryImpl implements TrapFactory{
      * Creates a new factory with a reference to the player.
      * @param playerop the player operations.
      */
-    public TrapFactoryImpl(PlayerOperations playerop){
+    public TrapFactoryImpl(final PlayerOperations playerop){
         this.playerop = playerop;
     }
 
@@ -25,8 +25,8 @@ public class TrapFactoryImpl implements TrapFactory{
      * @return a new initialized {@link Revealable} trap.
      */
     @Override
-    public Revealable createTrap(PlayerOperations playerop) {
-        var trap = new Trap();
+    public Revealable createTrap(final PlayerOperations playerop) {
+        final var trap = new Trap();
         trap.bind(playerop);
         return trap;
     }
