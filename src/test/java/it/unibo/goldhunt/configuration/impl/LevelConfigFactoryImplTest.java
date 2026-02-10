@@ -41,7 +41,7 @@ public class LevelConfigFactoryImplTest {
     }
 
     @Test
-    void testCreateWithNullThrowsEcxeption() {
+    void testCreateWithNullThrowsException() {
         assertThrows(NullPointerException.class, () -> factory.create(null));
     }
 }

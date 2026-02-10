@@ -30,18 +30,18 @@ public class HardConfig implements LevelConfig {
     @Override
     public Map<String, Integer> getItemConfig() {
 
-        Map<String, Integer> mediumData = new HashMap<>();
+        Map<String, Integer> hardData = new HashMap<>();
 
-        mediumData.put("D", DYNAMITE_COUNT);
-        mediumData.put("G", GOLD_COUNT);
-        mediumData.put("X", GOLDX3_COUNT);
-        mediumData.put("L", LIFES_COUNT);
-        mediumData.put("C", LUCKY_CLOVER_COUNT);
-        mediumData.put("M", CHART_COUNT);
-        mediumData.put("P", PICKAXE_COUNT);
-        mediumData.put("S", SHIELD_COUNT);
+        hardData.put("D", DYNAMITE_COUNT);
+        hardData.put("G", GOLD_COUNT);
+        hardData.put("X", GOLDX3_COUNT);
+        hardData.put("L", LIFES_COUNT);
+        hardData.put("C", LUCKY_CLOVER_COUNT);
+        hardData.put("M", CHART_COUNT);
+        hardData.put("P", PICKAXE_COUNT);
+        hardData.put("S", SHIELD_COUNT);
 
-        return mediumData;
+        return hardData;
     }
 
     /**

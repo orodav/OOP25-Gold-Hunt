@@ -39,7 +39,7 @@ public class BoardGeneratorImpl implements BoardGenerator {
      * Creates a new {@code BoardGeneratorImpl}.
      * 
      * @param boardFactory the factory used to create board cells
-     * @param trapFactory the factpry used to create traps
+     * @param trapFactory the factory used to create traps
      * @param itemFactory the factory used to create items placed on the board
      * @param player the player operations instance used for trap creation
      * @throws NullPointerException if any parameter is null
@@ -117,7 +117,7 @@ public class BoardGeneratorImpl implements BoardGenerator {
     
     /**
      * Computes a safe path by using a BFS algorithm, 
-     * ensuring it dows not exceed max length. 
+     * ensuring it does not exceed max length. 
      * 
      * @param board the board on which the safepath is computed
      * @param start the starting position of the algorithm

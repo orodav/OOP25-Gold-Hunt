@@ -44,69 +44,69 @@ class BoardGeneratorImplTest {
     }
 
     @Test
-    void boardIsGeneratedSuccessfully() {
+    void testBoardIsGeneratedSuccessfully() {
         assertDoesNotThrow(() -> generator.generate(config, start, exit));
     }
 
     @Test
-    void boardHasCorrectSize() {
+    void testBoardHasCorrectSize() {
         Board board = generator.generate(config, start, exit);
         assertEquals(config.getBoardSize(), board.getBoardSize());
     }
 
     @Test
-    void startCellIsEmpty() {
+    void testStartCellIsEmpty() {
         Board board = generator.generate(config, start, exit);
         assertTrue(board.getCell(start).getContent().isEmpty());
     }
 
     @Test
-    void exitCellIsEmpty() {
+    void testExitCellIsEmpty() {
         Board board = generator.generate(config, start, exit);
         assertTrue(board.getCell(exit).getContent().isEmpty());
     }
 
     @Test
-    void exactlyCorrectNumberOfTraps() {
+    void testExactlyCorrectNumberOfTraps() {
         Board board = generator.generate(config, start, exit);
         long traps = countTraps(board);
-        assertEquals(config.getTrapCount(), traps, "Must place exactly the configured number of traps");
+        assertEquals(config.getTrapCount(), traps, "10 traps attesi");
     }
 
     @Test
-    void exactlyCorrectNumberOfItems() {
+    void testExactlyCorrectNumberOfItems() {
         Board board = generator.generate(config, start, exit);
         int expectedItems = config.getItemConfig().values().stream().mapToInt(Integer::intValue).sum();
-        long items = board.getBoardCells().stream().filter(c -> c.hasContent() && !c.getContent().get().isTrap()).count();
-        assertEquals(expectedItems, items, "Must place exactly the configured number of items");
+        long actualItems = board.getBoardCells().stream().filter(c -> c.hasContent() && !c.getContent().get().isTrap()).count();
+        assertEquals(expectedItems, actualItems);
     }
 
     @Test
-    void adjacentTrapsAreComputedCorrectly() {
+    void testAdjacentTrapsAreComputedCorrectly() {
         Board board = generator.generate(config, start, exit);
         for (Cell cell : board.getBoardCells()) {
             int computed = cell.getAdjacentTraps();
             int actual = countAdjacentTraps(board, cell);
-            assertEquals(actual, computed, "Adjacent traps incorrect for cell " + board.getCellPosition(cell));
+            assertEquals(actual, computed);
         }
     }
 
     @Test
-    void allCellsAreInitiallyHidden() {
+    void testAllCellsAreInitiallyHidden() {
         Board board = generator.generate(config, start, exit);
         boolean anyRevealed = board.getBoardCells().stream().anyMatch(Cell::isRevealed);
         assertFalse(anyRevealed);
     }
 
     @Test
-    void startAndExitAreReachablePositions() {
+    void testStartAndExitAreReachablePositions() {
         Board board = generator.generate(config, start, exit);
         assertDoesNotThrow(() -> board.getCell(start));
         assertDoesNotThrow(() -> board.getCell(exit));
     }
 
     @Test
-    void startAndExitAreOnSafePath() {
+    void testStartAndExitAreOnSafePath() {
         Board board = generator.generate(config, start, exit);
         assertTrue(board.getCell(start).getContent().isEmpty());
         assertTrue(board.getCell(exit).getContent().isEmpty());
