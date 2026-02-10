@@ -79,10 +79,11 @@ public class GameFactory {
         final BoardGenerator boardGenerator = new BoardGeneratorImpl(
             boardFactory, 
             trapFactory, 
-            this.itemFactory
+            this.itemFactory,
+            player
         );
         final Level level = new LevelImpl(config, boardGenerator, player);
-        level.initBoard();;
+        level.initBoard();
         level.initPlayerPosition();
         level.initLives();
         final MovementRules rules = new MovementRulesImpl(level.getBoard());

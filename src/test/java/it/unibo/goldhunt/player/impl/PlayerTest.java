@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.items.api.ItemTypes;
+import it.unibo.goldhunt.items.api.KindOfItem;
 import it.unibo.goldhunt.player.api.Inventory;
+import it.unibo.goldhunt.player.api.PlayerOperations;
 
 public class PlayerTest {
 
@@ -31,8 +33,11 @@ public class PlayerTest {
         SHIELD;
 
         @Override
-        public boolean applyEffect() {
-            return false;
+        public PlayerOperations applyEffect(final PlayerOperations player) {
+            if (player == null) {
+                throw new IllegalArgumentException("player");
+            }
+            return player;
         }
 
         @Override
@@ -43,6 +48,11 @@ public class PlayerTest {
         @Override
         public String getName() {
             return "shield";
+        }
+
+        @Override
+        public KindOfItem getItem() {
+            throw new UnsupportedOperationException("Unimplemented method 'getItem'");
         }
 
         
@@ -190,7 +200,7 @@ public class PlayerTest {
     }
 
     @Test
-    void addLivesShouldNotAllowReachingZero() {
+    void addLivesShouldAllowReachingZero() {
         var player = new PlayerImpl(pos(0, 0), 1, 0, emptyInventory());
         var updated = player.addLives(-1);
         assertEquals(0, updated.livesCount());
