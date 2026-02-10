@@ -198,7 +198,7 @@ public class ReadOnlyBoardAdapterTest {
         final ReadOnlyCell roCell = adapter.cellAt(new Position(0, 0));
         assertTrue(roCell.isRevealed());
         assertFalse(roCell.isFlagged());
-        assertEquals(5, roCell.adjacentTraps());
+        assertEquals(5, roCell.getAdjacentTraps());
         assertTrue(roCell.contentID().isEmpty());
     }
 
