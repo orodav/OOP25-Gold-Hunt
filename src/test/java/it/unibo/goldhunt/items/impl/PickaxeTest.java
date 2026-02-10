@@ -15,23 +15,28 @@ import it.unibo.goldhunt.board.api.Cell;
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.items.api.CellContent;
 import it.unibo.goldhunt.items.api.ItemContext;
+import it.unibo.goldhunt.items.api.ItemTypes;
+import it.unibo.goldhunt.player.api.Inventory;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 
 public class PickaxeTest {
     private Pickaxe pick;
     private FakeBoard board;
+    private FakePlayer player;
+    
 
     @BeforeEach
     void init(){
         board = new FakeBoard(10);
         pick = new Pickaxe();
+        player = new FakePlayer();
         ItemContext context = new ItemContext(board, null, null);
         pick.bind(context);
     }
 
     @RepeatedTest(10)
     void effectPick(){
-        pick.applyEffect(playerop);
+        pick.applyEffect(player);
         boolean found = false;
 
         for (int i = 0; i < board.size; i++) {
@@ -47,7 +52,7 @@ public class PickaxeTest {
     void pickOnTrap(){
         board.getRow(0).forEach(c -> c.setContent(new FakeTrap()));
     
-        pick.applyEffect(playerop);
+        pick.applyEffect(player);
     }
 
     private final static class FakeTrap implements CellContent{
@@ -205,6 +210,70 @@ public class PickaxeTest {
         @Override
         public void removeContent() {
             this.content = null;
+        }
+        
+    }
+
+    private final static class FakePlayer implements PlayerOperations{
+
+        @Override
+        public Position position() {
+
+            throw new UnsupportedOperationException("Unimplemented method 'position'");
+        }
+
+        @Override
+        public int livesCount() {
+
+            throw new UnsupportedOperationException("Unimplemented method 'livesCount'");
+        }
+
+        @Override
+        public int goldCount() {
+
+            throw new UnsupportedOperationException("Unimplemented method 'goldCount'");
+        }
+
+        @Override
+        public Inventory inventory() {
+
+            throw new UnsupportedOperationException("Unimplemented method 'inventory'");
+        }
+
+        @Override
+        public PlayerOperations withInventory(Inventory inventory) {
+
+            throw new UnsupportedOperationException("Unimplemented method 'withInventory'");
+        }
+
+        @Override
+        public PlayerOperations moveTo(Position p) {
+
+            throw new UnsupportedOperationException("Unimplemented method 'moveTo'");
+        }
+
+        @Override
+        public PlayerOperations addGold(int num) {
+
+            throw new UnsupportedOperationException("Unimplemented method 'addGold'");
+        }
+
+        @Override
+        public PlayerOperations addLives(int num) {
+
+            throw new UnsupportedOperationException("Unimplemented method 'addLives'");
+        }
+
+        @Override
+        public PlayerOperations addItem(ItemTypes item, int quantity) {
+
+            throw new UnsupportedOperationException("Unimplemented method 'addItem'");
+        }
+
+        @Override
+        public PlayerOperations useItem(ItemTypes item, int quantity) {
+
+            throw new UnsupportedOperationException("Unimplemented method 'useItem'");
         }
         
     }

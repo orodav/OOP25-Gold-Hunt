@@ -32,9 +32,9 @@ public class LifesTest {
         
 
         lifes.bind(new ItemContext(null, playerop, null));
-        boolean res = lifes.applyEffect();
+        PlayerOperations res = lifes.applyEffect(playerop);
 
-        assertTrue(res);
+        assertTrue(res != null);
         assertEquals(3, playerop.livesCount());
     }
 
@@ -46,9 +46,9 @@ public class LifesTest {
         Objects.requireNonNull(playerop);
 
         lifes.bind(new ItemContext(null, playerop, null));
-        boolean res = lifes.applyEffect();
+        PlayerOperations res = lifes.applyEffect(playerop);
 
-        assertFalse(res);
+        assertFalse(res != null);
         assertEquals(Item.MAX_QUANTITY_LIVES, playerop.livesCount());
     }
 

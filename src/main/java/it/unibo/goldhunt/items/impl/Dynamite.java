@@ -32,7 +32,8 @@ public class Dynamite extends Item implements ClearCells{
         
         List<Cell> adjacent = board.getAdjacentCells(board.getCellPosition(currentCell));
         if(adjacent == null || adjacent.isEmpty()){
-            return playerop;
+            throw new IllegalStateException();
+        
         }
         disarm(adjacent);
         return playerop;

@@ -37,9 +37,9 @@ public class DynamiteTest {
 
     @Test
     void testEffectDynamite(){
-        boolean used = dynamite.applyEffect();
+        PlayerOperations used = dynamite.applyEffect(player);
 
-        assertTrue(used, "when used should return true");
+        assertTrue(used != null, "when used should return true");
         List<Cell> adj = board.getAdjacentCells(player.pos);
         adj.forEach(cell-> assertTrue(((FakeCell) cell ).disarmed, "cell should be disarmed"));
     }
@@ -101,7 +101,7 @@ public class DynamiteTest {
 
         dynamite.context = new ItemContext(emptyBoard, player, null);
         assertThrows(IllegalStateException.class, () -> {
-            dynamite.applyEffect();
+            dynamite.applyEffect(player);
         }, "should throw exception when no cells are nearby");
     }
 
