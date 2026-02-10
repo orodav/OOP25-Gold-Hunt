@@ -15,7 +15,7 @@ public interface Inventory {
             throw new IllegalArgumentException("item can't be null");
         }
         if (quantity < 0) {
-            throw new IllegalArgumentException("Quantity must be > 0");
+            throw new IllegalArgumentException("Quantity must be >= 0");
         }
         return this.quantity(item) >= quantity;
     }

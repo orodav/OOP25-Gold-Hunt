@@ -3,6 +3,7 @@ package it.unibo.goldhunt.shop.impl;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,6 +28,7 @@ public final class ShopImpl implements Shop {
     private final int purchasesDone;
     private final Set<ItemTypes> boughtThisSession;
     private final Map<ItemTypes, ShopItem> catalog;
+    private final List<ShopItem> itemView;
 
     /**
      * Builds a shop with a fixed catalog and a maximum number of purchases.
@@ -45,13 +47,11 @@ public final class ShopImpl implements Shop {
         if (maxPurchases < 0) {
             throw new IllegalArgumentException("maxPurchases must be >= 0");
         }
-        
-
         this.player = player;
         this.maxPurchases = maxPurchases;
         this.purchasesDone = 0;
         this.boughtThisSession = Set.of();
-
+        final List<ShopItem> list = new ArrayList<>(catalog.size());
         final Map<ItemTypes, ShopItem> map = new HashMap<>();
         for (final ShopItem item : catalog) {
             if (item == null) {
@@ -67,19 +67,23 @@ public final class ShopImpl implements Shop {
                 throw new IllegalArgumentException("duplicate item in catalog: " + item.type());
             }
             map.put(item.type(), item);
+            list.add(item);
         }
-        this.catalog = map;
+        this.catalog = Map.copyOf(map);
+        this.itemView = List.copyOf(list);
     }
 
     private ShopImpl(
         final PlayerOperations player,
         final Map<ItemTypes, ShopItem> catalog,
+        final List<ShopItem> itemView,
         final int maxPurchases,
         final int purchasesDone,
         final Set<ItemTypes> boughtThisSession
     ) {
         this.player = player;
         this.catalog = catalog;
+        this.itemView = itemView;
         this.maxPurchases = maxPurchases;
         this.purchasesDone = purchasesDone;
         this.boughtThisSession = boughtThisSession;
@@ -87,7 +91,7 @@ public final class ShopImpl implements Shop {
 
     @Override
     public List<ShopItem> items() {
-        return new ArrayList<>(this.catalog.values());
+        return this.itemView;
     }
 
     @Override
@@ -115,7 +119,6 @@ public final class ShopImpl implements Shop {
         if (this.player.goldCount() < shopItem.price()) {
             return blocked(ShopStopReason.NOT_ENOUGH_GOLD);
         }
-
         final Inventory updatedInv = this.player.inventory().add(type, 1);
         final PlayerOperations updatedPlayer = this.player
             .addGold(-shopItem.price())
@@ -127,9 +130,10 @@ public final class ShopImpl implements Shop {
         final Shop updatedShop = new ShopImpl(
             updatedPlayer,
             this.catalog,
+            this.itemView,
             this.maxPurchases,
             this.purchasesDone + 1,
-            updatedBought
+            Set.copyOf(updatedBought)
         );
 
         return new ShopActionResult(
@@ -146,6 +150,7 @@ public final class ShopImpl implements Shop {
         final Shop sameShop = new ShopImpl(
             this.player,
             this.catalog,
+            this.itemView,
             this.maxPurchases,
             this.purchasesDone,
             this.boughtThisSession

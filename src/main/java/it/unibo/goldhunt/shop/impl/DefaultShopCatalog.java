@@ -2,7 +2,7 @@ package it.unibo.goldhunt.shop.impl;
 
 import java.util.List;
 
-import it.unibo.goldhunt.items.api.BaseItemType;
+import it.unibo.goldhunt.items.api.KindOfItem;
 import it.unibo.goldhunt.shop.api.ShopItem;
 
 public final class DefaultShopCatalog {
@@ -16,10 +16,10 @@ public final class DefaultShopCatalog {
 
     public static List<ShopItem> create() {
         return List.of(
-            new ShopItem(BaseItemType.SHIELD, SHIELD_PRICE),
-            new ShopItem(BaseItemType.PICKAXE, PICKAXE_PRICE),
-            new ShopItem(BaseItemType.DYNAMITE, DYNAMITE_PRICE),
-            new ShopItem(BaseItemType.CHART, CHART_PRICE)
+            new ShopItem(KindOfItem.SHIELD, SHIELD_PRICE),
+            new ShopItem(KindOfItem.PICKAXE, PICKAXE_PRICE),
+            new ShopItem(KindOfItem.DYNAMITE, DYNAMITE_PRICE),
+            new ShopItem(KindOfItem.CHART, CHART_PRICE)
         );
     }
 }

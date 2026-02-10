@@ -167,7 +167,7 @@ public class EngineImpl implements EngineWithShopActions {
         final Shop currentShop = this.shop.get();
         final ShopActionResult res = currentShop.buy(type);
         if (res.effect() == ShopActionEffect.APPLIED) {
-            this.player = (PlayerOperations) res.player();
+            this.player = res.player();
             this.shop = Optional.of(res.shop());
         }
         return res;

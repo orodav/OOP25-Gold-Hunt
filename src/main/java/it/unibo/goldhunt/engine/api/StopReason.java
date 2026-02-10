@@ -8,6 +8,3 @@ public enum StopReason {
     ON_WARNING,
     NONE;
 }
-
-/* NONE è per azioni che non riguardano il movimento, rendendo la 
-enum utilizzabile anche in altri contesti */

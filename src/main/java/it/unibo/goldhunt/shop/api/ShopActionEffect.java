@@ -13,5 +13,5 @@ public enum ShopActionEffect {
     /**
      * The action has been blocked by shop rules.
      */
-    BLOCKED,
+    BLOCKED
 }
