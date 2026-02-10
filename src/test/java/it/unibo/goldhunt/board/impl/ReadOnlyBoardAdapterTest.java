@@ -56,5 +56,5 @@ final class ReadOnlyBoardAdapterTest {
         board.getCell(p).reveal();
         assertTrue(adapter.cellAt(p).isRevealed());
     }
-    
+
 }
