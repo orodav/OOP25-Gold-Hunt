@@ -1,4 +1,3 @@
-/*
 package it.unibo.goldhunt.shop.impl;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.items.api.ItemTypes;
+import it.unibo.goldhunt.items.api.KindOfItem;
 import it.unibo.goldhunt.player.api.Inventory;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 import it.unibo.goldhunt.player.impl.InventoryImpl;
@@ -42,8 +42,11 @@ public class ShopTest {
         PICKAXE;
 
         @Override
-        public boolean applyEffect() {
-            return false;
+        public PlayerOperations applyEffect(final PlayerOperations player) {
+            if (player == null) {
+                throw new IllegalArgumentException("player");
+            }
+            return player;
         }
 
         @Override
@@ -54,6 +57,11 @@ public class ShopTest {
         @Override
         public String getName() {
             return name().toLowerCase();
+        }
+
+        @Override
+        public KindOfItem getItem() {
+            return KindOfItem.SHIELD;
         }
     }
 
@@ -117,6 +125,17 @@ public class ShopTest {
             () -> new ShopImpl(
                 playerWithGold(10), 
                 List.of(item(StubItem.SHIELD, -2)), 1)
+        );
+    }
+
+    @Test
+    void costructorShouldThrowIfCatalogContainsDuplicateType() {
+        assertThrows(IllegalArgumentException.class, 
+            () -> new ShopImpl(
+                playerWithGold(10), 
+                List.of(item(StubItem.SHIELD, 3), item(StubItem.SHIELD, 5)), 
+                2
+            )
         );
     }
 
@@ -239,4 +258,3 @@ public class ShopTest {
         assertEquals(1, second.player().inventory().quantity(StubItem.PICKAXE));
     }
 }
- */

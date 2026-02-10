@@ -323,9 +323,8 @@ public class MovementRulesTest {
     void canEnterShouldReturnFalseForInvalidTo() {
         final MovementRules rules = new MovementRulesImpl(new TestBoard(4));
         final Player player = new BasicPlayer(pos(0, 0));
-        assertFalse(rules.canEnter(pos(0, 0), pos(3, 3), player));
         assertFalse(rules.canEnter(pos(0, 0), pos(0, 4), player));
-    }   //aaaaaaaaaaaaaaaaaaaaaaaaaa adiacente
+    }   
 
     @Test
     void canEnterShouldRespectBlockedPredicate() {
@@ -346,6 +345,29 @@ public class MovementRulesTest {
         final Player player = new BasicPlayer(pos(0, 0));
         assertTrue(rules.canEnter(pos(0, 0), pos(1, 1), player));
     }
+
+    @Test
+    void canEnterShouldReturnFalseWhenNotAdjacent() {
+        final MovementRules rules = new MovementRulesImpl(new TestBoard(4));
+        final Player player = new BasicPlayer(pos(0, 0));
+        assertFalse(rules.canEnter(pos(0, 0), pos(3, 3), player));
+    }
+
+    @Test
+    void canEnterShouldThrowIfAnyArgumentNull() {
+        final MovementRules rules = new MovementRulesImpl(new TestBoard(3));
+        final Player player = new BasicPlayer(pos(0, 0));
+        assertThrows(IllegalArgumentException.class, 
+            () -> rules.canEnter(null, pos(0, 1), player)
+        );
+        assertThrows(IllegalArgumentException.class, 
+            () -> rules.canEnter(pos(0, 0), null, player)
+        );
+        assertThrows(IllegalArgumentException.class, 
+            () -> rules.canEnter(pos(0, 0), pos(0, 1), null)
+        );
+    }
+
     @Test
     void mustStopOnShouldReturnFalseForInvalid() {
         final Board b = new TestBoard(5);
@@ -419,6 +441,13 @@ public class MovementRulesTest {
         final var xDelta = Math.abs(s.x() - from.x());
         final var yDelta = Math.abs(s.y() - from.y());
         assertTrue(xDelta <= 1 && yDelta <= 1 && !(xDelta == 0 && yDelta == 0));
+    }
+
+    @Test
+    void nextUnitaryStepShouldReturnEmptyWhenPathInvalid() {
+        final Player player = new BasicPlayer(pos(0, 0));
+        final MovementRules rules = new MovementRulesImpl(new TestBoard(3));
+        assertTrue(rules.nextUnitaryStep(pos(0, 0), pos(9, 9), player).isEmpty());
     }
 
     @Test

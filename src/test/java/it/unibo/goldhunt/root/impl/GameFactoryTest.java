@@ -18,6 +18,7 @@ class GameFactoryTest {
         assertNotNull(session.level());
         assertNotNull(session.engine());
         assertNotNull(session.shop());
+        assertTrue(session.shop().isEmpty());
     }
 
     @Test
@@ -29,5 +30,13 @@ class GameFactoryTest {
         assertNotNull(session.engine().state().player());
         assertNotNull(session.engine().state().status());
         assertTrue(session.engine().state().board().boardSize() > 0);
+    }
+
+    @Test
+    void newGameShouldThrowIfDifficultyNull() {
+        final GameFactory factory = new GameFactory();
+        assertThrows(NullPointerException.class, 
+            () -> factory.newGame(null)
+        );
     }
 }

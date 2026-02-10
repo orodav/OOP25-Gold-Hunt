@@ -1,4 +1,3 @@
-/*
 package it.unibo.goldhunt.player.impl;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -6,7 +5,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import it.unibo.goldhunt.items.api.ItemTypes;
+import it.unibo.goldhunt.items.api.KindOfItem;
 import it.unibo.goldhunt.player.api.Inventory;
+import it.unibo.goldhunt.player.api.PlayerOperations;
 
 public class InventoryTest {
     // Helpers
@@ -18,8 +19,11 @@ public class InventoryTest {
         SHIELD;
 
         @Override
-        public boolean applyEffect() {
-            return false;
+        public PlayerOperations applyEffect(final PlayerOperations player) {
+            if (player == null) {
+                throw new IllegalArgumentException("player");
+            }
+            return player;
         }
 
         @Override
@@ -30,6 +34,11 @@ public class InventoryTest {
         @Override
         public String getName() {
             return "shield";
+        }
+
+        @Override
+        public KindOfItem getItem() {
+            throw new UnsupportedOperationException("Unimplemented method 'getItem'");
         }
     }
 
@@ -159,7 +168,7 @@ public class InventoryTest {
     void hasAtLeastShouldThrowIfItemNull() {
         final var inventory = empty();
         assertThrows(IllegalArgumentException.class, 
-            () -> inventory.hasAtLeast(null, -1)
+            () -> inventory.hasAtLeast(null, 0)
         );
     }
     @Test
@@ -169,4 +178,3 @@ public class InventoryTest {
             () -> inventory.hasAtLeast(StubItem.SHIELD, -1));
     }
 }
- */

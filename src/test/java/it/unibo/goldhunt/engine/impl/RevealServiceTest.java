@@ -1,4 +1,3 @@
-/*
 package it.unibo.goldhunt.engine.impl;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -91,7 +90,6 @@ public class RevealServiceTest {
 
         @Override
         public void setAdjacentTraps(int n) {
-            throw new UnsupportedOperationException("Unimplemented method 'setAdjacentTraps'");
         }
 
         @Override
@@ -101,17 +99,15 @@ public class RevealServiceTest {
 
         @Override
         public Optional<CellContent> getContent() {
-            throw new UnsupportedOperationException("Unimplemented method 'getContent'");
+            return Optional.empty();
         }
 
         @Override
         public void setContent(CellContent content) {
-            throw new UnsupportedOperationException("Unimplemented method 'setContent'");
         }
 
         @Override
         public void removeContent() {
-            throw new UnsupportedOperationException("Unimplemented method 'removeContent'");
         }
     }
 
@@ -197,8 +193,12 @@ public class RevealServiceTest {
         return new RevealService(
             this.board, 
             this.strategy, 
-            () -> this.status, 
-            () -> this.player
+            () -> this.player, 
+            p -> {
+                this.player = p;
+                return p;
+            },
+            () -> this.status
         );
     }
 
@@ -287,7 +287,7 @@ public class RevealServiceTest {
         newCells.put(p, new TestCell(false, true));
         newCells.put(new Position(0, 1), new TestCell(false, false));
         this.board = new TestBoard(Set.of(p, new Position(0, 1)), newCells);
-        final ActionResult ar = makeService().reveal(p);
+        final ActionResult ar = makeService().toggleFlag(p);
         assertEquals(ActionEffect.BLOCKED, ar.effect());
         assertFalse(((TestCell) this.board.getCell(p)).isFlagged());
     }
@@ -309,4 +309,3 @@ public class RevealServiceTest {
         assertFalse(((TestCell) this.board.getCell(p)).isFlagged());
     }
 }
- */

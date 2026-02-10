@@ -144,7 +144,7 @@ public class MoveServiceTest {
 
         @Override
         public Optional<Position> nextUnitaryStep(Position from, Position to, Player player) {
-            throw new UnsupportedOperationException("Unimplemented method 'nextUnitaryStep'");
+            return Optional.empty();
         }
     }
 
@@ -171,7 +171,7 @@ public class MoveServiceTest {
             this.rules,
             this.testPlayer::get,
             this.testPlayer::set,
-            () -> this.status);
+            () -> status);
     }
     
     @Test
@@ -227,6 +227,7 @@ public class MoveServiceTest {
         assertEquals(new Position(0, 0), this.testPlayer.get().position());
     }
 
+    @Test
     void shouldReturnBlockedWhenCannotEnterStep() {
         final MoveService service = makeService(this.board, this.rules, this.testPlayer, this.status);
         this.rules.path = Optional.of(List.of(new Position(0, 1)));

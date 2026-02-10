@@ -61,7 +61,7 @@ public class StatusTest {
         assertEquals(GameMode.DIFFICULTY, updated.gameMode());
         assertEquals(prevState.levelState(), updated.levelState());
         assertEquals(prevState.levelNumber(), updated.levelNumber());
-        assertNotEquals(prevState, updated);
+        assertNotSame(prevState, updated);
         assertEquals(GameMode.LEVEL, prevState.gameMode());
     }
 
