@@ -13,45 +13,53 @@ public interface Level {
 
     /**
      * Initializes the game board according to the level configuration.
-     * @throws
+     * 
+     * @throws IllegalStateException if board generation fails
      */
     public void initBoard();
 
     /**
      * Initializes the player's position to the starting cell.
-     * @throws
+     * 
+     * @throws IllegalStateException if player repositioning fails
      */
     public void initPlayerPosition();
 
     /**
      * Initializes the player's lives.
-     * @throws
+     * 
+     * @throws IllegalStateException if lives initialization fails
      */
     public void initLives();
 
     /**
      * Returns the current game board.
+     * 
      * @return the current game {@link Board}
      */
     public Board getBoard();
 
     /**
      * Returns the start position.
+     * 
      * @return the start {@link Position}
      */
     public Position getStart();
 
     /**
      * Returns the exit position.
+     * 
      * @return the exit {@link Position}
      */
     public Position getExit();
 
     /**
      * Returns the player.
+     * 
      * @return the {@link player}
      */
     public PlayerOperations getPlayer();
 }
+
 
 

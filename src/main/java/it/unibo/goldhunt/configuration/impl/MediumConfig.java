@@ -6,8 +6,8 @@ import java.util.Map;
 import it.unibo.goldhunt.configuration.api.LevelConfig;
 
 /**
- * This class is one of the implementations of LevelConfig and represents
- * the configuration for the MEDIUM difficulty level.
+ * This class is one of the implementations of {@link LevelConfig} 
+ * for MEDIUM difficulty: 16x16 board, 40 traps, specific item quantities. 
  */
 public class MediumConfig implements LevelConfig {
 

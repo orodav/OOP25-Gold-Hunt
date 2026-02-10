@@ -10,7 +10,9 @@ import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 
 /**
- * This class is the implementation of Level.
+ * This class is the implementation of {@link Level}.
+ * It initializes boards using a generator, positions player at (0, 0)
+ * and sets initial lives to 3.
  */
 public class LevelImpl implements Level {
 
@@ -26,9 +28,11 @@ public class LevelImpl implements Level {
 
     /**
      * Creates a new instance of LevelImpl.
+     * 
      * @param config the level configuration
      * @param boardGenerator the board generator
      * @param player the player
+     * @throws NullPointerException if any parameter is null
      */
     public LevelImpl(final LevelConfig config, final BoardGenerator boardGenerator, final PlayerOperations player) {
         this.config = Objects.requireNonNull(config);
@@ -51,7 +55,7 @@ public class LevelImpl implements Level {
      */
     @Override
     public void initPlayerPosition() {
-        this.player = player.moveTo(START);
+        this.player = this.player.moveTo(START);
     }
 
     /**
@@ -59,7 +63,7 @@ public class LevelImpl implements Level {
      */
     @Override
     public void initLives() {
-        this.player = player.addLives(INITIAL_LIVES);
+        this.player = this.player.addLives(INITIAL_LIVES);
     }
 
     /**
@@ -94,3 +98,4 @@ public class LevelImpl implements Level {
         return player;
     }
 }
+

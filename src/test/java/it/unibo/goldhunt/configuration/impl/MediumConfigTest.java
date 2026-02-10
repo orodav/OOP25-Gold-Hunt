@@ -5,6 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Tests for {@link MediumConfig}.
+ */
 class MediumConfigTest {
 
     private MediumConfig config;
@@ -42,3 +45,4 @@ class MediumConfigTest {
         assertEquals(2, items.getOrDefault("S", 0));
     }
 }
+

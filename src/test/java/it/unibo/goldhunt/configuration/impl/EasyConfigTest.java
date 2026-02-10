@@ -5,6 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Tests for {@link EasyConfig}.
+ */
 class EasyConfigTest {
 
     private EasyConfig config;
@@ -42,4 +45,5 @@ class EasyConfigTest {
         assertEquals(1, items.getOrDefault("S", 0));
     }
 }
+
 

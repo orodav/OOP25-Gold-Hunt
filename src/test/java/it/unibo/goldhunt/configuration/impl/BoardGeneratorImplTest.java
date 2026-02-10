@@ -21,6 +21,11 @@ import it.unibo.goldhunt.items.impl.TrapFactoryImpl;
 import it.unibo.goldhunt.player.impl.InventoryImpl;
 import it.unibo.goldhunt.player.impl.PlayerImpl;
 
+/**
+ * Tests for {@link BoardGeneratorImpl}.
+ * Verifies board generation, content placement, safety
+ * and computations.
+ */
 class BoardGeneratorImplTest {
 
     private BoardGenerator generator;
@@ -107,16 +112,8 @@ class BoardGeneratorImplTest {
         assertTrue(board.getCell(exit).getContent().isEmpty());
     }
 
-
-
-
     private long countTraps(Board board) {
         return board.getBoardCells().stream().filter(c -> c.hasContent() && c.getContent().get().isTrap()).count();
-    }
-
-    @SuppressWarnings("unused")
-    private long countItems(Board board) {
-        return board.getBoardCells().stream().filter(c -> c.hasContent() && !c.getContent().get().isTrap()).count();
     }
 
     private int countAdjacentTraps(Board board, Cell cell) {
@@ -253,5 +250,6 @@ class BoardGeneratorImplTest {
         }
     }
 }
+
 
 

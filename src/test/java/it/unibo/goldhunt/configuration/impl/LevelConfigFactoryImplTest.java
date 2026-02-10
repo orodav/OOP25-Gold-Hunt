@@ -10,6 +10,9 @@ import it.unibo.goldhunt.configuration.api.Difficulty;
 import it.unibo.goldhunt.configuration.api.LevelConfig;
 import it.unibo.goldhunt.configuration.api.LevelConfigFactory;
 
+/**
+ * Tests for {@link LevelConfigFactoryImpl}.
+ */
 public class LevelConfigFactoryImplTest {
 
     private LevelConfigFactory factory;

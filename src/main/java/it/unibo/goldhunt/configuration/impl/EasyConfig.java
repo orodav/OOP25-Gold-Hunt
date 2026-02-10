@@ -6,8 +6,8 @@ import java.util.Map;
 import it.unibo.goldhunt.configuration.api.LevelConfig;
 
 /**
- * This class is one of the implementations of LevelConfig and represents 
- * the configuration for the EASY difficulty level.
+ * This class is one of the implementations of {@link LevelConfig} 
+ * for EASY difficulty: 9x9 board, 10 traps, specific item quantities. 
  */
 public class EasyConfig implements LevelConfig {
 
@@ -60,4 +60,5 @@ public class EasyConfig implements LevelConfig {
         return BOARD_SIZE;
     }
 }
+
 

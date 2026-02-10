@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 import it.unibo.goldhunt.configuration.api.LevelConfig;
 
-/** 
- * This class is one of the implementations of LevelConfig and represents 
- * the configuration for the HARD difficulty level.
+/**
+ * This class is one of the implementations of {@link LevelConfig} 
+ * for HARD difficulty: 22x22 board, 99 traps, specific item quantities. 
  */
 public class HardConfig implements LevelConfig {
 
@@ -60,3 +60,4 @@ public class HardConfig implements LevelConfig {
         return BOARD_SIZE;
     }
 }
+

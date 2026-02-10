@@ -18,7 +18,7 @@ import it.unibo.goldhunt.player.api.Inventory;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 
 /**
- * Tests for {@link LevelImpl}
+ * Tests for {@link LevelImpl}.
  */
 class LevelImplTest {
 
@@ -170,7 +170,7 @@ class LevelImplTest {
     }
 
     @Test
-    void testEasyInitBoardSetsExitCorreclty() {
+    void testEasyInitBoardSetsExitCorrectly() {
         LevelConfig config = new EasyConfig();
         Level level = new LevelImpl(config, new FakeBoardGenerator(), new FakePlayer(new Position(0, 0), 0));
         level.initBoard();

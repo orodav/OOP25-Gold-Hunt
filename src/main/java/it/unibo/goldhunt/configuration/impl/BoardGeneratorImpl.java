@@ -21,7 +21,10 @@ import it.unibo.goldhunt.items.api.TrapFactory;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 
 /**
- * This class is the implementation of BoardGenerator.
+ * This class is the implementation of {@link BoardGenerator} 
+ * that generates boards with a safe path using BFS, places traps and
+ * items randomly in available cells and computes adjacent traps for each 
+ * cell.
  */
 public class BoardGeneratorImpl implements BoardGenerator {
 
@@ -36,7 +39,10 @@ public class BoardGeneratorImpl implements BoardGenerator {
      * Creates a new {@code BoardGeneratorImpl}.
      * 
      * @param boardFactory the factory used to create board cells
+     * @param trapFactory the factpry used to create traps
      * @param itemFactory the factory used to create items placed on the board
+     * @param player the player operations instance used for trap creation
+     * @throws NullPointerException if any parameter is null
      */
     public BoardGeneratorImpl(final BoardFactory boardFactory, final TrapFactory trapFactory, final ItemFactory itemFactory, final PlayerOperations player) {
         this.boardFactory = Objects.requireNonNull(boardFactory);
@@ -96,9 +102,10 @@ public class BoardGeneratorImpl implements BoardGenerator {
     }
 
     /**
+     * Computes the total number of cells required for traps and items.
      * 
-     * @param config
-     * @return
+     * @param config the level configuration
+     * @return the total count of required cells
      */
     private int computeRequiredCells(final LevelConfig config) {
         int required = config.getTrapCount();
@@ -109,14 +116,15 @@ public class BoardGeneratorImpl implements BoardGenerator {
     }
     
     /**
-     * Computes a safe path by using a BFS algorithm and stores it 
-     * in a {@link Set} of {@link Cell}.
+     * Computes a safe path by using a BFS algorithm, 
+     * ensuring it dows not exceed max length. 
      * 
      * @param board the board on which the safepath is computed
      * @param start the starting position of the algorithm
      * @param exit the ending position of the algorithm
+     * @param maxPathLength the maximum allowed path length
      * @return a {@link Set} containing all cells belonging to the safe path
-     * @throws IllegalStateException if no safe path can be found
+     * @throws IllegalStateException if no safe path can be found withing start and exit
      */
     private Set<Cell> computeSafePath(final Board board, final Position start, final Position exit, int maxPathLength) {
                 
@@ -135,17 +143,14 @@ public class BoardGeneratorImpl implements BoardGenerator {
     }
 
     /**
-     * Recursive implementation of the DFS algorithm used to compute a safe path.
-     * Starting from the current position, the method adds the corresponding cell to the safe path,
-     * then explores adjacent cells in random order until the exit position is reached.
-     * If a dead end is encountered, backtracking is performed by removing the current cell
-     * from the safe path.
+     * BFS implementation to find a randomized safe path from start to exit.
+     * Shuffles neighbors for variability; rejects paths exceeding max length.
      * 
-     * @param board the board on which the search is performed
-     * @param current the current position explored by the algorithm
+     * @param board the board 
+     * @param start the starting position
      * @param exit the target exit position
-     * @param safePath the {@link Set} collecting the cells of the safe path
-     * @return true if a path to the exit has been found, false otherwise
+     * @param maxPathLength maximum path length
+     * @return the path as {@link List} of {@link Position} or empty if invalid
      */
     private List<Position> bfs(final Board board, final Position start, final Position exit, int maxPathLength) {
         
@@ -200,11 +205,11 @@ public class BoardGeneratorImpl implements BoardGenerator {
     }
 
     /**
-     * Places traps randomly on the board, avoiding the cells of the safe path.
+     * Places the specified number of traps in the first available cells.
      * 
-     * @param board the board on which traps are placed
-     * @param safePath the {@link Set} of {@link Cell} that must remain trap-free
-     * @param config the level configuration providing the number of traps
+     * @param availableCells list of cells available for placement (shuffled)
+     * @param trapCount number of traps to place.
+     * @throws IllegalStateException if not enough available cells
      */
     private void placeTraps(final List<Cell> availableCells, final int trapCount) {
     
@@ -218,11 +223,11 @@ public class BoardGeneratorImpl implements BoardGenerator {
     } 
 
     /**
-     * Places items randomly on the board, avoiding the cells of the safe path.
+     * Places items according to the configuration in available cells.
      *  
-     * @param board the board on which items are places
-     * @param safePath the {@link Set} of {@link Cell} that must remain trap-free
-     * @param config the level configuration providing the number of traps
+     * @param available list of available cells (modified by removal)
+     * @param itemsConfig map of item symbols to quantities
+     * @throws IllegalStateException if not enough space for an item type
      */
     private void placeItems(List<Cell> available, Map<String, Integer> itemsConfig) {
         
@@ -240,7 +245,8 @@ public class BoardGeneratorImpl implements BoardGenerator {
     }
 
     /**
-     * Computes the number of adjacent traps for each cell on the board.
+     * Computes and sets the number of adjacent traps for every cell 
+     * on the board.
      * 
      * @param board the board on which adjacent traps are computed
      */
@@ -262,4 +268,5 @@ public class BoardGeneratorImpl implements BoardGenerator {
         }
     } 
 }
+
 

@@ -12,6 +12,7 @@ public interface LevelConfigFactory {
      * 
      * @param difficulty the selected difficulty level
      * @return the corresponding level configuration
+     * @throws NullPointerException if difficulty is null
      */
     LevelConfig create(Difficulty difficulty);
 }

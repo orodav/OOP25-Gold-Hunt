@@ -5,6 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Tests for {@link HardConfig}.
+ */
 class HardConfigTest {
 
     private HardConfig config;
@@ -42,3 +45,4 @@ class HardConfigTest {
         assertEquals(3, items.getOrDefault("S", 0));
     }
 }
+
