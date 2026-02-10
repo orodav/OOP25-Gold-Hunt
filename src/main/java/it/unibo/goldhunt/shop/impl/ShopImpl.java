@@ -47,6 +47,8 @@ public final class ShopImpl implements Shop {
         if (maxPurchases < 0) {
             throw new IllegalArgumentException("maxPurchases must be >= 0");
         }
+        
+
         this.player = player;
         this.maxPurchases = maxPurchases;
         this.purchasesDone = 0;
