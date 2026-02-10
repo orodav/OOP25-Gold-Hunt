@@ -31,7 +31,7 @@ public interface ReadOnlyCell {
      * @return an {@code int} that represents the
      *     number of traps in the surrounding cells
      */
-    int adjacentTraps();
+    int getAdjacentTraps();
 
     /**
      * Returns the identifier of the content in the cell, if there is any.

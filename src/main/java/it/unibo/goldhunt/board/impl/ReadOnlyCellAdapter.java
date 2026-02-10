@@ -48,7 +48,7 @@ public final class ReadOnlyCellAdapter implements ReadOnlyCell {
      * {@inheritDoc}
      */
     @Override
-    public int adjacentTraps() {
+    public int getAdjacentTraps() {
         return cell.getAdjacentTraps();
     }
 
