@@ -15,6 +15,14 @@ import it.unibo.goldhunt.engine.api.Status;
 import it.unibo.goldhunt.items.api.CellContent;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 
+/**
+ * Service responsible for handling reveal and flag actions.
+ * 
+ * <p>
+ * This component validates action preconditions, delegates reveal logic
+ * to the configured {@link RevealStrategy}, applies cell content effects
+ * to the player, and produces {@link ActionResult} instances.
+ */
 public class RevealService {
 
     private final Board board;
@@ -23,6 +31,16 @@ public class RevealService {
     private final UnaryOperator<PlayerOperations> setPlayer;
     private final Supplier<Status> status;
 
+    /**
+     * Creates a reveal service with the required dependencies.
+     * 
+     * @param board the game board
+     * @param revealStrategy the strategy used to reveal cells
+     * @param player supplier for accessing the current player
+     * @param setPlayer operator used to update the player state
+     * @param status supplier for accessing the current status
+     * @throws IllegalArgumentException if any dependency is {@code null}
+     */
     RevealService(
         final Board board,
         final RevealStrategy revealStrategy,
@@ -43,6 +61,13 @@ public class RevealService {
         this.status = status;
     }
 
+    /**
+     * Reveals the cell at the specified position.
+     * 
+     * @param p the position to reveal
+     * @return an {@link ActionResult} describing the outcome
+     * @throws IllegalArgumentException if {@code p} is {@code null}
+     */
     ActionResult reveal(final Position p) {
         final Optional<ActionResult> preconditions = checkRevealPreconditions(p);
         if (preconditions.isPresent()) {
@@ -57,6 +82,13 @@ public class RevealService {
         return ActionResultsFactory.reveal(this.status.get(), ActionEffect.APPLIED);
     }
 
+    /**
+     * Toggles the flag state of the specified cell.
+     * 
+     * @param p the position of the cell
+     * @return an {@link ActionResult} describing the outcome
+     * @throws IllegalArgumentException if {@code p} is {@code null}
+     */
     ActionResult toggleFlag(final Position p) {
         final Optional<ActionResult> preconditions = checkFlagPreconditions(p);
         if (preconditions.isPresent()) {

@@ -3,6 +3,7 @@ package it.unibo.goldhunt.engine.api;
 /**
  * Represents the result of a reveal operation performed on the board.
  * 
+ * <p>
  * A {@code RevealResult} encapsulates the outcome of revealing a cell.
  * This record is typically used internally by the engine or the board
  * to communicate the effects of a reveal action before wrapping them.

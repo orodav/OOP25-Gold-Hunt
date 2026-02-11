@@ -1,5 +1,5 @@
 package it.unibo.goldhunt.player.impl;
-//davv
+
 import java.util.Arrays;
 
 import it.unibo.goldhunt.engine.api.Position;
@@ -7,6 +7,11 @@ import it.unibo.goldhunt.items.api.ItemTypes;
 import it.unibo.goldhunt.player.api.Inventory;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 
+/**
+ * Immutable implementation of {@link PlayerOperations}.
+ * 
+ * All state changes produce a new {@code PlayerImpl} instance.
+ */
 public final class PlayerImpl implements PlayerOperations {
 
     private final Position position;
@@ -14,6 +19,15 @@ public final class PlayerImpl implements PlayerOperations {
     private final int gold;
     private final Inventory inventory;
 
+    /**
+     * Creates a player with the specified state.
+     * 
+     * @param position the player's position
+     * @param lives the number of lives
+     * @param gold the amount of gold
+     * @param inventory the player's inventory
+     * @throws IllegalArgumentException if any parameter is invalid
+     */
     public PlayerImpl(
             final Position position, 
             final int lives, 
@@ -29,34 +43,42 @@ public final class PlayerImpl implements PlayerOperations {
                 this.lives = lives;
                 this.gold = gold;
                 this.inventory = inventory;
-            }
+    }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Position position() {
         return this.position;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int livesCount() {
         return this.lives;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int goldCount() {
         return this.gold;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Inventory inventory() {
         return this.inventory;
     }
 
     /*
-     * Check value-based equity.
-     * Two players are equal if all their state fields are matching.
-     * Needed to compare logical game states instead of object identity.
-     * Useful for tests, state checks ad deterministic game logic.
+     * Two players are equal if all their state fields match.
      */
     @Override
     public boolean equals(final Object obj) {
@@ -74,8 +96,7 @@ public final class PlayerImpl implements PlayerOperations {
     }
 
     /*
-     * Required for correct behavior in hash-based collections.
-     * same player state -> same hash code.
+     * Returns a hash code consistent with {@link #equals(Object)}.
      */
     @Override
     public int hashCode() {
@@ -85,8 +106,7 @@ public final class PlayerImpl implements PlayerOperations {
     }
 
     /** 
-     * Readable representation of the player state.
-     * Useful for debugging and test output.
+     * Returns a readable representation of the player state.
      */
     @Override
     public String toString() {
@@ -97,33 +117,49 @@ public final class PlayerImpl implements PlayerOperations {
                 + "]";
     }
 
-
-     @Override
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public PlayerImpl moveTo(final Position newPos) {
         return new PlayerImpl(newPos, this.lives, this.gold, this.inventory);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PlayerImpl addGold(int num) {
         return new PlayerImpl(this.position, this.lives, this.gold + num, this.inventory);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PlayerImpl addLives(int num) {
         return new PlayerImpl(this.position, this.lives + num, this.gold, this.inventory);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PlayerImpl addItem(final ItemTypes item, final int quantity) {
         return new PlayerImpl(this.position, this.lives, this.gold, this.inventory.add(item, quantity));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PlayerImpl useItem(final ItemTypes item, final int quantity) {
         return new PlayerImpl(this.position, this.lives, this.gold, this.inventory.remove(item, quantity));
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PlayerOperations withInventory(Inventory inventory) {
         if (inventory == null) {

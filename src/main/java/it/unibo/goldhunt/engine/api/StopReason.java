@@ -3,6 +3,7 @@ package it.unibo.goldhunt.engine.api;
 /**
  * Represents the reason why a movement action stopped.
  * 
+ * <p>
  * A {@link StopReason} provides contextual information about
  * the outcome of a move attempt, independently from the 
  * {@link ActionEffect} produced.
@@ -38,5 +39,5 @@ public enum StopReason {
     /**
      * No specific stop condition applies.
      */
-    NONE;
+    NONE
 }

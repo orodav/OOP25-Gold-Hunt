@@ -8,10 +8,12 @@ import it.unibo.goldhunt.player.api.Player;
 /**
  * Defines the movement validation and path computation logic for a player.
  * 
+ * <p>
  * This interface follows the Strategy Pattern: different implementations
  * may provide alternative movement behaviors depending on the game mode,
  * board structure or rule set.
  * 
+ * <p>
  * The interface respects the Single Responsibility Principle (SRP) by
  * encapsulating only movement-related rules and calculations.
  */
@@ -33,6 +35,7 @@ public interface MovementRules {
     /**
      * Determines whether the player is allowed to enter the target position.
      * 
+     * <p>
      * This method checks rule-based constraints.
      * 
      * @param from the current position
@@ -47,6 +50,7 @@ public interface MovementRules {
      * Determines whether movement must stop upon reaching the 
      * specified position.
      * 
+     * <p>
      * This can be used for special tiles.
      * 
      * @param p the position being evaluated

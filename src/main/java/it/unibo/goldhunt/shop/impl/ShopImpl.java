@@ -90,17 +90,26 @@ public final class ShopImpl implements Shop {
         this.boughtThisSession = boughtThisSession;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<ShopItem> items() {
         return this.itemView;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int remainingPurchases() {
         final int result = this.maxPurchases - this.purchasesDone;
         return result < 0 ? 0 : result;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ShopActionResult buy(final ItemTypes type) {
         if (type == null) {

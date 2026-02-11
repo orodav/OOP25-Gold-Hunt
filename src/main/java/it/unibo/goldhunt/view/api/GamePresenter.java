@@ -11,5 +11,15 @@ import it.unibo.goldhunt.view.viewmodel.GameViewState;
  */
 public interface GamePresenter {
 
+    /**
+     * Builds a {@link GameViewState} from the given game state.
+     * 
+     * @param state the current game state
+     * @param shop the optional shop
+     * @param message a UI message to show
+     * @return an immutable snapshot for the GUI
+     * @throws NullPointerException if {@code state}, {@code shop}
+     *         or {@code message} is {@code null}
+     */
     GameViewState map(GameState state, Optional<Shop> shop, String message);
 }
