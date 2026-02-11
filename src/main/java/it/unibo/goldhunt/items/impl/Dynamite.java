@@ -10,13 +10,13 @@ import it.unibo.goldhunt.player.api.PlayerOperations;
 //luca
 /**
  * Represents the "Dynamite" item.
+ * 
  * <p>
  * When used it disarms the cells in the adjacent cells and reveals them.
  */
-public class Dynamite extends Item implements ClearCells{
+public class Dynamite extends AbstractItem implements ClearCells { 
 
-    private final static String ITEM_NAME = "Dynamite";
-    
+    private static final String ITEM_NAME = "Dynamite";
 
     /**
      * Returns the name of the item.
@@ -36,28 +36,25 @@ public class Dynamite extends Item implements ClearCells{
      * @throws IllegalStateException if the item context is not bound or no adjacent cells exist
      */
     @Override
-    public PlayerOperations applyEffect(PlayerOperations playerop) {
+    public PlayerOperations applyEffect(final PlayerOperations playerop) {
 
-        if(context == null){
+        if (getContext() == null) {
             throw new IllegalStateException("item cannot bound");
         }
 
-        var board = context.board();
+        final var board = getContext().board();
 
-        Cell currentCell = board.getCell(playerop.position());
-        
-        List<Cell> adjacent = board.getAdjacentCells(board.getCellPosition(currentCell));
-        if(adjacent == null || adjacent.isEmpty()){
+        final Cell currentCell = board.getCell(playerop.position());
+        final List<Cell> adjacent = board.getAdjacentCells(board.getCellPosition(currentCell));
+        if (adjacent == null || adjacent.isEmpty()) {
             throw new IllegalStateException();
-        
         }
         disarm(adjacent);
         return playerop;
         }
-        
 
     /**
-     * Returns a short string representation of the item
+     * Returns a short string representation of the item.
      * 
      * @return "D"
      */
@@ -67,7 +64,7 @@ public class Dynamite extends Item implements ClearCells{
     }
 
     /**
-     * Returns the type of this item
+     * Returns the type of this item.
      * 
      * @return {@link KindOfItem#DYNAMITE}
      */
@@ -75,5 +72,4 @@ public class Dynamite extends Item implements ClearCells{
     public KindOfItem getItem() {
         return KindOfItem.DYNAMITE;
     }
-
 }

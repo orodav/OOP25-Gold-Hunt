@@ -38,8 +38,9 @@ class DynamiteTest {
         board = new FakeBoard(8);
         player = new FakePlayer(new Position(2, 2));
         dynamite = new Dynamite();
+        final ItemContext context = new ItemContext(board, player, null);
 
-        dynamite.context = new ItemContext(board, player, null);
+        dynamite.bind(context);
     }
 
     /**
@@ -112,7 +113,7 @@ class DynamiteTest {
             }
         };
 
-        dynamite.context = new ItemContext(emptyBoard, player, null);
+        this.dynamite.bind(new ItemContext(emptyBoard, player, null));
         assertThrows(IllegalStateException.class, () -> {
             dynamite.applyEffect(player);
         }, "should throw exception when no cells are nearby");

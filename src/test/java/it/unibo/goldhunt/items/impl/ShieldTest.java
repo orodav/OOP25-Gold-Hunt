@@ -35,7 +35,7 @@ class ShieldTest {
         Objects.requireNonNull(shield);
         final ItemContext itemContext = new ItemContext(null, playerOp, null);
         shield.bind(itemContext);
-        shield.trap = new TrapFake();
+        shield.bindTrap(new TrapFake());
     }
 
     /**
@@ -55,7 +55,7 @@ class ShieldTest {
      */
     @Test
     void noTrapEffect() {
-        shield.trap = null;
+        shield.bindTrap(null);
         final int livesBef = playerOp.livesCount();
         final PlayerOperations used = shield.applyEffect(playerOp);
 

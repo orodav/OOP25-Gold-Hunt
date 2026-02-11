@@ -3,12 +3,19 @@ package it.unibo.goldhunt.items.impl;
 import it.unibo.goldhunt.items.api.KindOfItem;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 
-public class LuckyClover extends Item{
+/**
+ * Implementation of the Lucky Clover item.
+ * 
+ * <p>
+ * This item can be collected by the player and added to their inventory
+ * to provide specific bonuses.
+ */
+public class LuckyClover extends AbstractItem {
 
     private static final String ITEM_NAME = "Lucky clover";
 
     /**
-     * Returns the name of the item
+     * Returns the name of the item.
      * 
      * @return "Lucky Clover"
      */
@@ -26,11 +33,11 @@ public class LuckyClover extends Item{
      */
     @Override
     public PlayerOperations applyEffect(final PlayerOperations playerop) {
-        if(playerop == null){
+        if (playerop == null) {
             throw new IllegalArgumentException();
         }
 
-        if(context == null){
+        if (getContext() == null) {
             throw new IllegalArgumentException();
         }
         playerop.addItem(getItem(), MAX_QUANTITY_CLOVER);
@@ -56,5 +63,4 @@ public class LuckyClover extends Item{
     public KindOfItem getItem() {
         return KindOfItem.LUCKYCLOVER;
     }
-
 }
