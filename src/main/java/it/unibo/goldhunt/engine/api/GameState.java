@@ -8,15 +8,41 @@ import java.util.Optional;
 import it.unibo.goldhunt.board.api.ReadOnlyBoard;
 
 /**
- * Represents an immutable snapshot.
+ * Represents an immutable snapshot of the current game state.
+ * 
+ * A {@code GameState} provides read-only access to all the
+ * relevant components of the game at a specific moment in time.
+ * It is typically used by UI layers or controllers to observe
+ * the state of the game without directly modifying it.
  */
 public interface GameState {
 
+    /**
+     * Returns the current read-only view of the board.
+     * 
+     * @return the {@link ReadOnlyBoard} representing the board state
+     */
     ReadOnlyBoard board();
 
+    /**
+     * Returns the current {@link Player}
+     * 
+     * 
+     * @return the player snapshot
+     */
     Player player();
 
+    /**
+     * Returns the current {@link Status} of the game.
+     * @return
+     */
     Status status();
 
+    /**
+     * Returns the current {@link Shop} if the game is in shop mode.
+     * 
+     * @return an {@link Optional} containing the shop
+     * if present, otherwise {@link Optional#empty()}
+     */
     Optional<Shop> shop();
 }
