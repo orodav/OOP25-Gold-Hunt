@@ -1,9 +1,14 @@
 package it.unibo.goldhunt.engine.impl;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -36,8 +41,15 @@ import it.unibo.goldhunt.shop.api.ShopFactory;
 import it.unibo.goldhunt.shop.api.ShopItem;
 import it.unibo.goldhunt.shop.impl.ShopImpl;
 
-public class EngineTest {
+/**
+ * Testing class for Engine implementation.
+ */
+class EngineTest {
 
+    private static final int NINE = 9;
+    private static final int SEVEN = 7;
+    private static final int FIVE = 5;
+    private static final int THREE = 3;
     private PlayerOperations player;
     private Status status;
     private TestBoard board;
@@ -54,207 +66,9 @@ public class EngineTest {
         return new PlayerImpl(p, 3, 0, inventory);
     }
 
-    private enum StubItem implements ItemTypes {
-        A, B, C, D;
-
-        @Override
-        public PlayerOperations applyEffect(PlayerOperations player) {
-            if (player == null) {
-                throw new IllegalArgumentException("player");
-            }
-            return player;
-        }
-
-        @Override
-        public String shortString() {
-            return name();
-        }
-
-        @Override
-        public String getName() {
-            return name().toLowerCase();
-        }
-
-        @Override
-        public KindOfItem getItem() {
-            return getItem();
-        }
-    }
-
-    private static final class TestRules implements MovementRules {
-        Optional<List<Position>> path = Optional.empty();
-        boolean canEnter = true;
-        Set<Position> warnings = Set.of();
-
-        @Override
-        public Optional<List<Position>> pathCalculation(
-            final Position from,
-            final Position to,
-            final Player player
-        ) {
-            return path;
-        }
-
-        @Override
-        public boolean canEnter(final Position from, final Position to, final Player player) {
-            return canEnter;
-        }
-
-        @Override
-        public boolean mustStopOn(final Position p, final Player player) {
-            return warnings.contains(p);
-        }
-
-        @Override
-        public boolean isReachable(Position from, Position to, Player player) {
-            throw new UnsupportedOperationException("not needed in engine tests");
-        }
-
-        @Override
-        public Optional<Position> nextUnitaryStep(Position from, Position to, Player player) {
-            throw new UnsupportedOperationException("not needed in engine tests");
-        }
-    }
-
-    private static final class TestStrategy implements RevealStrategy {
-
-        int calls;
-        Position lastPos;
-
-        @Override
-        public void reveal(final Board b, final Position p) {
-            this.calls++;
-            this.lastPos = p;
-        }
-    }
-
-    private static final class TestCell implements Cell {
-
-        private boolean flagged;
-        private boolean revealed;
-
-        TestCell(final boolean flagged, final boolean revealed) {
-            this.flagged = flagged;
-            this.revealed = revealed;
-        }
-
-        @Override
-        public void reveal() {
-            if (!flagged) {
-                revealed = true;
-            }
-        }
-
-        @Override
-        public boolean isRevealed() {
-            return revealed;
-        }
-
-        @Override
-        public void toggleFlag() {
-            if (!revealed) {
-                flagged = !flagged;
-            }
-        }
-
-        @Override
-        public boolean isFlagged() {
-            return flagged;
-        }
-
-        @Override
-        public int getAdjacentTraps() {
-            throw new UnsupportedOperationException("not needed in engine tests");
-        }
-
-        @Override
-        public void setAdjacentTraps(int n) {
-        }
-
-        @Override
-        public boolean hasContent() {
-            return false;
-        }
-
-        @Override
-        public Optional<CellContent> getContent() {
-            return Optional.empty();
-        }
-
-        @Override
-        public void setContent(CellContent content) {
-            throw new UnsupportedOperationException("not needed in engine tests");
-        }
-
-        @Override
-        public void removeContent() {
-        }
-    }
-
-    private static final class TestBoard implements Board {
-        
-        private final Set<Position> validPos;
-        private final Map<Position, TestCell> cells;
-        private final Map<Cell, Position> reverse;
-
-        TestBoard(
-            final Set<Position> validPos,
-            final Map<Position, TestCell> cells
-        ) {
-            this.validPos = validPos;
-            this.cells = new HashMap<>(cells);
-            this.reverse = new HashMap<>();
-            for (final var e : this.cells.entrySet()) {
-                this.reverse.put(e.getValue(), e.getKey());
-            }
-        }
-
-        @Override
-        public boolean isPositionValid(final Position p) {
-            return this.validPos.contains(p);
-        }
-
-        @Override
-        public Cell getCell(final Position p) {
-            return this.cells.get(p);
-        }
-
-        @Override
-        public Position getCellPosition(final Cell cell) {
-            return this.reverse.get(cell);
-        }
-
-        @Override
-        public List<Cell> getBoardCells() {
-            throw new UnsupportedOperationException("not needed in engine tests");
-        }
-
-        @Override
-        public List<Cell> getAdjacentCells(Position p) {
-            throw new UnsupportedOperationException("not needed in engine tests");
-        }
-
-        @Override
-        public int getBoardSize() {
-            throw new UnsupportedOperationException("not needed in engine tests");
-        }
-
-        @Override
-        public List<Cell> getRow(int index) {
-            throw new UnsupportedOperationException("not needed in engine tests");
-        }
-
-        @Override
-        public List<Cell> getColumn(int index) {
-            throw new UnsupportedOperationException("not needed in engine tests");
-        }
-
-        @Override
-        public boolean isAdjacent(Position p1, Position p2) {
-            throw new UnsupportedOperationException("not needed in engine tests");
-        }
-    }
-
+    /**
+     * Initializes the shared test fixtures used by each test.
+     */
     @BeforeEach
     void init() {
         this.status = StatusImpl.createStartingState();
@@ -276,38 +90,38 @@ public class EngineTest {
         );
         this.shopLimit = 3;
         this.globalCatalog = List.of(
-            new ShopItem(StubItem.A, 3),
-            new ShopItem(StubItem.B, 5),
-            new ShopItem(StubItem.C, 7),
-            new ShopItem(StubItem.D, 9)
+            new ShopItem(StubItem.A, THREE),
+            new ShopItem(StubItem.B, FIVE),
+            new ShopItem(StubItem.C, SEVEN),
+            new ShopItem(StubItem.D, NINE)
         );
-        this.shopFactory = (player, catalog, maxPurchases)
-                -> new ShopImpl(player, catalog, maxPurchases);
+        this.shopFactory = (playerOps, catalog, maxPurchases)
+                -> new ShopImpl(playerOps, catalog, maxPurchases);
     }
 
     private EngineImpl newEngine(
-        final PlayerOperations player,
-        final Status status,
-        final Board board,
-        final MovementRules movementRules,
-        final RevealStrategy revealStrategy,
-        final Position start,
-        final Position exit,
-        final ShopFactory shopFactory,
-        final List<ShopItem> catalog,
-        final int limit
+        final PlayerOperations playerOps,
+        final Status gameStatus,
+        final Board gameBoard,
+        final MovementRules gameMovementRules,
+        final RevealStrategy gameRevealStrategy,
+        final Position gameStart,
+        final Position gameExit,
+        final ShopFactory gameShopFactory,
+        final List<ShopItem> gameCatalog,
+        final int gameLimit
     ) {
         return new EngineImpl(
-            player,
-            status,
-            board,
-            movementRules,
-            revealStrategy,
-            start,
-            exit,
-            shopFactory,
-            catalog,
-            limit
+            playerOps,
+            gameStatus,
+            gameBoard,
+            gameMovementRules,
+            gameRevealStrategy,
+            gameStart,
+            gameExit,
+            gameShopFactory,
+            gameCatalog,
+            gameLimit
         );
     }
 
@@ -620,10 +434,211 @@ public class EngineTest {
         final int prevLevel = engine.status().levelNumber();
         assertEquals(GameMode.SHOP, engine.status().gameMode());
         assertTrue(engine.state().shop().isPresent());
-        engine.leaveShop();;
+        engine.leaveShop();
         assertEquals(GameMode.LEVEL, engine.status().gameMode());
         assertEquals(LevelState.PLAYING, engine.status().levelState());
         assertEquals(prevLevel + 1, engine.status().levelNumber());
         assertTrue(engine.state().shop().isEmpty());
+    }
+
+    private enum StubItem implements ItemTypes {
+        A, B, C, D;
+
+        @Override
+        public PlayerOperations applyEffect(final PlayerOperations stubPlayer) {
+            if (stubPlayer == null) {
+                throw new IllegalArgumentException("player");
+            }
+            return stubPlayer;
+        }
+
+        @Override
+        public String shortString() {
+            return name();
+        }
+
+        @Override
+        public String getName() {
+            return name().toLowerCase(Locale.ROOT);
+        }
+
+        @Override
+        public KindOfItem getItem() {
+            throw new UnsupportedOperationException("Unimplemented method 'getItem'");
+        }
+
+    }
+
+    private static final class TestRules implements MovementRules {
+        private Optional<List<Position>> path = Optional.empty();
+        private static final boolean canEnter = true;
+        private final Set<Position> warnings = Set.of();
+
+        @Override
+        public Optional<List<Position>> pathCalculation(
+            final Position from,
+            final Position to,
+            final Player player
+        ) {
+            return path;
+        }
+
+        @Override
+        public boolean canEnter(final Position from, final Position to, final Player player) {
+            return canEnter;
+        }
+
+        @Override
+        public boolean mustStopOn(final Position p, final Player player) {
+            return warnings.contains(p);
+        }
+
+        @Override
+        public boolean isReachable(final Position from, final Position to, final Player player) {
+            throw new UnsupportedOperationException("isReachable is not used");
+        }
+
+        @Override
+        public Optional<Position> nextUnitaryStep(final Position from, final Position to, final Player player) {
+            throw new UnsupportedOperationException("nextUnitaryStep is not used");
+        }
+    }
+
+    private static final class TestStrategy implements RevealStrategy {
+
+        private int calls;
+        private Position lastPos;
+
+        @Override
+        public void reveal(final Board b, final Position p) {
+            this.calls++;
+            this.lastPos = p;
+        }
+    }
+
+    private static final class TestCell implements Cell {
+
+        private boolean flagged;
+        private boolean revealed;
+
+        TestCell(final boolean flagged, final boolean revealed) {
+            this.flagged = flagged;
+            this.revealed = revealed;
+        }
+
+        @Override
+        public void reveal() {
+            if (!flagged) {
+                revealed = true;
+            }
+        }
+
+        @Override
+        public boolean isRevealed() {
+            return revealed;
+        }
+
+        @Override
+        public void toggleFlag() {
+            if (!revealed) {
+                flagged = !flagged;
+            }
+        }
+
+        @Override
+        public boolean isFlagged() {
+            return flagged;
+        }
+
+        @Override
+        public int getAdjacentTraps() {
+            throw new UnsupportedOperationException("getAdjacentTraps is not used");
+        }
+
+        @Override
+        public void setAdjacentTraps(final int n) {
+        }
+
+        @Override
+        public boolean hasContent() {
+            return false;
+        }
+
+        @Override
+        public Optional<CellContent> getContent() {
+            return Optional.empty();
+        }
+
+        @Override
+        public void setContent(final CellContent content) {
+            throw new UnsupportedOperationException("setContent is not used");
+        }
+
+        @Override
+        public void removeContent() {
+        }
+    }
+
+    private static final class TestBoard implements Board {
+        private final Set<Position> validPos;
+        private final Map<Position, TestCell> cells;
+        private final Map<Cell, Position> reverse;
+
+        TestBoard(
+            final Set<Position> validPos,
+            final Map<Position, TestCell> cells
+        ) {
+            this.validPos = validPos;
+            this.cells = new HashMap<>(cells);
+            this.reverse = new HashMap<>();
+            for (final var e : this.cells.entrySet()) {
+                this.reverse.put(e.getValue(), e.getKey());
+            }
+        }
+
+        @Override
+        public boolean isPositionValid(final Position p) {
+            return this.validPos.contains(p);
+        }
+
+        @Override
+        public Cell getCell(final Position p) {
+            return this.cells.get(p);
+        }
+
+        @Override
+        public Position getCellPosition(final Cell cell) {
+            return this.reverse.get(cell);
+        }
+
+        @Override
+        public List<Cell> getBoardCells() {
+            throw new UnsupportedOperationException("getBoardCells is not used");
+        }
+
+        @Override
+        public List<Cell> getAdjacentCells(final Position p) {
+            throw new UnsupportedOperationException("getAdjacentCells is not used");
+        }
+
+        @Override
+        public int getBoardSize() {
+            throw new UnsupportedOperationException("getBoardSize is not used");
+        }
+
+        @Override
+        public List<Cell> getRow(final int index) {
+            throw new UnsupportedOperationException("getRow is not used");
+        }
+
+        @Override
+        public List<Cell> getColumn(final int index) {
+            throw new UnsupportedOperationException("getColumn is not used");
+        }
+
+        @Override
+        public boolean isAdjacent(final Position p1, final Position p2) {
+            throw new UnsupportedOperationException("isAdjacent is not used");
+        }
     }
 }

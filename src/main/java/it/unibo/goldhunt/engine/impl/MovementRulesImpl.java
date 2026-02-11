@@ -81,16 +81,10 @@ public final class MovementRulesImpl implements MovementRules {
         if (from == null || to == null || player == null) {
             throw new IllegalArgumentException("parameters can't be null");
         }
-        if (from.equals(to)) {
-            return false;
-        }
-        if (!this.board.isPositionValid(to)) {
-            return false;
-        }
-        if (!this.board.isAdjacent(from, to)) {
-            return false;
-        }
-        return !this.blocked.test(to, player);
+        return !from.equals(to)
+                && this.board.isPositionValid(to)
+                && this.board.isAdjacent(from, to)
+                && !this.blocked.test(to, player);
     }
 
     /**
@@ -101,10 +95,7 @@ public final class MovementRulesImpl implements MovementRules {
         if (p == null || player == null) {
             throw new IllegalArgumentException("null arguments not allowed");
         }
-        if (!this.board.isPositionValid(p)) {
-            return false;
-        }
-        return this.stop.test(p, player);
+        return this.board.isPositionValid(p) && this.stop.test(p, player);
     }
 
     /**
@@ -118,10 +109,7 @@ public final class MovementRulesImpl implements MovementRules {
         if (!this.board.isPositionValid(from) || !this.board.isPositionValid(to)) {
             return false;
         }
-        if (from.equals(to)) {
-            return true;
-        }
-        return this.pathCalculation(from, to, player).isPresent(); 
+        return from.equals(to) && this.pathCalculation(from, to, player).isPresent(); 
     }
 
     /** 
@@ -222,11 +210,10 @@ public final class MovementRulesImpl implements MovementRules {
         if (optionalPredecessor.isEmpty()) {
             return Optional.empty();
         }
-        final Optional<List<Position>> optionalPath = this.pathFromPred(
+        return this.pathFromPred(
             from,
             to,
             optionalPredecessor.get()
         );
-        return optionalPath;
     }
 }

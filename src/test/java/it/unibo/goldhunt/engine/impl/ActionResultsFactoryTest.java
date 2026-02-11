@@ -1,6 +1,6 @@
 package it.unibo.goldhunt.engine.impl;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +11,10 @@ import it.unibo.goldhunt.engine.api.LevelState;
 import it.unibo.goldhunt.engine.api.Status;
 import it.unibo.goldhunt.engine.api.StopReason;
 
-public class ActionResultsFactoryTest {
+/**
+ * Testing class for ActionResultsFactory implementation.
+ */
+class ActionResultsFactoryTest {
 
     private Status statusPlaying() {
         return new StatusImpl(

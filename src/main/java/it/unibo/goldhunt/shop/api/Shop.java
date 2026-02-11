@@ -7,6 +7,7 @@ import it.unibo.goldhunt.items.api.ItemTypes;
 /**
  * Models the in-game shop available at the end of a level.
  * 
+ * <p>
  * The shop is immutable: each purchase attempt returns a 
  * {@link ShopActionResult} containing the outcome 
  * and the updated player.

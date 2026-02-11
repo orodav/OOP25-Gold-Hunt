@@ -1,5 +1,5 @@
 package it.unibo.goldhunt.player.impl;
-//davv
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,6 +9,7 @@ import it.unibo.goldhunt.player.api.Inventory;
 /**
  * Default immutable implementation of {@link Inventory}.
  * 
+ * <p>
  * This implementation stores item quantities in an immutable internal map.
  */
 public class InventoryImpl implements Inventory {
@@ -32,7 +33,7 @@ public class InventoryImpl implements Inventory {
     @Override
     public Inventory add(final ItemTypes item, final int quantity) {
         if (item == null) {
-            throw new IllegalArgumentException("item");
+            throw new IllegalArgumentException("parameter can't be null");
         }
         if (quantity < 0) {
             throw new IllegalArgumentException("quantity must be >= 0");

@@ -9,12 +9,10 @@ import it.unibo.goldhunt.shop.api.ShopItem;
 
 /**
  * Default implementation of {@link ShopFactory}.
- * 
  * This factory creates standard {@link Shop} instances
  * backed by {@link ShopImpl}.
  */
-public class DefaultShopFactory implements ShopFactory{
-    
+public class DefaultShopFactory implements ShopFactory {
     /**
      * Creates a new {@link ShopImpl} instance.
      * 

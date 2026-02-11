@@ -1,6 +1,8 @@
 package it.unibo.goldhunt.engine.impl;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 
 import org.junit.jupiter.api.Test;
 
@@ -8,7 +10,10 @@ import it.unibo.goldhunt.engine.api.GameMode;
 import it.unibo.goldhunt.engine.api.LevelState;
 import it.unibo.goldhunt.engine.api.Status;
 
-public class StatusTest {
+/**
+ * Testing class for Status implementation.
+ */
+class StatusTest {
 
     @Test
     void shouldReturnCorrectInitialValues() {

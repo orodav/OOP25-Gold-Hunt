@@ -5,8 +5,8 @@ import it.unibo.goldhunt.engine.api.Position;
 /**
  * Represents the immutable view of a player in the game.
  * 
+ * <p>
  * A {@code Player} provides access to the player's current state.
- * 
  * Implementations are expected tobe immutable.
  */
 public interface Player {

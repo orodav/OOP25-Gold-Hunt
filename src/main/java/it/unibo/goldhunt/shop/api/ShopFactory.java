@@ -7,8 +7,10 @@ import it.unibo.goldhunt.player.api.PlayerOperations;
 /**
  * Factory responsible for creating {@link Shop} instances.
  * 
+ * <p>
  * A {@code ShopFactory} initializes a shop session for a given player.
  */
+@FunctionalInterface
 public interface ShopFactory {
 
     /**

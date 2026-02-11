@@ -6,7 +6,7 @@ import it.unibo.goldhunt.items.api.ItemTypes;
 /**
  * Represents the operational view of a player.
  */
-public interface PlayerOperations extends Player{
+public interface PlayerOperations extends Player {
 
     /**
      * Returns a new player instance moved to the specified position.

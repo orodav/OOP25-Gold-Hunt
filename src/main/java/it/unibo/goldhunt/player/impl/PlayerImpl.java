@@ -10,6 +10,7 @@ import it.unibo.goldhunt.player.api.PlayerOperations;
 /**
  * Immutable implementation of {@link PlayerOperations}.
  * 
+ * <p>
  * All state changes produce a new {@code PlayerImpl} instance.
  */
 public final class PlayerImpl implements PlayerOperations {
@@ -89,10 +90,10 @@ public final class PlayerImpl implements PlayerOperations {
             return false;
         }
         final PlayerImpl checkObj = (PlayerImpl) obj;
-        return this.position.equals(checkObj.position) &&
-                this.lives == checkObj.lives &&
-                this.gold == checkObj.gold &&
-                this.inventory.equals(checkObj.inventory);
+        return this.position.equals(checkObj.position) 
+                && this.lives == checkObj.lives 
+                && this.gold == checkObj.gold 
+                && this.inventory.equals(checkObj.inventory);
     }
 
     /*
@@ -101,7 +102,7 @@ public final class PlayerImpl implements PlayerOperations {
     @Override
     public int hashCode() {
         return Arrays.hashCode(new Object[] {
-            this.position, this.lives, this.gold, this.inventory
+            this.position, this.lives, this.gold, this.inventory,
         });
     }
 
@@ -129,7 +130,7 @@ public final class PlayerImpl implements PlayerOperations {
      * {@inheritDoc}
      */
     @Override
-    public PlayerImpl addGold(int num) {
+    public PlayerImpl addGold(final int num) {
         return new PlayerImpl(this.position, this.lives, this.gold + num, this.inventory);
     }
 
@@ -137,7 +138,7 @@ public final class PlayerImpl implements PlayerOperations {
      * {@inheritDoc}
      */
     @Override
-    public PlayerImpl addLives(int num) {
+    public PlayerImpl addLives(final int num) {
         return new PlayerImpl(this.position, this.lives + num, this.gold, this.inventory);
     }
 
@@ -161,10 +162,10 @@ public final class PlayerImpl implements PlayerOperations {
      * {@inheritDoc}
      */
     @Override
-    public PlayerOperations withInventory(Inventory inventory) {
+    public PlayerOperations withInventory(final Inventory newInventory) {
         if (inventory == null) {
             throw new IllegalArgumentException("inventory can't be null");
         }
-        return new PlayerImpl(this.position, this.lives, this.gold, inventory);
+        return new PlayerImpl(this.position, this.lives, this.gold, newInventory);
     }
 }

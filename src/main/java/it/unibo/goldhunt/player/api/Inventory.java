@@ -4,9 +4,9 @@ import it.unibo.goldhunt.items.api.ItemTypes;
 
 /**
  * Represents the player's inventory.
- * 
  * An {@code Inventory} manages item quantities owned by the player.
  * 
+ * <p>
  * Implementations are expected to be immutable.
  * 
  */
@@ -46,7 +46,7 @@ public interface Inventory {
      * @throws IllegalArgumentException if {@code item} is {@code null}
      *                                  or {@code quantity} is negative
      */
-    default boolean hasAtLeast(ItemTypes item, int quantity) {
+    default boolean hasAtLeast(final ItemTypes item, final int quantity) {
         if (item == null) {
             throw new IllegalArgumentException("item can't be null");
         }

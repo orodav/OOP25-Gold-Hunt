@@ -30,7 +30,14 @@ public final class ShopImpl implements Shop {
     private final List<ShopItem> itemView;
 
     /**
-     * Builds a shop with a fixed catalog and a maximum number of purchases.
+     * Creates a new immutable shop session.
+     * 
+     * <p>
+     * The catalog is validated and internally copied for immutability
+     * 
+     * @param player the player associated with the shop session
+     * @param catalog the list of items available for purchase
+     * @param maxPurchases the limit of purchases allowed
      */
     public ShopImpl(
         final PlayerOperations player,
@@ -46,8 +53,6 @@ public final class ShopImpl implements Shop {
         if (maxPurchases < 0) {
             throw new IllegalArgumentException("maxPurchases must be >= 0");
         }
-        
-
         this.player = player;
         this.maxPurchases = maxPurchases;
         this.purchasesDone = 0;
@@ -95,7 +100,7 @@ public final class ShopImpl implements Shop {
      */
     @Override
     public List<ShopItem> items() {
-        return this.itemView;
+        return List.copyOf(this.itemView);
     }
 
     /**
