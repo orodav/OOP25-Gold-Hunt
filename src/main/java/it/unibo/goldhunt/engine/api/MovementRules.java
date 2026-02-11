@@ -6,12 +6,14 @@ import java.util.Optional;
 import it.unibo.goldhunt.player.api.Player;
 
 /**
- * Defines the movement logic applied by the engine.
+ * Defines the movement validation and path computation logic for a player.
  * 
- * {@code MovementRules} encaspulates all constraints and policies
- * governing how a {@link Player} can move on the board.
- * It separates path computation and rule validation from the
- * engine, promoting modularity and testability.
+ * This interface follows the Strategy Pattern: different implementations
+ * may provide alternative movement behaviors depending on the game mode,
+ * board structure or rule set.
+ * 
+ * The interface respects the Single Responsibility Principle (SRP) by
+ * encapsulating only movement-related rules and calculations.
  */
 public interface MovementRules {
 
@@ -31,14 +33,13 @@ public interface MovementRules {
     /**
      * Determines whether the player is allowed to enter the target position.
      * 
-     * This method checks local constraints
+     * This method checks rule-based constraints.
      * 
-     * @param from the starting position
+     * @param from the current position
      * @param to the target position
-     * @param player the player attempting the movement
-     * @return {@code true} if the player can enter the target position,
-     *         {@code false} otherwise
-     * @throws IllegalArgumentException if any argument is {@code null}
+     * @param player the player attempting to move
+     * @return {@code true} if the player can enter the position,
+     *         {code false} otherwise
      */
     boolean canEnter(Position from, Position to, Player player);
 

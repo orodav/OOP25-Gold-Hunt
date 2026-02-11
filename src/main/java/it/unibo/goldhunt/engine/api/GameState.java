@@ -25,16 +25,16 @@ public interface GameState {
     ReadOnlyBoard board();
 
     /**
-     * Returns the current {@link Player}
+     * Returns the current player instance.
      * 
-     * 
-     * @return the player snapshot
+     * @return the player associated with this game state
      */
     Player player();
 
     /**
-     * Returns the current {@link Status} of the game.
-     * @return
+     * Returns the current game status.
+     * 
+     * @return the status describing level state, mode and progression
      */
     Status status();
 

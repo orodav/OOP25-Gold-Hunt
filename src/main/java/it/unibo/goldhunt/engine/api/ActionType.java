@@ -1,5 +1,33 @@
 package it.unibo.goldhunt.engine.api;
-//davv
+
+/**
+ * Represents the type of action that can be performed by the player during the game.
+ * 
+ * An {@code ActionType} identifies the nature of the requested operation
+ * and is typically included in an {@link ActionResult} to describe which
+ * action has been executed.
+ */
 public enum ActionType {
-    MOVE, REVEAL, FLAG;
+
+    /**
+     * Represents a movement action.
+     * 
+     * Used when the player attempts to move from the current position
+     * to another valid position.
+     */
+    MOVE,
+    
+    /**
+     * Represents a reveal action.
+     * 
+     * Used when the player attempts to uncover the content of a cell.
+     */
+    REVEAL,
+    
+    /**
+     * Represents a flag action.
+     * 
+     * Used when the player marks or unmarks a cell to signal a trap
+     */
+    FLAG;
 }

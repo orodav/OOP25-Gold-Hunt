@@ -1,11 +1,10 @@
 package it.unibo.goldhunt.engine.api;
 
 /**
- * Represents the current progression state of a level.
+ * Represents the current outcome state of a level.
  * 
- * A {@code LevelState} indicates whether the player is still
- * actively playing the level or if the level has reached
- * a terminal condition (victory or defeat)
+ * A {@code LevelState} describes whether the player is still playing the
+ * level or if a terminal condition has been reached.
  */
 public enum LevelState {
 
@@ -16,13 +15,12 @@ public enum LevelState {
     PLAYING,
     
     /**
-     * The level has been successfully completed.
-     * The player has achieved victory.
+     * The player has successfully completed the level.
      */
     WON,
     
     /**
-     * The level has ended in defeat.
+     * The player has failed the level due to reaching a losing condition.
      */
     LOSS;
 }
