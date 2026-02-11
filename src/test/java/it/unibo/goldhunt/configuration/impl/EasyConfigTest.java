@@ -1,14 +1,28 @@
+
 package it.unibo.goldhunt.configuration.impl;
 
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeEach;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.Map;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * Tests for {@link EasyConfig}.
  */
 class EasyConfigTest {
+
+    private static final int BOARD_SIZE = 9;
+    private static final int TRAP_COUNT = 10;
+    private static final int DYNAMITE_COUNT = 2;
+    private static final int GOLD_COUNT = 5;
+    private static final int GOLDX3_COUNT = 1;
+    private static final int LIFES_COUNT = 3;
+    private static final int LUCKY_CLOVER_COUNT = 1;
+    private static final int CHART_COUNT = 0;
+    private static final int PICKAXE_COUNT = 1;
+    private static final int SHIELD_COUNT = 1;
 
     private EasyConfig config;
 
@@ -19,12 +33,12 @@ class EasyConfigTest {
 
     @Test
     void testBoardSize() {
-        assertEquals(9, config.getBoardSize());
+        assertEquals(BOARD_SIZE, config.getBoardSize());
     }
 
     @Test
     void testTrapCount() {
-        assertEquals(10, config.getTrapCount());
+        assertEquals(TRAP_COUNT, config.getTrapCount());
     }
 
     @Test 
@@ -34,16 +48,14 @@ class EasyConfigTest {
 
     @Test
     void testItemQuantities() {
-        Map<String, Integer> items = config.getItemConfig();
-        assertEquals(2, items.getOrDefault("D", 0));
-        assertEquals(5, items.getOrDefault("G", 0));
-        assertEquals(1, items.getOrDefault("X", 0));
-        assertEquals(3, items.getOrDefault("L", 0));
-        assertEquals(1, items.getOrDefault("C", 0));
-        assertEquals(0, items.getOrDefault("M", 0));
-        assertEquals(1, items.getOrDefault("P", 0));
-        assertEquals(1, items.getOrDefault("S", 0));
+        final Map<String, Integer> items = config.getItemConfig();
+        assertEquals(DYNAMITE_COUNT, items.getOrDefault("D", 0));
+        assertEquals(GOLD_COUNT, items.getOrDefault("G", 0));
+        assertEquals(GOLDX3_COUNT, items.getOrDefault("X", 0));
+        assertEquals(LIFES_COUNT, items.getOrDefault("L", 0));
+        assertEquals(LUCKY_CLOVER_COUNT, items.getOrDefault("C", 0));
+        assertEquals(CHART_COUNT, items.getOrDefault("M", 0));
+        assertEquals(PICKAXE_COUNT, items.getOrDefault("P", 0));
+        assertEquals(SHIELD_COUNT, items.getOrDefault("S", 0));
     }
 }
-
-

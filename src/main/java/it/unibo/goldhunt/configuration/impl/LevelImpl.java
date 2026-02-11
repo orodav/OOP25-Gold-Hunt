@@ -1,4 +1,4 @@
-//SARA
+
 package it.unibo.goldhunt.configuration.impl;
 
 import java.util.Objects;
@@ -21,7 +21,7 @@ public class LevelImpl implements Level {
 
     private final LevelConfig config;
     private final BoardGenerator boardGenerator;
-        
+
     private PlayerOperations player;
     private Board board;
     private Position exit;
@@ -98,4 +98,3 @@ public class LevelImpl implements Level {
         return player;
     }
 }
-

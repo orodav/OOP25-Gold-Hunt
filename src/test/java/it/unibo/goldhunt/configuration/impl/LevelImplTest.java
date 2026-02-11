@@ -1,3 +1,4 @@
+
 package it.unibo.goldhunt.configuration.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -22,6 +23,129 @@ import it.unibo.goldhunt.player.api.PlayerOperations;
  */
 class LevelImplTest {
 
+    @Test
+    void testEasyInitBoardCreatesBoard() {
+        final Level level = new LevelImpl(new EasyConfig(), new FakeBoardGenerator(), new FakePlayer(new Position(0, 0), 0));
+        level.initBoard();
+        assertNotNull(level.getBoard());
+    }
+
+    @Test
+    void testEasyInitBoardPassesCorrectParametersToBoardGenerator() {
+        final LevelConfig config = new EasyConfig();
+        final FakeBoardGenerator generator = new FakeBoardGenerator();
+        final Level level = new LevelImpl(config, generator, new FakePlayer(new Position(1, 1), 0));
+        level.initBoard();
+
+        assertEquals(config, generator.receivedConfig);
+        assertEquals(new Position(0, 0), generator.receivedStart);
+        assertEquals(new Position(config.getBoardSize() - 1, config.getBoardSize() - 1), generator.receivedExit);
+    }
+
+    @Test
+    void testEasyInitBoardSetsExitCorrectly() {
+        final LevelConfig config = new EasyConfig();
+        final Level level = new LevelImpl(config, new FakeBoardGenerator(), new FakePlayer(new Position(0, 0), 0));
+        level.initBoard();
+        assertEquals(new Position(config.getBoardSize() - 1, config.getBoardSize() - 1), level.getExit());
+    }
+
+    @Test
+    void testEasyInitPlayerPositionMovesPlayerToStart() {
+        final Level level = new LevelImpl(new EasyConfig(), new FakeBoardGenerator(), new FakePlayer(new Position(5, 5), 0));
+        level.initPlayerPosition();
+        assertEquals(new Position(0, 0), level.getPlayer().position());
+    }
+
+    @Test
+    void testEasyInitLivesAddsThreeLives() { 
+        final Level level = new LevelImpl(new EasyConfig(), new FakeBoardGenerator(), new FakePlayer(new Position(0, 0), 0));
+        level.initLives();
+        assertEquals(3, level.getPlayer().livesCount());
+    }
+
+    @Test
+    void testMediumInitBoardCreatesBoard() {
+        final Level level = new LevelImpl(new MediumConfig(), new FakeBoardGenerator(), new FakePlayer(new Position(0, 0), 0));
+        level.initBoard();
+        assertNotNull(level.getBoard());
+    }
+
+    @Test
+    void testMediumInitBoardPassesCorrectParametersToBoardGenerator() {
+        final LevelConfig config = new MediumConfig();
+        final FakeBoardGenerator generator = new FakeBoardGenerator();
+        final Level level = new LevelImpl(config, generator, new FakePlayer(new Position(1, 1), 0));
+        level.initBoard();
+
+        assertEquals(config, generator.receivedConfig);
+        assertEquals(new Position(0, 0), generator.receivedStart);
+        assertEquals(new Position(config.getBoardSize() - 1, config.getBoardSize() - 1), generator.receivedExit);
+    }
+
+    @Test
+    void testMediumInitBoardSetsExitCorreclty() {
+        final LevelConfig config = new MediumConfig();
+        final Level level = new LevelImpl(config, new FakeBoardGenerator(), new FakePlayer(new Position(0, 0), 0));
+        level.initBoard();
+        assertEquals(new Position(config.getBoardSize() - 1, config.getBoardSize() - 1), level.getExit());
+    }
+
+    @Test
+    void testMediumInitPlayerPositionMovesPlayerToStart() {
+        final Level level = new LevelImpl(new MediumConfig(), new FakeBoardGenerator(), new FakePlayer(new Position(5, 5), 0));
+        level.initPlayerPosition();
+        assertEquals(new Position(0, 0), level.getPlayer().position());
+    }
+
+    @Test
+    void testMediumInitLivesAddsThreeLives() { 
+        final Level level = new LevelImpl(new MediumConfig(), new FakeBoardGenerator(), new FakePlayer(new Position(0, 0), 0));
+        level.initLives();
+        assertEquals(3, level.getPlayer().livesCount());
+    }
+
+    @Test
+    void testHardInitBoardCreatesBoard() {
+        final Level level = new LevelImpl(new HardConfig(), new FakeBoardGenerator(), new FakePlayer(new Position(0, 0), 0));
+        level.initBoard();
+        assertNotNull(level.getBoard());
+    }
+
+    @Test
+    void testHardInitBoardPassesCorrectParametersToBoardGenerator() {
+        final LevelConfig config = new HardConfig();
+        final FakeBoardGenerator generator = new FakeBoardGenerator();
+        final Level level = new LevelImpl(config, generator, new FakePlayer(new Position(1, 1), 0));
+        level.initBoard();
+
+        assertEquals(config, generator.receivedConfig);
+        assertEquals(new Position(0, 0), generator.receivedStart);
+        assertEquals(new Position(config.getBoardSize() - 1, config.getBoardSize() - 1), generator.receivedExit);
+    }
+
+    @Test
+    void testHardInitBoardSetsExitCorreclty() {
+        final LevelConfig config = new HardConfig();
+        final Level level = new LevelImpl(config, new FakeBoardGenerator(), new FakePlayer(new Position(0, 0), 0));
+        level.initBoard();
+        assertEquals(new Position(config.getBoardSize() - 1, config.getBoardSize() - 1), level.getExit());
+    }
+
+    @Test
+    void testHardInitPlayerPositionMovesPlayerToStart() {
+        final Level level = new LevelImpl(new HardConfig(), new FakeBoardGenerator(), new FakePlayer(new Position(5, 5), 0));
+        level.initPlayerPosition();
+        assertEquals(new Position(0, 0), level.getPlayer().position());
+    }
+
+    @Test
+    void testHardInitLivesAddsThreeLives() { 
+        final Level level = new LevelImpl(new HardConfig(), new FakeBoardGenerator(), new FakePlayer(new Position(0, 0), 0));
+        level.initLives();
+        assertEquals(3, level.getPlayer().livesCount());
+    }
+
     private static final class FakeBoard implements Board {
         private final int size;
 
@@ -35,17 +159,17 @@ class LevelImplTest {
         }
 
         @Override
-        public Cell getCell(Position p) {
+        public Cell getCell(final Position p) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public Position getCellPosition(Cell cell) {
+        public Position getCellPosition(final Cell cell) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public List<Cell> getAdjacentCells(Position p) {
+        public List<Cell> getAdjacentCells(final Position p) {
             throw new UnsupportedOperationException();
         }
 
@@ -55,33 +179,33 @@ class LevelImplTest {
         }
 
         @Override
-        public List<Cell> getRow(int index) {
+        public List<Cell> getRow(final int index) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public List<Cell> getColumn(int index) {
+        public List<Cell> getColumn(final int index) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public boolean isPositionValid(Position p) {
+        public boolean isPositionValid(final Position p) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public boolean isAdjacent(Position p1, Position p2) {
+        public boolean isAdjacent(final Position p1, final Position p2) {
             throw new UnsupportedOperationException();
         }
     }
 
     private static final class FakeBoardGenerator implements BoardGenerator {
-        Position receivedStart;
-        Position receivedExit;
-        LevelConfig receivedConfig;
-        
+        private Position receivedStart;
+        private Position receivedExit;
+        private LevelConfig receivedConfig;
+
         @Override
-        public Board generate(LevelConfig config, Position start, Position exit) {
+        public Board generate(final LevelConfig config, final Position start, final Position exit) {
             this.receivedConfig = config;
             this.receivedStart = start;
             this.receivedExit = exit;
@@ -92,34 +216,34 @@ class LevelImplTest {
     private static final class FakePlayer implements PlayerOperations {
         private final Position position;
         private final int lives;
-        
+
         FakePlayer(final Position position, final int lives) {
             this.position = position;
             this.lives = lives;
         }
 
         @Override
-        public PlayerOperations moveTo(Position p) {
+        public PlayerOperations moveTo(final Position p) {
             return new FakePlayer(p, lives);
         }
 
         @Override
-        public PlayerOperations addGold(int num) {
+        public PlayerOperations addGold(final int num) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public PlayerOperations addLives(int num) {
+        public PlayerOperations addLives(final int num) {
             return new FakePlayer(position, lives + num);
         }
 
         @Override
-        public PlayerOperations addItem(ItemTypes item, int quantity) {
+        public PlayerOperations addItem(final ItemTypes item, final int quantity) {
             throw new UnsupportedOperationException("Unimplemented method 'addItem'");
         }
 
         @Override
-        public PlayerOperations useItem(ItemTypes item, int quantity) {
+        public PlayerOperations useItem(final ItemTypes item, final int quantity) {
             throw new UnsupportedOperationException("Unimplemented method 'useItem'");
         }
 
@@ -144,134 +268,8 @@ class LevelImplTest {
         }
 
         @Override
-        public PlayerOperations withInventory(Inventory inventory) {
+        public PlayerOperations withInventory(final Inventory inventory) {
             throw new UnsupportedOperationException("Unimplemented method 'withInventory'");
         }
-    }
-
-
-    @Test
-    void testEasyInitBoardCreatesBoard() {
-        Level level = new LevelImpl(new EasyConfig(), new FakeBoardGenerator(), new FakePlayer(new Position(0, 0), 0));
-        level.initBoard();
-        assertNotNull(level.getBoard());
-    }
-
-    @Test
-    void testEasyInitBoardPassesCorrectParametersToBoardGenerator() {
-        LevelConfig config = new EasyConfig();
-        FakeBoardGenerator generator = new FakeBoardGenerator();
-        Level level = new LevelImpl(config, generator, new FakePlayer(new Position(1,1), 0));
-        level.initBoard();
-
-        assertEquals(config, generator.receivedConfig);
-        assertEquals(new Position(0, 0), generator.receivedStart);
-        assertEquals(new Position(config.getBoardSize() - 1, config.getBoardSize() - 1), generator.receivedExit);
-    }
-
-    @Test
-    void testEasyInitBoardSetsExitCorrectly() {
-        LevelConfig config = new EasyConfig();
-        Level level = new LevelImpl(config, new FakeBoardGenerator(), new FakePlayer(new Position(0, 0), 0));
-        level.initBoard();
-        assertEquals(new Position(config.getBoardSize() - 1, config.getBoardSize() - 1), level.getExit());
-    }
-
-    @Test
-    void testEasyInitPlayerPositionMovesPlayerToStart() {
-        Level level = new LevelImpl(new EasyConfig(), new FakeBoardGenerator(), new FakePlayer(new Position(5, 5), 0));
-        level.initPlayerPosition();
-        assertEquals(new Position(0, 0), level.getPlayer().position());
-    }
-
-    @Test
-    void testEasyInitLivesAddsThreeLives() { 
-        Level level = new LevelImpl(new EasyConfig(), new FakeBoardGenerator(), new FakePlayer(new Position(0, 0), 0));
-        level.initLives();
-        assertEquals(3, level.getPlayer().livesCount());
-    }
-
-
-    @Test
-    void testMediumInitBoardCreatesBoard() {
-        Level level = new LevelImpl(new MediumConfig(), new FakeBoardGenerator(), new FakePlayer(new Position(0, 0), 0));
-        level.initBoard();
-        assertNotNull(level.getBoard());
-    }
-
-    @Test
-    void testMediumInitBoardPassesCorrectParametersToBoardGenerator() {
-        LevelConfig config = new MediumConfig();
-        FakeBoardGenerator generator = new FakeBoardGenerator();
-        Level level = new LevelImpl(config, generator, new FakePlayer(new Position(1,1), 0));
-        level.initBoard();
-
-        assertEquals(config, generator.receivedConfig);
-        assertEquals(new Position(0, 0), generator.receivedStart);
-        assertEquals(new Position(config.getBoardSize() - 1, config.getBoardSize() - 1), generator.receivedExit);
-    }
-
-    @Test
-    void testMediumInitBoardSetsExitCorreclty() {
-        LevelConfig config = new MediumConfig();
-        Level level = new LevelImpl(config, new FakeBoardGenerator(), new FakePlayer(new Position(0, 0), 0));
-        level.initBoard();
-        assertEquals(new Position(config.getBoardSize() - 1, config.getBoardSize() - 1), level.getExit());
-    }
-
-    @Test
-    void testMediumInitPlayerPositionMovesPlayerToStart() {
-        Level level = new LevelImpl(new MediumConfig(), new FakeBoardGenerator(), new FakePlayer(new Position(5, 5), 0));
-        level.initPlayerPosition();
-        assertEquals(new Position(0, 0), level.getPlayer().position());
-    }
-
-    @Test
-    void testMediumInitLivesAddsThreeLives() { 
-        Level level = new LevelImpl(new MediumConfig(), new FakeBoardGenerator(), new FakePlayer(new Position(0, 0), 0));
-        level.initLives();
-        assertEquals(3, level.getPlayer().livesCount());
-    }
-
-
-    @Test
-    void testHardInitBoardCreatesBoard() {
-        Level level = new LevelImpl(new HardConfig(), new FakeBoardGenerator(), new FakePlayer(new Position(0, 0), 0));
-        level.initBoard();
-        assertNotNull(level.getBoard());
-    }
-
-    @Test
-    void testHardInitBoardPassesCorrectParametersToBoardGenerator() {
-        LevelConfig config = new HardConfig();
-        FakeBoardGenerator generator = new FakeBoardGenerator();
-        Level level = new LevelImpl(config, generator, new FakePlayer(new Position(1,1), 0));
-        level.initBoard();
-
-        assertEquals(config, generator.receivedConfig);
-        assertEquals(new Position(0, 0), generator.receivedStart);
-        assertEquals(new Position(config.getBoardSize() - 1, config.getBoardSize() - 1), generator.receivedExit);
-    }
-
-    @Test
-    void testHardInitBoardSetsExitCorreclty() {
-        LevelConfig config = new HardConfig();
-        Level level = new LevelImpl(config, new FakeBoardGenerator(), new FakePlayer(new Position(0, 0), 0));
-        level.initBoard();
-        assertEquals(new Position(config.getBoardSize() - 1, config.getBoardSize() - 1), level.getExit());
-    }
-
-    @Test
-    void testHardInitPlayerPositionMovesPlayerToStart() {
-        Level level = new LevelImpl(new HardConfig(), new FakeBoardGenerator(), new FakePlayer(new Position(5, 5), 0));
-        level.initPlayerPosition();
-        assertEquals(new Position(0, 0), level.getPlayer().position());
-    }
-
-    @Test
-    void testHardInitLivesAddsThreeLives() { 
-        Level level = new LevelImpl(new HardConfig(), new FakeBoardGenerator(), new FakePlayer(new Position(0, 0), 0));
-        level.initLives();
-        assertEquals(3, level.getPlayer().livesCount());
     }
 }

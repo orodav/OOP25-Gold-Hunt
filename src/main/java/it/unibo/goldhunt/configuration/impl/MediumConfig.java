@@ -1,4 +1,4 @@
-//SARA
+
 package it.unibo.goldhunt.configuration.impl;
 
 import java.util.HashMap;
@@ -23,14 +23,14 @@ public class MediumConfig implements LevelConfig {
     private static final int CHART_COUNT = 2;
     private static final int PICKAXE_COUNT = 2;
     private static final int SHIELD_COUNT = 2;
-    
+
     /**
      * {@inheritDoc}
      */
     @Override
     public final Map<String, Integer> getItemConfig() {
-        
-        Map<String, Integer> mediumData = new HashMap<>();
+
+        final Map<String, Integer> mediumData = new HashMap<>();
 
         mediumData.put("D", DYNAMITE_COUNT);
         mediumData.put("G", GOLD_COUNT);

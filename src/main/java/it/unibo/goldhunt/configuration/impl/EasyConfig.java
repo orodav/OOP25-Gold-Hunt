@@ -1,4 +1,4 @@
-//SARA
+
 package it.unibo.goldhunt.configuration.impl;
 
 import java.util.HashMap;
@@ -29,9 +29,9 @@ public class EasyConfig implements LevelConfig {
      */
     @Override
     public Map<String, Integer> getItemConfig() {
-        
-        Map<String, Integer> easyData = new HashMap<>();
-        
+
+        final Map<String, Integer> easyData = new HashMap<>();
+
         easyData.put("D", DYNAMITE_COUNT);
         easyData.put("G", GOLD_COUNT);
         easyData.put("X", GOLDX3_COUNT);
@@ -40,7 +40,7 @@ public class EasyConfig implements LevelConfig {
         easyData.put("M", CHART_COUNT);
         easyData.put("P", PICKAXE_COUNT);
         easyData.put("S", SHIELD_COUNT);
-        
+
         return easyData;
     }
 
@@ -60,5 +60,3 @@ public class EasyConfig implements LevelConfig {
         return BOARD_SIZE;
     }
 }
-
-

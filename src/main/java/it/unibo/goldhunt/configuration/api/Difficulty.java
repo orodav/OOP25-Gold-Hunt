@@ -1,4 +1,4 @@
-//SARA
+
 package it.unibo.goldhunt.configuration.api;
 
 /**
@@ -6,8 +6,7 @@ package it.unibo.goldhunt.configuration.api;
  * Each difficulty corresponds to a specific level configuration.
  */
 public enum Difficulty {
-    EASY,
-    MEDIUM,
-    HARD;
+    EASY, 
+    MEDIUM, 
+    HARD
 }
-

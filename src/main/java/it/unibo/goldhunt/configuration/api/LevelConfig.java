@@ -1,4 +1,4 @@
-//SARA
+
 package it.unibo.goldhunt.configuration.api;
 
 import java.util.Map;
@@ -7,7 +7,7 @@ import java.util.Map;
  * This interface models different level configurations for the game.
  */
 public interface LevelConfig {
-    
+
     /**
      * Returns the configuration of items for the current difficulty level.
      * Each entry maps an item symbol (used by {@link ItemFactory}) to the number of instances 
@@ -31,5 +31,3 @@ public interface LevelConfig {
      */
     int getBoardSize();
 }
-
-
