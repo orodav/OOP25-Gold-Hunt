@@ -3,41 +3,48 @@ package it.unibo.goldhunt.items.impl;
 import it.unibo.goldhunt.items.api.Revealable;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 
-//luca
-public class Trap implements Revealable{
-    
+/**
+ * Implementation of a Trap item.
+ * 
+ * <p>
+ * A trap is a revealable item that deals damage to the player
+ * when its effect is applied.
+ */
+public class Trap implements Revealable {
+
     public static final int DAMAGE = -1;
 
-    PlayerOperations playerop;
+    private PlayerOperations playerop;
 
     /**
-     * Private constructor
+     * Private constructor.
      */
-    Trap(){
+    Trap() {
         //empty constructor for factory instantiation
     }
 
     /**
      * Binds a player to this trap.
-     * @param playerop the player to bind.
+     * 
+     * @param playero the player to bind.
      */
-    public void bind(final PlayerOperations playerop){
-        this.playerop = playerop;
+    public void bind(final PlayerOperations playero) {
+        this.playerop = playero;
     }
-    
+
     /**
      * Reduces the player's health by the damage amount.
      * 
-     * @param playerop the player who triggered the trap.
+     * @param playero the player who triggered the trap.
      * @return the updated player state.
      * @throws IllegalStateException if playerop is null.
      */
     @Override
-    public PlayerOperations applyEffect(final PlayerOperations playerop) {
-        if(playerop == null){
+    public PlayerOperations applyEffect(final PlayerOperations playero) {
+        if (playero == null) {
             throw new IllegalStateException("cannot bind items");
         }
-        return playerop.addLives(DAMAGE);
+        return getPlayerop().addLives(DAMAGE);
     }
 
     /**
@@ -54,7 +61,11 @@ public class Trap implements Revealable{
      * @return always true since this is a trap.
      */
     @Override
-    public boolean isTrap(){
+    public boolean isTrap() {
         return true;
+    }
+
+    private PlayerOperations getPlayerop() {
+        return this.playerop;
     }
 }

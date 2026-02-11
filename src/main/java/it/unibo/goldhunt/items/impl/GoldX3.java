@@ -3,7 +3,6 @@ package it.unibo.goldhunt.items.impl;
 import it.unibo.goldhunt.items.api.KindOfItem;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 
-
 /**
  * Represents the "Gold x3" item.
  * 
@@ -11,7 +10,7 @@ import it.unibo.goldhunt.player.api.PlayerOperations;
  * When collected, it adds three times the normal gold amount to the player.
  * If the player has a Lucky Clover, the amount doubles.
  */
-public class GoldX3 extends Item {
+public class GoldX3 extends AbstractItem {
 
     public static final String ITEM_NAME = "Gold x3";
 
@@ -28,7 +27,7 @@ public class GoldX3 extends Item {
      */
     @Override
     public PlayerOperations applyEffect(final PlayerOperations playerop) {
-        if (context == null) {
+        if (getContext() == null) {
             throw new IllegalStateException("item cannot bound");
         }
 

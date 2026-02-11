@@ -13,15 +13,15 @@ import it.unibo.goldhunt.player.api.PlayerOperations;
 
 /**
  * Implementation of {@link ItemFactory}.
+ * 
  * <p>
  * Creates game items based on a symbol and binds them to the context if provided.
  */
-public class ItemFactoryImpl implements ItemFactory{
+public class ItemFactoryImpl implements ItemFactory {
 
-    private static final Map<String, Supplier<Item>> ITEMS = new HashMap<>();
+    private static final Map<String, Supplier<AbstractItem>> ITEMS = new HashMap<>();
 
-
-    static{
+    static {
         ITEMS.put("M", Chart::new);
         ITEMS.put("D", Dynamite::new);
         ITEMS.put("G", Gold::new);
@@ -39,37 +39,36 @@ public class ItemFactoryImpl implements ItemFactory{
      * @param board the game board
      * @param playerop the player operations
      * @param inventory the player inventory
-     * @return the created {@link Item}
+     * @return the created {@link AbstractItem}
      * @throws IllegalArgumentException if the symbol is unknown
      */
     @Override
-    public Item generateItem(final String item, final Board board, final PlayerOperations playerop, final Inventory inventory){
-        final Supplier<Item> constructor = ITEMS.get(item);
+    public AbstractItem generateItem(final String item, final Board board,
+        final PlayerOperations playerop, final Inventory inventory) {
+        final Supplier<AbstractItem> constructor = ITEMS.get(item);
 
-        if(constructor == null){
+        if (constructor == null) {
             throw new IllegalArgumentException();
         }
-        final Item obj = constructor.get();
+        final AbstractItem obj = constructor.get();
         obj.bind(new ItemContext(board, playerop, inventory));
         return obj;
     }
-    
+
     /**
      * Generates an item without binding a context.
      * 
      * @param item the symbol representing the item
-     * @return the created {@link Item}
+     * @return the created {@link AbstractItem}
      * @throws IllegalArgumentException if the symbol is unknown
      */
     @Override
-    public Item generateItem(final String item) {
-        final Supplier<Item> constructor = ITEMS.get(item);
+    public AbstractItem generateItem(final String item) {
+        final Supplier<AbstractItem> constructor = ITEMS.get(item);
             if (constructor == null) {
             throw new IllegalArgumentException("Unknown item symbol");
             }
         return constructor.get();
     }
-
-
 }
 

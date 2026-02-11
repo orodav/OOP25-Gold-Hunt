@@ -7,27 +7,38 @@ import it.unibo.goldhunt.player.api.PlayerOperations;
 /**
  * Implementation of a factory that creates and initializes traps.
  */
-public class TrapFactoryImpl implements TrapFactory{
+public class TrapFactoryImpl implements TrapFactory {
 
-    PlayerOperations playerop;
+    private final PlayerOperations playerop;
 
     /**
      * Creates a new factory with a reference to the player.
+     * 
      * @param playerop the player operations.
      */
-    public TrapFactoryImpl(final PlayerOperations playerop){
+    public TrapFactoryImpl(final PlayerOperations playerop) {
         this.playerop = playerop;
     }
 
     /**
      * Creates a new Trap and binds it to a player.
-     * @param playerop the player to bind the trap to.
+     * 
+     * @param playero the player to bind the trap to.
      * @return a new initialized {@link Revealable} trap.
      */
     @Override
-    public Revealable createTrap(final PlayerOperations playerop) {
+    public Revealable createTrap(final PlayerOperations playero) {
         final var trap = new Trap();
-        trap.bind(playerop);
+        trap.bind(playero);
         return trap;
+    }
+
+    /**
+     * Getter for playerop.
+     * 
+     * @return playerop
+     */
+    public PlayerOperations getPlayer() {
+        return playerop;
     }
 }
