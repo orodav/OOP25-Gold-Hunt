@@ -1,6 +1,7 @@
 package it.unibo.goldhunt.engine.impl;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Optional;
 
@@ -17,7 +18,10 @@ import it.unibo.goldhunt.player.impl.InventoryImpl;
 import it.unibo.goldhunt.player.impl.PlayerImpl;
 import it.unibo.goldhunt.shop.api.Shop;
 
-public class GameStateTest {
+/**
+ * Testing class for GameState implementation.
+ */
+class GameStateTest {
 
     private static ReadOnlyBoard testBoard() {
         return new ReadOnlyBoard() {
@@ -28,7 +32,7 @@ public class GameStateTest {
             }
 
             @Override
-            public ReadOnlyCell cellAt(Position p) {
+            public ReadOnlyCell cellAt(final Position p) {
                 throw new UnsupportedOperationException("not needed in test");
             } 
         };
@@ -46,7 +50,6 @@ public class GameStateTest {
     private static Status testStatus() {
         return new StatusImpl(LevelState.PLAYING, GameMode.LEVEL, 1);
     }
-
 
     @Test
     void constructorShouldThrowIfBoardNull() {

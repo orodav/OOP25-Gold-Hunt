@@ -6,9 +6,16 @@ import it.unibo.goldhunt.engine.api.ActionType;
 import it.unibo.goldhunt.engine.api.Status;
 import it.unibo.goldhunt.engine.api.StopReason;
 
-final class ActionResultsFactory {
-    
-    private ActionResultsFactory() {}
+/**
+ * Internal factory for creating {@link ActionResult} instances.
+ * 
+ * <p>
+ * Centralizes the creation logic for different action types to
+ * ensure consistency across the engine layer.
+ */
+final class ActionResultsFactory { 
+
+    private ActionResultsFactory() { }
 
     static ActionResult move(
         final Status status,

@@ -25,8 +25,17 @@ import it.unibo.goldhunt.shop.api.ShopActionResult;
 import it.unibo.goldhunt.shop.api.ShopFactory;
 import it.unibo.goldhunt.shop.api.ShopItem;
 
+/**
+ * Default engine implementation that coordinates movement, reveal actions,
+ * and shop flow while exposing a read-only game state snapshot.
+ * 
+ * <p>
+ * This class delegates movement and reveal logic to dedicated services
+ * and handles transitions between {@link GameMode#LEVEL} and {@link GameMode#SHOP}.
+ */
 public class EngineImpl implements EngineWithShopActions {
 
+    private static final int CATALOG_SIZE = 4;
     private PlayerOperations player;
     private Status status;
     private final Board board;
@@ -38,8 +47,24 @@ public class EngineImpl implements EngineWithShopActions {
     private final ShopFactory shopFactory;
     private final List<ShopItem> globalCatalog;
     private final int shopLimit;
-    private static final int CATALOG_SIZE = 4;
 
+    /**
+     * Creates an engine with the provided dependencies and initial state.
+     * 
+     * @param player the initial player instance
+     * @param status the initial status
+     * @param board the game board
+     * @param rules the movement rules strategy
+     * @param revealStrategy the reveal strategy
+     * @param start the starting position
+     * @param exit the exit position
+     * @param shopFactory the factory used to create shop sessions
+     * @param globalCatalog the global catalog containing all shop items
+     * @param shopLimit the maximum number of purchases allowed per shop session
+     * @throws IllegalArgumentException if any dependency is {@code null}, 
+     *                                  if {@code globalCatalog} is empty,
+     *                                  or if {@code shopLimit} is negative
+     */
     public EngineImpl(
         final PlayerOperations player,
         final Status status,
@@ -88,31 +113,58 @@ public class EngineImpl implements EngineWithShopActions {
             board, 
             revealStrategy, 
             () -> this.player, 
-            p -> { this.player = p; return p;},
+            p -> { 
+                this.player = p;
+                return p;
+            },
             () -> this.status
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Player player() {
         return this.player;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Status status() {
         return this.status;
     }
 
+    /**
+     * Returns the starting position of the current level.
+     * 
+     * @return the initial player position
+     */
     Position start() {
         return this.start;
     }
 
+    /**
+     * Returns the exit position of the current level.
+     * 
+     * @return the level exit position
+     */
     Position exit() {
         return this.exit;
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * <p>
+     * This implementation additionally updates the {@link LevelState} to
+     * {@link LevelState#LOSS} if the player runs out of lives
+     * as a consequence of the reveal.
+     */
     @Override
-    public ActionResult reveal(Position p) {
+    public ActionResult reveal(final Position p) {
         final ActionResult res = this.revealService.reveal(p);
         if (res.effect() == ActionEffect.APPLIED) {
             this.updateLossIfNeeded();
@@ -126,11 +178,22 @@ public class EngineImpl implements EngineWithShopActions {
         return res;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public ActionResult toggleFlag(Position p) {
+    public ActionResult toggleFlag(final Position p) {
        return this.revealService.toggleFlag(p);
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * <p>
+     * When the player reaches the exit, the engine transitions to
+     * {@link GameMode#SHOP}, stes the level state to {@link LevelState#WON}
+     * and initializes the shop session.
+     */
     @Override
     public ActionResult move(final Position newPos) {
         final ActionResult result = this.moveService.move(newPos);
@@ -168,6 +231,9 @@ public class EngineImpl implements EngineWithShopActions {
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public GameState state() {
         return new GameStateImpl(
@@ -178,8 +244,11 @@ public class EngineImpl implements EngineWithShopActions {
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public ShopActionResult buy(ItemTypes type) {
+    public ShopActionResult buy(final ItemTypes type) {
         if (type == null) {
             throw new IllegalArgumentException("type can't be null");
         }
@@ -196,6 +265,9 @@ public class EngineImpl implements EngineWithShopActions {
         return res;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void leaveShop() {
         if (this.status.gameMode() != GameMode.SHOP) {

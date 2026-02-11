@@ -1,6 +1,10 @@
 package it.unibo.goldhunt.player.impl;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -9,8 +13,13 @@ import it.unibo.goldhunt.items.api.KindOfItem;
 import it.unibo.goldhunt.player.api.Inventory;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 
-public class InventoryTest {
-    // Helpers
+/**
+ * Testing class for Inventory implementation.
+ */
+class InventoryTest {
+
+    private static final int FIVE_POSITIVE = 5;
+
     private Inventory empty() {
         return new InventoryImpl();
     }
@@ -64,7 +73,7 @@ public class InventoryTest {
     void shouldAddMultipleTimesSameItem() {  //o limitiamo a 1?
         final var inventory = empty().add(StubItem.SHIELD, 2);
         final var updated = inventory.add(StubItem.SHIELD, 3);
-        assertEquals(5, updated.quantity(StubItem.SHIELD));
+        assertEquals(FIVE_POSITIVE, updated.quantity(StubItem.SHIELD));
         assertEquals(2, inventory.quantity(StubItem.SHIELD));
     }
 
@@ -171,6 +180,7 @@ public class InventoryTest {
             () -> inventory.hasAtLeast(null, 0)
         );
     }
+
     @Test
     void hasAtLeastShouldThrowIfQuantityNegative() {
         final var inventory = empty();

@@ -1,9 +1,12 @@
 package it.unibo.goldhunt.shop.impl;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.junit.jupiter.api.Test;
 
@@ -21,9 +24,15 @@ import it.unibo.goldhunt.shop.api.ShopActionType;
 import it.unibo.goldhunt.shop.api.ShopItem;
 import it.unibo.goldhunt.shop.api.ShopStopReason;
 
-public class ShopTest {
+/**
+ * Testing class for Shop implementations.
+ */
+class ShopTest {
 
-    // helpers
+    private static final int TWO_NEGATIVE = -2;
+    private static final int SEVEN_POSITIVE = 7;
+    private static final int FIVE_POSITIVE = 5;
+    private static final int NINETYSEVEN_POSITIVE = 97;
 
     private Position pos(final int x, final int y) {
         return new Position(x, y);
@@ -51,12 +60,12 @@ public class ShopTest {
 
         @Override
         public String shortString() {
-            return name().substring(0, 2).toLowerCase();
+            return name().substring(0, 2).toLowerCase(Locale.ROOT);
         }
 
         @Override
         public String getName() {
-            return name().toLowerCase();
+            return name().toLowerCase(Locale.ROOT);
         }
 
         @Override
@@ -124,7 +133,7 @@ public class ShopTest {
         assertThrows(IllegalArgumentException.class,
             () -> new ShopImpl(
                 playerWithGold(10), 
-                List.of(item(StubItem.SHIELD, -2)), 1)
+                List.of(item(StubItem.SHIELD, TWO_NEGATIVE)), 1)
         );
     }
 
@@ -133,7 +142,7 @@ public class ShopTest {
         assertThrows(IllegalArgumentException.class, 
             () -> new ShopImpl(
                 playerWithGold(10), 
-                List.of(item(StubItem.SHIELD, 3), item(StubItem.SHIELD, 5)), 
+                List.of(item(StubItem.SHIELD, 3), item(StubItem.SHIELD, FIVE_POSITIVE)), 
                 2
             )
         );
@@ -188,7 +197,7 @@ public class ShopTest {
         assertEquals(ShopStopReason.NONE, r.reason());
         assertEquals(ShopActionEffect.APPLIED, r.effect());
         assertEquals(1, r.remainingPurchases());
-        assertEquals(7, r.player().goldCount());
+        assertEquals(SEVEN_POSITIVE, r.player().goldCount());
         assertEquals(1, r.player().inventory().quantity(StubItem.SHIELD));
         assertNotSame(s, r.shop());
     }
@@ -200,7 +209,7 @@ public class ShopTest {
         final ShopActionResult first = s.buy(StubItem.SHIELD);
         assertEquals(ShopActionEffect.APPLIED, first.effect());
         assertEquals(2, first.remainingPurchases());
-        assertEquals(7, first.player().goldCount());
+        assertEquals(SEVEN_POSITIVE, first.player().goldCount());
         assertEquals(1, first.player().inventory().quantity(StubItem.SHIELD));
 
         final ShopActionResult second = first.shop().buy(StubItem.SHIELD);
@@ -208,7 +217,7 @@ public class ShopTest {
         assertEquals(ShopStopReason.ALREADY_BOUGHT, second.reason());
         assertEquals(ShopActionEffect.BLOCKED, second.effect());
         assertEquals(2, second.remainingPurchases());
-        assertEquals(7, second.player().goldCount());
+        assertEquals(SEVEN_POSITIVE, second.player().goldCount());
         assertEquals(1, second.player().inventory().quantity(StubItem.SHIELD));
     }
 
@@ -224,7 +233,7 @@ public class ShopTest {
         final ShopActionResult first = s.buy(StubItem.SHIELD);
         assertEquals(ShopActionEffect.APPLIED, first.effect());
         assertEquals(0, first.remainingPurchases());
-        assertEquals(97, first.player().goldCount());
+        assertEquals(NINETYSEVEN_POSITIVE, first.player().goldCount());
         assertEquals(1, first.player().inventory().quantity(StubItem.SHIELD));
 
         final ShopActionResult second = first.shop().buy(StubItem.PICKAXE);
@@ -232,7 +241,7 @@ public class ShopTest {
         assertEquals(ShopStopReason.LIMIT_REACHED, second.reason());
         assertEquals(ShopActionEffect.BLOCKED, second.effect());
         assertEquals(0, second.remainingPurchases());
-        assertEquals(97, second.player().goldCount());
+        assertEquals(NINETYSEVEN_POSITIVE, second.player().goldCount());
         assertEquals(0, second.player().inventory().quantity(StubItem.PICKAXE));
     }
 
@@ -248,7 +257,7 @@ public class ShopTest {
         final ShopActionResult first = s.buy(StubItem.SHIELD);
         assertEquals(ShopActionEffect.APPLIED, first.effect());
         assertEquals(1, first.remainingPurchases());
-        assertEquals(7, first.player().goldCount());
+        assertEquals(SEVEN_POSITIVE, first.player().goldCount());
         assertEquals(1, first.player().inventory().quantity(StubItem.SHIELD));
 
         final ShopActionResult second = first.shop().buy(StubItem.PICKAXE);

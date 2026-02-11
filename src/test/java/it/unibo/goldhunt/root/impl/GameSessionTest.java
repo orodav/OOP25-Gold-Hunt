@@ -1,6 +1,7 @@
 package it.unibo.goldhunt.root.impl;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 
@@ -11,6 +12,9 @@ import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.root.GameFactory;
 import it.unibo.goldhunt.root.GameSession;
 
+/**
+ * Testing class for GameSession implementation.
+ */
 class GameSessionTest {
 
     @Test

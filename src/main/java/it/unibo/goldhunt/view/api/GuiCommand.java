@@ -6,48 +6,48 @@ import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.items.api.ItemTypes;
 
 /**
- * Represents a user interacion issued from the GUI and handled
- * by the GameController
+ * Represents a user interaction issued from the GUI.
+ * It will be handled by the GameController.
  */
 public interface GuiCommand {
 
     /**
-     * Move the player to a specific position.
+     * Requests to move the player to a specific position.
      */
-    record MoveTo(Position pos) implements GuiCommand {}
-    
-    /**
-     * Represents a directional move.
-     */
-    record Move(Direction dir) implements GuiCommand {}
+    record MoveTo(Position pos) implements GuiCommand { }
 
     /**
-     * Reveal the cell at the given position.
+     * Requests a directional move.
      */
-    record Reveal(Position pos) implements GuiCommand {}
+    record Move(Direction dir) implements GuiCommand { }
 
     /**
-     * Toggle a flag on the cell at the given position.
+     * Requests to reveal the cell at the given position.
      */
-    record ToggleFlag(Position pos) implements GuiCommand {}
+    record Reveal(Position pos) implements GuiCommand { }
 
     /**
-     * Buy one unit of the given item type in the shop.
+     * Requests to toggle a flag on the cell at the given position.
      */
-    record Buy(ItemTypes type) implements GuiCommand {}
+    record ToggleFlag(Position pos) implements GuiCommand { }
 
     /**
-     * Leaves the shop.
+     * Requests to buy one unit of the given item type in the shop.
      */
-    record LeaveShop() implements GuiCommand {}
+    record Buy(ItemTypes type) implements GuiCommand { }
 
     /**
-     * Start a new game with the given difficulty.
+     * Requests to leave the shop.
      */
-    record NewGame(Difficulty difficulty) implements GuiCommand {}
+    record LeaveShop() implements GuiCommand { }
 
     /**
-     * Resets the current session.
+     * Requests to start a new game with the given difficulty.
      */
-    record Reset() implements GuiCommand {}
+    record NewGame(Difficulty difficulty) implements GuiCommand { }
+
+    /**
+     * Requests to reset the current session.
+     */
+    record Reset() implements GuiCommand { }
 }

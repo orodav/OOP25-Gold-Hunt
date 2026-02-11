@@ -1,6 +1,12 @@
 package it.unibo.goldhunt.player.impl;
-//davv
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -10,12 +16,15 @@ import it.unibo.goldhunt.items.api.KindOfItem;
 import it.unibo.goldhunt.player.api.Inventory;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 
-public class PlayerTest {
+/**
+ * Testing class for Player implementation.
+ */
+class PlayerTest {
 
-    // helpers
+    private static final int ONE_NEGATIVE = -1;
 
     private Position pos(final int x, final int y) {
-        return new Position(x,y);
+        return new Position(x, y);
     }
 
     private Inventory emptyInventory() {
@@ -54,8 +63,6 @@ public class PlayerTest {
         public KindOfItem getItem() {
             throw new UnsupportedOperationException("Unimplemented method 'getItem'");
         }
-
-        
     }
 
     // Testing Constructor Invariants
@@ -116,11 +123,10 @@ public class PlayerTest {
             () -> player.moveTo(null));
     }
 
-    
     @Test
     void moveToSamePositionStillReturnsNewInstance() {
         final var player = basicPlayer();
-        final var updated = player.moveTo(pos(0,0));
+        final var updated = player.moveTo(pos(0, 0));
         assertNotSame(player, updated);
         assertEquals(player, updated);
     }
@@ -155,7 +161,7 @@ public class PlayerTest {
     void addGoldShouldThrowWhenResultNegative() {
         final var player = basicPlayer();
         assertThrows(IllegalArgumentException.class, 
-            () -> player.addGold(-1));
+            () -> player.addGold(ONE_NEGATIVE));
     }
 
     @Test
@@ -201,16 +207,16 @@ public class PlayerTest {
 
     @Test
     void addLivesShouldAllowReachingZero() {
-        var player = new PlayerImpl(pos(0, 0), 1, 0, emptyInventory());
-        var updated = player.addLives(-1);
+        final var player = new PlayerImpl(pos(0, 0), 1, 0, emptyInventory());
+        final var updated = player.addLives(ONE_NEGATIVE);
         assertEquals(0, updated.livesCount());
     }
 
     @Test
     void addLivesShouldThrowWhenNegativeOrZero() {
         final var player = new PlayerImpl(pos(0, 0), 0, 0, emptyInventory());
-        assertThrows(IllegalArgumentException.class, () ->
-                player.addLives(-1));
+        assertThrows(IllegalArgumentException.class, 
+            () -> player.addLives(ONE_NEGATIVE));
     }
 
     @Test
@@ -220,16 +226,13 @@ public class PlayerTest {
         assertNotSame(player, updated);
         assertEquals(player, updated);
     }
-    
-
-    // ___________Inventory: delegation
 
     @Test
     void addItemShouldUpdateInventory() {
         final var player = basicPlayer();
         final var updated = player.addItem(StubItem.SHIELD, 1);
         assertEquals(0, player.inventory().quantity(StubItem.SHIELD));
-        assertEquals(1, updated.inventory().quantity(StubItem.SHIELD));        
+        assertEquals(1, updated.inventory().quantity(StubItem.SHIELD));
     }
 
     @Test
@@ -261,14 +264,14 @@ public class PlayerTest {
     }
 
     @Test
-    void EqualsShouldHandleNull() {
+    void equalsShouldHandleNull() {
         final var player = basicPlayer();
         assertNotEquals(player, null);
         assertNotEquals(player, "not a player");
     }
 
     @Test
-    void toStringShouldContainKeyFields() {
+    void playerToStringContainsKeyFields() {
         final var player = new PlayerImpl(pos(1, 2), 3, 4, emptyInventory());
         final var string = player.toString();
         assertNotNull(string);

@@ -5,11 +5,13 @@ import it.unibo.goldhunt.player.api.Player;
 /**
  * Represents the core component of the game logic.
  * 
+ * <p>
  * The {@code Engine} acts as the "brain" of the game: it 
  * coordinates player actions, applies game rules, interacts
  * with the board, and produces {@link ActionResult}s 
  * describing the outcome of each operation.
  * 
+ * <p>
  * The engine is responsible for validating actions according to
  * the current {@link Status}, updating the game state, and 
  * ensuring consistency between the player, the board, and the

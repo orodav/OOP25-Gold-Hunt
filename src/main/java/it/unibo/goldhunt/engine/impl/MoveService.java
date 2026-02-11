@@ -15,6 +15,14 @@ import it.unibo.goldhunt.engine.api.Status;
 import it.unibo.goldhunt.engine.api.StopReason;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 
+/**
+ * Service responsible for handling player movement logic.
+ * 
+ * <p>
+ * This component validates movement preconditions, compute path using
+ * {@link MovementRules}, and updates the player state step-by-step.
+ * It produces {@link ActionResult} instances describing the outcome.
+ */
 public class MoveService {
 
     private final Board board;
@@ -23,6 +31,16 @@ public class MoveService {
     private final UnaryOperator<PlayerOperations> setPlayer;
     private final Supplier<Status> status;
 
+    /**
+     * Creates a movement service with the required dependencies.
+     * 
+     * @param board the game board
+     * @param rules the movement rules strategy
+     * @param player supplier for accessing the current player
+     * @param setPlayer operator used to update the player state
+     * @param status supplier for accessing the current status
+     * @throws IllegalArgumentException if any dependency is {@code null}
+     */
     MoveService(
         final Board board,
         final MovementRules rules,
@@ -30,8 +48,8 @@ public class MoveService {
         final UnaryOperator<PlayerOperations> setPlayer,
         final Supplier<Status> status
     ) {
-        if (board == null || rules == null || player == null || 
-            setPlayer == null || status == null) {
+        if (board == null || rules == null || player == null 
+            || setPlayer == null || status == null) {
                 throw new IllegalArgumentException("dependencies can't be null");
         }
         this.board = board;
@@ -41,6 +59,13 @@ public class MoveService {
         this.status = status;
     }
 
+    /**
+     * Attempts to move the player to the specified position.
+     * 
+     * @param newPos the target position
+     * @return an {@link ActionResult} describing the outcome
+     * @throws IllegalArgumentException if {@code newPos} is {@code null}
+     */
     ActionResult move(final Position newPos) {
         if (newPos == null) {
             throw new IllegalArgumentException("newPos can't be null");
@@ -75,14 +100,14 @@ public class MoveService {
                 ActionResultsFactory.move(
                     actualStatus, 
                     StopReason.NONE, 
-                    ActionEffect.BLOCKED    
+                    ActionEffect.BLOCKED
             ));
         }
         return Optional.empty();
     }
 
     private ActionResult moveByOne(final Position newPos) {
-        PlayerOperations currentPlayer = this.player.get();
+        final PlayerOperations currentPlayer = this.player.get();
         final Optional<List<Position>> optionalPath = this.rules.pathCalculation(
             currentPlayer.position(), 
             newPos,
@@ -93,18 +118,17 @@ public class MoveService {
         }
         return followPath(optionalPath.get(), currentPlayer);
     }
-        
 
     private ActionResult followPath(
         final List<Position> path,
-        PlayerOperations currentPlayer
+        final PlayerOperations currentPlayer
     ) {
         for (final Position nextPosition : path) {
             final Optional<ActionResult> stepResult = applyStep(currentPlayer, nextPosition);
             if (stepResult.isPresent()) {
                 return stepResult.get();
             }
-            currentPlayer = this.player.get();
+            //currentPlayer = this.player.get();
         }
         return reached();
     }
