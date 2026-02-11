@@ -49,14 +49,14 @@ class LifesTest {
      */
     @Test
     void testMaxLives() {
-        final PlayerFake player = new PlayerFake(Item.MAX_QUANTITY_LIVES);
+        final PlayerFake player = new PlayerFake(AbstractItem.MAX_QUANTITY_LIVES);
         Objects.requireNonNull(player);
-        final PlayerOpFake playerop = new PlayerOpFake(Item.MAX_QUANTITY_LIVES);
+        final PlayerOpFake playerop = new PlayerOpFake(AbstractItem.MAX_QUANTITY_LIVES);
         Objects.requireNonNull(playerop);
         lifes.bind(new ItemContext(null, playerop, null));
         final PlayerOperations res = lifes.applyEffect(playerop);
         assertNull(res);
-        assertEquals(Item.MAX_QUANTITY_LIVES, playerop.livesCount());
+        assertEquals(AbstractItem.MAX_QUANTITY_LIVES, playerop.livesCount());
     }
 
     /**

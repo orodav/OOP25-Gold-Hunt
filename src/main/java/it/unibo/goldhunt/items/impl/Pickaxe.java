@@ -1,6 +1,9 @@
 package it.unibo.goldhunt.items.impl;
+
 import java.util.List;
+
 //luca
+
 import java.util.Random;
 
 import it.unibo.goldhunt.board.api.Cell;
@@ -8,12 +11,20 @@ import it.unibo.goldhunt.items.api.ClearCells;
 import it.unibo.goldhunt.items.api.KindOfItem;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 
-public class Pickaxe extends Item implements ClearCells{
+/**
+ * Implementation of the Pickaxe item.
+ * 
+ * <p>
+ * The pickaxe allows the player to clear an entire row or column 
+ * of the board from traps.
+ */
+public class Pickaxe extends AbstractItem implements ClearCells {
 
+    private static final Random RANDOM = new Random();
     private static final String ITEM_NAME = "Pickaxe";
-    
+
     /**
-     * Returns the name of the item
+     * Returns the name of the item.
      * 
      * @return "Pickaxe"
      */
@@ -31,14 +42,13 @@ public class Pickaxe extends Item implements ClearCells{
      */
     @Override
     public PlayerOperations applyEffect(final PlayerOperations playerop) {
-        if(context == null) {
+        if (getContext() == null) {
             throw new IllegalStateException("cannot bind items");
         }
 
-        final var board = context.board();
-        final Random random = new Random();
-        final int idx = random.nextInt(board.getBoardSize());
-        final List<Cell> cells = random.nextBoolean() 
+        final var board = getContext().board();
+        final int idx = RANDOM.nextInt(board.getBoardSize());
+        final List<Cell> cells = RANDOM.nextBoolean() 
         ? board.getRow(idx) 
         : board.getColumn(idx);
 
@@ -65,5 +75,4 @@ public class Pickaxe extends Item implements ClearCells{
     public KindOfItem getItem() {
         return KindOfItem.PICKAXE;
     }
-
 }

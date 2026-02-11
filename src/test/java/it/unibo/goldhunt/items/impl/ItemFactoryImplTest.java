@@ -57,15 +57,15 @@ class ItemFactoryImplTest {
             CHART_ID, PICKAXE_ID, SHIELD_ID, GOLDX3_ID,
         };
         for (final String str : keys) {
-            final Item item = itemFactoryImpl.generateItem(str);
+            final AbstractItem item = itemFactoryImpl.generateItem(str);
             assertNotNull(item, "should return an item given the key");
         }
     }
 
     @Test
     void testObjectsAreDiff() {
-        final Item firsItem = itemFactoryImpl.generateItem(PICKAXE_ID);
-        final Item secondItem = itemFactoryImpl.generateItem(PICKAXE_ID);
+        final AbstractItem firsItem = itemFactoryImpl.generateItem(PICKAXE_ID);
+        final AbstractItem secondItem = itemFactoryImpl.generateItem(PICKAXE_ID);
 
         assertNotSame(firsItem, secondItem, "every call should return a different object");
     }
@@ -76,11 +76,11 @@ class ItemFactoryImplTest {
         final PlayerOperations player = new FakePlayer();
         final Inventory inventory = new FakeInventory();
         // Usa CHART_ID qui
-        final Item item = itemFactoryImpl.generateItem(CHART_ID, board, player, inventory);
+        final AbstractItem item = itemFactoryImpl.generateItem(CHART_ID, board, player, inventory);
 
         assertNotNull(item);
         // Nota: Assicurati che 'context' sia accessibile o usa un getter
-        assertNotNull(item.context, "item should have a bound context");
+        assertNotNull(item.getContext(), "item should have a bound context");
     }
 
     /**

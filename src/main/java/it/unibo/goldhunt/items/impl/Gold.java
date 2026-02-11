@@ -11,7 +11,7 @@ import it.unibo.goldhunt.player.api.PlayerOperations;
  * When collected, it adds a fixed amount of gold to the player.
  * If the player has a Lucky Clover in the inventory the gold amount is double.
  */
-public class Gold extends Item{
+public class Gold extends AbstractItem {
 
     public static final String ITEM_NAME = "Gold";
 
@@ -38,10 +38,10 @@ public class Gold extends Item{
      */
     @Override
     public PlayerOperations applyEffect(final PlayerOperations playerop) {
-        if (context == null) {
+        if (getContext() == null) {
             throw new IllegalStateException("item cannot bound");
         }
-        final var inventory = context.inventory();
+        final var inventory = getContext().inventory();
         int multiplier = 1;
 
         if (inventory.quantity(KindOfItem.LUCKYCLOVER) > 0) {

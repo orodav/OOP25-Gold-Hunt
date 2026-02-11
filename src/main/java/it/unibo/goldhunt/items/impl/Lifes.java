@@ -5,10 +5,11 @@ import it.unibo.goldhunt.player.api.PlayerOperations;
 
 /**
  * Represents a life item.
+ * 
  * <p>
  * Increases the player's lives by one if not at maximum.
  */
-public class Lifes extends Item{
+public class Lifes extends AbstractItem {
 
     public static final String ITEM_NAME = "life";
 
@@ -31,13 +32,12 @@ public class Lifes extends Item{
      */
     @Override
     public PlayerOperations applyEffect(final PlayerOperations playerop) {
-        if(context == null){
+        if (getContext() == null) {
             throw new IllegalStateException("item cannot bound");
         }
 
-        if(playerop.livesCount() < MAX_QUANTITY_LIVES){
+        if (playerop.livesCount() < MAX_QUANTITY_LIVES) {
             return playerop.addLives(PLUS_LIFE);
-        
         }
         return null;
     }

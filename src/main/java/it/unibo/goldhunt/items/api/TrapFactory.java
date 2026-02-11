@@ -4,10 +4,12 @@ import it.unibo.goldhunt.player.api.PlayerOperations;
 
 /**
  * Factory interface to create traps
+ * 
  * <p>
  * Implementation of this interface produce {@link Revealable} traps
  * that can be placed in game cells.
  */
+@FunctionalInterface
 public interface TrapFactory {
 
     /**
