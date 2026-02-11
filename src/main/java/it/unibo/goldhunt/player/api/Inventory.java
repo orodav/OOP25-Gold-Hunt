@@ -2,7 +2,12 @@ package it.unibo.goldhunt.player.api;
 
 import it.unibo.goldhunt.items.api.ItemTypes;
 
-//davv
+/**
+ * Represents the player's inventory.
+ * 
+ * An {@code Inventory} manages item quantities owned by the player.
+ * 
+ */
 public interface Inventory {
 
     Inventory add(ItemTypes item, int quantity);
