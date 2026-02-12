@@ -7,6 +7,7 @@ import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.items.api.ItemTypes;
 import it.unibo.goldhunt.root.GameSession;
 import it.unibo.goldhunt.view.viewstate.GameViewState;
+import it.unibo.goldhunt.view.viewstate.ScreenType;
 
 /**
  * Maps the model/session state to immutable UI view states.
@@ -18,9 +19,10 @@ public interface ViewStateMapper {
      * 
      * @param session the current game session
      * @param message an optional UI meggase to attach to the snapshot
+     * @param screen the phase of the UI
      * @return the snapshot
      */
-    GameViewState fromSession(GameSession session, Optional<String> message);
+    GameViewState fromSession(GameSession session, Optional<String> message, ScreenType screen);
 
     /**
      * Extracts an optional UI message from an {@link ActionResult}.

@@ -2,8 +2,6 @@ package it.unibo.goldhunt.view.api;
 
 import java.util.Optional;
 
-import it.unibo.goldhunt.configuration.api.Difficulty;
-import it.unibo.goldhunt.engine.api.Direction;
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.items.api.ItemTypes;
 import it.unibo.goldhunt.view.viewstate.GameViewState;
@@ -33,19 +31,6 @@ public interface GuiCommand {
         @Override
         public GameViewState apply(GameController controller) {
             return controller.handleMoveTo(pos);
-        }
-    }
-
-    /**
-     * Requests a directional move.
-     * 
-     * @param dir the target direction
-     */
-    record Move(Direction dir) implements GuiCommand {
-
-        @Override
-        public GameViewState apply(GameController controller) {
-            return controller.handleMove(dir);
         }
     }
 
@@ -85,7 +70,8 @@ public interface GuiCommand {
         @Override
         public GameViewState apply(GameController controller) {
             return controller.handleBuy(type);
-        } }
+        }
+    }
 
     /**
      * Requests to use one unit of an item type.
@@ -101,7 +87,8 @@ public interface GuiCommand {
         @Override
         public GameViewState apply(GameController controller) {
             return controller.handleUseItem(type, target);
-        } }
+        }
+    }
 
     /**
      * Requests to proceed with the current flow.
@@ -112,7 +99,8 @@ public interface GuiCommand {
         @Override
         public GameViewState apply(GameController controller) {
             return controller.handleContinue();
-        } }
+        }
+    }
 
     /**
      * Requests to leave the current run and return to the main menu.
@@ -123,17 +111,6 @@ public interface GuiCommand {
         @Override
         public GameViewState apply(GameController controller) {
             return controller.handleLeaveToMenu();
-        } }
-
-    /**
-     * Requests to start a new game with the given difficulty.
-     * 
-     * @param difficulty the selected difficulty
-     */
-    record NewGame(Difficulty difficulty) implements GuiCommand {
-
-        @Override
-        public GameViewState apply(GameController controller) {
-            return controller.handleNewGame(difficulty);
-        } }
+        }
+    }
 }

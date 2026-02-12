@@ -3,7 +3,6 @@ package it.unibo.goldhunt.view.viewstate;
 import java.util.List;
 import java.util.Optional;
 
-import it.unibo.goldhunt.engine.api.GameMode;
 import it.unibo.goldhunt.engine.api.LevelState;
 import it.unibo.goldhunt.engine.api.Position;
 
@@ -28,7 +27,7 @@ import it.unibo.goldhunt.engine.api.Position;
  * @param inventory the inventory snapshot
  * @param shop the shop snapshot if available
  * @param message an optional UI message
- * @param mode the current game mode
+ * @param screen the current game mode
  * @param levelState the current level state
  */
 public record GameViewState(
@@ -39,6 +38,6 @@ public record GameViewState(
     InventoryViewState inventory,
     Optional<ShopViewState> shop,
     Optional<String> message,
-    GameMode mode,
+    ScreenType screen,
     LevelState levelState
 ) { }

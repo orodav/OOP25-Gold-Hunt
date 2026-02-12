@@ -3,14 +3,15 @@ package it.unibo.goldhunt.view.impl;
 import java.util.Objects;
 import java.util.Optional;
 
-import it.unibo.goldhunt.configuration.api.Difficulty;
-import it.unibo.goldhunt.engine.api.Direction;
+import it.unibo.goldhunt.engine.api.ActionResult;
+import it.unibo.goldhunt.engine.api.LevelState;
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.items.api.ItemTypes;
 import it.unibo.goldhunt.root.GameSession;
 import it.unibo.goldhunt.view.api.GameController;
 import it.unibo.goldhunt.view.api.GuiCommand;
 import it.unibo.goldhunt.view.viewstate.GameViewState;
+import it.unibo.goldhunt.view.viewstate.ScreenType;
 
 /**
  * Default UI-facing controller implementation.
@@ -22,15 +23,18 @@ public class GameControllerImpl implements GameController {
     private final GameSession session;
     private final ViewStateMapper mapper;
     private GameViewState state;
+    private ScreenType screen;
 
     public GameControllerImpl(
         final GameSession session,
-        final ViewStateMapper mapper,
-        final GameViewState state
+        final ViewStateMapper mapper
     ) {
         this.session = Objects.requireNonNull(session, "session can't be null");
         this.mapper = Objects.requireNonNull(mapper, "mapper can't be null");
-        this.state = this.mapper.fromSession(this.session, Optional.empty());
+        this.screen = ScreenType.MENU;
+        this.state = this.mapper.fromSession(this.session, Optional.empty(), this.screen);
+
+        
     }
 
     /**
@@ -51,49 +55,84 @@ public class GameControllerImpl implements GameController {
         return this.state;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public GameViewState handleMoveTo(Position pos) {
-        throw new UnsupportedOperationException("Unimplemented method 'handleMoveTo'");
+        Objects.requireNonNull(pos, "pos can't be null");
+        final ActionResult res = this.session.move(pos);
+        return refresh(this.mapper.messageFromActionResult(res));
     }
 
-    @Override
-    public GameViewState handleMove(Direction dir) {
-        throw new UnsupportedOperationException("Unimplemented method 'handleMove'");
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public GameViewState handleReveal(Position pos) {
-        throw new UnsupportedOperationException("Unimplemented method 'handleReveal'");
+        Objects.requireNonNull(pos, "pos can't be null");
+        final ActionResult res = this.session.reveal(pos);
+        return refresh(this.mapper.messageFromActionResult(res));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public GameViewState handleToggleFlag(Position pos) {
-        throw new UnsupportedOperationException("Unimplemented method 'handleToggleFlag'");
+        Objects.requireNonNull(pos, "pos can't be null");
+        final ActionResult res = this.session.toggleFlag(pos);
+        return refresh(this.mapper.messageFromActionResult(res));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public GameViewState handleBuy(ItemTypes type) {
-        throw new UnsupportedOperationException("Unimplemented method 'handleBuy'");
+        Objects.requireNonNull(type, "type can't be null");
+        return refresh(this.mapper.handleBuy(this.session, type));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public GameViewState handleUseItem(ItemTypes type, Optional<Position> target) {
-        throw new UnsupportedOperationException("Unimplemented method 'handleUseItem'");
+        Objects.requireNonNull(type, "type can't be null");
+        Objects.requireNonNull(target, "target can't be null");
+        return refresh(this.mapper.handleUseItem(this.session, type, target));
+
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public GameViewState handleContinue() {
-        throw new UnsupportedOperationException("Unimplemented method 'handleContinue'");
+        if (this.screen == ScreenType.SHOP) {
+            this.screen = ScreenType.DIFFICULTY;
+        } else if (this.screen == ScreenType.END) {
+            this.screen = ScreenType.SHOP;
+        }
+        return refresh(Optional.empty());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public GameViewState handleLeaveToMenu() {
-        throw new UnsupportedOperationException("Unimplemented method 'handleLeaveToMenu'");
+        this.screen = ScreenType.MENU;
+        return refresh(Optional.empty());
     }
 
-    @Override
-    public GameViewState handleNewGame(Difficulty difficulty) {
-        throw new UnsupportedOperationException("Unimplemented method 'handleNewGame'");
+    private GameViewState refresh(final Optional<String> message) {
+        LevelState levelState = session.status().levelState();
+        if (levelState != LevelState.PLAYING) {
+            this.screen = ScreenType.END;
+        }
+        this.state = this.mapper.fromSession(this.session, message, this.screen);
+        return this.state;
     }
-
 }
