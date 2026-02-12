@@ -1,5 +1,3 @@
-// AZZU
-
 package it.unibo.goldhunt.board.impl;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;

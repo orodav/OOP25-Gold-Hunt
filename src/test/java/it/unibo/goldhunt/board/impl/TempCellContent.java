@@ -1,5 +1,3 @@
-// AZZU
-
 package it.unibo.goldhunt.board.impl;
 
 import it.unibo.goldhunt.items.api.CellContent;

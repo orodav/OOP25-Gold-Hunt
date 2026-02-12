@@ -5,6 +5,9 @@ import java.util.Optional;
 import it.unibo.goldhunt.board.api.Cell;
 import it.unibo.goldhunt.items.api.CellContent;
 
+/**
+ * This class is a support class for {@link ReadOnlyCellAdapterTest}.
+ */
 public class TempCell implements Cell {
 
     private static final int NO_ADJACENT_TRAPS = 0;
@@ -15,6 +18,9 @@ public class TempCell implements Cell {
     private int adjacentTraps;
     private Optional<CellContent> content;
 
+    /**
+     * This constructor creates a {@code TempCell} of empty cells.
+     */
     public TempCell() {
         this.revealed = false;
         this.flagged = false;
@@ -70,7 +76,7 @@ public class TempCell implements Cell {
      * {@inheritDoc}
      */
     @Override
-    public void setAdjacentTraps(int n) {
+    public void setAdjacentTraps(final int n) {
         if (n >= NO_ADJACENT_TRAPS && n <= MAX_ADJACENT_TRAPS) {
             this.adjacentTraps = n;
         } else {
@@ -98,7 +104,7 @@ public class TempCell implements Cell {
      * {@inheritDoc}
      */
     @Override
-    public void setContent(CellContent content) {
+    public void setContent(final CellContent content) {
         if (this.content.isPresent()) {
             throw new IllegalStateException("The cell already has content");
         }

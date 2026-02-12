@@ -1,5 +1,3 @@
-// AZZU
-
 package it.unibo.goldhunt.board.api;
 
 import java.util.Optional;

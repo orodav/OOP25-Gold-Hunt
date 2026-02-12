@@ -27,7 +27,7 @@ final class ReadOnlyCellAdapterTest {
 
     /**
      * Tests that {@link ReadOnlyCellAdapter#ReadOnlyCellAdapter(Cell)}'s constructor
-     * throws {@link NullPointerException} if {@code cell} is {@code null}
+     * throws {@link NullPointerException} if {@code cell} is {@code null}.
      */
     @Test
     void testConstructorThrowsNullPointerException() {

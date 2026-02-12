@@ -7,6 +7,9 @@ import it.unibo.goldhunt.board.api.Board;
 import it.unibo.goldhunt.board.api.Cell;
 import it.unibo.goldhunt.engine.api.Position;
 
+/**
+ * This class is a support class for {@link ReadOnlyBoardAdapterTest}.
+ */
 public class TempBoard implements Board {
 
     private static final String UNNECESSARY_METHOD_FOR_TESTING = "Not needed in TempBoard";
@@ -31,7 +34,7 @@ public class TempBoard implements Board {
      * {@inheritDoc}
      */
     @Override
-    public Cell getCell(Position p) {
+    public Cell getCell(final Position p) {
         Objects.requireNonNull(p);
         if (!isPositionValid(p)) {
             throw new IndexOutOfBoundsException("This position is not in the board");
@@ -51,7 +54,7 @@ public class TempBoard implements Board {
      * {@inheritDoc}
      */
     @Override
-    public boolean isPositionValid(Position p) {
+    public boolean isPositionValid(final Position p) {
         Objects.requireNonNull(p);
         return p.x() >= 0 && p.x() < board.length
             && p.y() >= 0 && p.y() < board.length;
@@ -69,7 +72,7 @@ public class TempBoard implements Board {
      * {@inheritDoc}
      */
     @Override
-    public Position getCellPosition(Cell cell) {
+    public Position getCellPosition(final Cell cell) {
         throw new UnsupportedOperationException(UNNECESSARY_METHOD_FOR_TESTING);
     }
 
@@ -77,7 +80,7 @@ public class TempBoard implements Board {
      * {@inheritDoc}
      */
     @Override
-    public List<Cell> getAdjacentCells(Position p) {
+    public List<Cell> getAdjacentCells(final Position p) {
         throw new UnsupportedOperationException(UNNECESSARY_METHOD_FOR_TESTING);
     }
 
@@ -85,7 +88,7 @@ public class TempBoard implements Board {
      * {@inheritDoc}
      */
     @Override
-    public List<Cell> getRow(int index) {
+    public List<Cell> getRow(final int index) {
         throw new UnsupportedOperationException(UNNECESSARY_METHOD_FOR_TESTING);
     }
 
@@ -93,7 +96,7 @@ public class TempBoard implements Board {
      * {@inheritDoc}
      */
     @Override
-    public List<Cell> getColumn(int index) {
+    public List<Cell> getColumn(final int index) {
         throw new UnsupportedOperationException(UNNECESSARY_METHOD_FOR_TESTING);
     }
 
@@ -101,7 +104,7 @@ public class TempBoard implements Board {
      * {@inheritDoc}
      */
     @Override
-    public boolean isAdjacent(Position p1, Position p2) {
+    public boolean isAdjacent(final Position p1, final Position p2) {
         throw new UnsupportedOperationException(UNNECESSARY_METHOD_FOR_TESTING);
     }
 
