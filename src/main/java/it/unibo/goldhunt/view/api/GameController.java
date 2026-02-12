@@ -4,7 +4,7 @@ import it.unibo.goldhunt.view.viewstate.GameViewState;
 
 /**
  * Acts as the UI-facing controller.
- * Handles GUI commands and publish view state updates.
+ * Handles {@link GuiCommand}s and publish immutable {@link GameViewState} snapshots.
  */
 public interface GameController {
 
@@ -14,4 +14,11 @@ public interface GameController {
      * @return the corrent GameViewState
      */
     GameViewState state();
+
+    /**
+     * Handles a GUI command and returns the updated UI state snapshot.
+     * @param command
+     * @return
+     */
+    GameViewState handle(GuiCommand command);
 }
