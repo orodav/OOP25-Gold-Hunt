@@ -13,7 +13,7 @@ import it.unibo.goldhunt.engine.api.GameMode;
 import it.unibo.goldhunt.engine.api.LevelState;
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.engine.api.Status;
-import it.unibo.goldhunt.player.api.Player;
+import it.unibo.goldhunt.player.api.PlayerOperations;
 import it.unibo.goldhunt.player.impl.InventoryImpl;
 import it.unibo.goldhunt.player.impl.PlayerImpl;
 import it.unibo.goldhunt.shop.api.Shop;
@@ -38,7 +38,7 @@ class GameStateTest {
         };
     }
 
-    private static Player testPlayer() {
+    private static PlayerOperations testPlayer() {
         return new PlayerImpl(
             new Position(0, 0),
             3,
@@ -102,7 +102,7 @@ class GameStateTest {
     @Test
     void shouldExposeAllFieldsCorrectly() {
         final ReadOnlyBoard board = testBoard();
-        final Player player = testPlayer();
+        final PlayerOperations player = testPlayer();
         final Status status = testStatus();
         final Optional<Shop> shop = Optional.empty();
         final GameStateImpl state = new GameStateImpl(

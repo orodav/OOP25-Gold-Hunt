@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import it.unibo.goldhunt.engine.api.GameState;
 import it.unibo.goldhunt.engine.api.Status;
-import it.unibo.goldhunt.player.api.Player;
+import it.unibo.goldhunt.player.api.PlayerOperations;
 import it.unibo.goldhunt.shop.api.Shop;
 import it.unibo.goldhunt.board.api.ReadOnlyBoard;
 
@@ -22,7 +22,7 @@ import it.unibo.goldhunt.board.api.ReadOnlyBoard;
  */
 public record GameStateImpl(
     ReadOnlyBoard board,
-    Player player,
+    PlayerOperations player,
     Status status,
     Optional<Shop> shop
 ) implements GameState {

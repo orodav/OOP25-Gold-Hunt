@@ -1,6 +1,6 @@
 package it.unibo.goldhunt.engine.api;
 
-import it.unibo.goldhunt.player.api.Player;
+import it.unibo.goldhunt.player.api.PlayerOperations;
 
 /**
  * Represents the core component of the game logic.
@@ -24,7 +24,7 @@ public interface Engine {
      * 
      * @return the player associated with this engine
      */
-    Player player();
+    PlayerOperations player();
 
     /**
      * Returns the current {@link Status} of the game.

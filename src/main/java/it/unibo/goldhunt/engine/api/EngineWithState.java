@@ -1,6 +1,10 @@
 package it.unibo.goldhunt.engine.api;
 
+import java.util.Optional;
+
 import it.unibo.goldhunt.items.api.ItemTypes;
+import it.unibo.goldhunt.player.api.PlayerOperations;
+import it.unibo.goldhunt.shop.api.Shop;
 import it.unibo.goldhunt.shop.api.ShopActionResult;
 
 /**
@@ -20,6 +24,24 @@ public interface EngineWithState extends Engine {
      * @return the current {@link GameState}
      */
     GameState state();
+
+    /**
+     * Returns a new engine equal to this one but with the given player.
+     *
+     * @param player the new player
+     * @return a new engine instance with updated player
+     * @throws NullPointerException if {@code player} is {@code null}
+     */
+    EngineWithState withPlayer(PlayerOperations player);
+
+    /**
+     * Returns a new engine equal to this one but with the given shop.
+     *
+     * @param shop the new shop (empty if no shop is available)
+     * @return a new engine instance with updated shop
+     * @throws NullPointerException if {@code shop} is {@code null}
+     */
+    EngineWithState withShop(Optional<Shop> shop);
 
     /**
      * Further extension of {@link EngineWithState} that enables

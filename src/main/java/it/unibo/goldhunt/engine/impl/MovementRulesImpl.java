@@ -109,7 +109,7 @@ public final class MovementRulesImpl implements MovementRules {
         if (!this.board.isPositionValid(from) || !this.board.isPositionValid(to)) {
             return false;
         }
-        return from.equals(to) && this.pathCalculation(from, to, player).isPresent(); 
+        return from.equals(to) || this.pathCalculation(from, to, player).isPresent(); 
     }
 
     /** 
@@ -217,3 +217,4 @@ public final class MovementRulesImpl implements MovementRules {
         );
     }
 }
+

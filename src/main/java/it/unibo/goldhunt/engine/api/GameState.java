@@ -1,6 +1,6 @@
 package it.unibo.goldhunt.engine.api;
 
-import it.unibo.goldhunt.player.api.Player;
+import it.unibo.goldhunt.player.api.PlayerOperations;
 import it.unibo.goldhunt.shop.api.Shop;
 
 import java.util.Optional;
@@ -30,7 +30,7 @@ public interface GameState {
      * 
      * @return the player associated with this game state
      */
-    Player player();
+    PlayerOperations player();
 
     /**
      * Returns the current game status.

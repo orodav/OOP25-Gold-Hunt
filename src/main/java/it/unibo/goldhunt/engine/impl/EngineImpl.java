@@ -1,6 +1,7 @@
 package it.unibo.goldhunt.engine.impl;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -9,6 +10,7 @@ import it.unibo.goldhunt.board.api.RevealStrategy;
 import it.unibo.goldhunt.board.impl.ReadOnlyBoardAdapter;
 import it.unibo.goldhunt.engine.api.ActionEffect;
 import it.unibo.goldhunt.engine.api.ActionResult;
+import it.unibo.goldhunt.engine.api.EngineWithState;
 import it.unibo.goldhunt.engine.api.GameMode;
 import it.unibo.goldhunt.engine.api.EngineWithState.EngineWithShopActions;
 import it.unibo.goldhunt.engine.api.GameState;
@@ -17,7 +19,6 @@ import it.unibo.goldhunt.engine.api.MovementRules;
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.engine.api.Status;
 import it.unibo.goldhunt.items.api.ItemTypes;
-import it.unibo.goldhunt.player.api.Player;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 import it.unibo.goldhunt.shop.api.Shop;
 import it.unibo.goldhunt.shop.api.ShopActionEffect;
@@ -47,6 +48,8 @@ public class EngineImpl implements EngineWithShopActions {
     private final ShopFactory shopFactory;
     private final List<ShopItem> globalCatalog;
     private final int shopLimit;
+    private final MovementRules rules;
+    private final RevealStrategy revealStrategy;
 
     /**
      * Creates an engine with the provided dependencies and initial state.
@@ -99,6 +102,8 @@ public class EngineImpl implements EngineWithShopActions {
         this.shopFactory = shopFactory;
         this.globalCatalog = List.copyOf(globalCatalog);
         this.shopLimit = shopLimit;
+        this.rules = rules;
+        this.revealStrategy = revealStrategy;
         this.moveService = new MoveService(
             board, 
             rules, 
@@ -125,7 +130,7 @@ public class EngineImpl implements EngineWithShopActions {
      * {@inheritDoc}
      */
     @Override
-    public Player player() {
+    public PlayerOperations player() {
         return this.player;
     }
 
@@ -297,5 +302,42 @@ public class EngineImpl implements EngineWithShopActions {
             this.status = this.status.withLevelState(LevelState.LOSS);
         }
     }
-}
 
+    @Override
+    public EngineWithState withPlayer(PlayerOperations player) {
+        Objects.requireNonNull(player, "player can't be null");
+        final EngineImpl copy = new EngineImpl(
+            player, 
+            this.status, 
+            this.board, 
+            this.rules, 
+            this.revealStrategy, 
+            this.start, 
+            this.exit, 
+            this.shopFactory, 
+            this.globalCatalog, 
+            this.shopLimit
+        );
+        copy.shop = this.shop;
+        return copy;
+    }
+
+    @Override
+    public EngineWithState withShop(Optional<Shop> shop) {
+        Objects.requireNonNull(shop, "shop can't be null");
+        final EngineImpl copy = new EngineImpl(
+            player, 
+            this.status, 
+            this.board, 
+            this.rules, 
+            this.revealStrategy, 
+            this.start, 
+            this.exit, 
+            this.shopFactory, 
+            this.globalCatalog, 
+            this.shopLimit
+        );
+        copy.shop = this.shop;
+        return copy;
+    }
+}

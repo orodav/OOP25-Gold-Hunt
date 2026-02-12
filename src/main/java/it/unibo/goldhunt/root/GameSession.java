@@ -9,8 +9,10 @@ import it.unibo.goldhunt.engine.api.ActionResult;
 import it.unibo.goldhunt.engine.api.EngineWithState;
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.engine.api.Status;
-import it.unibo.goldhunt.player.api.Player;
+import it.unibo.goldhunt.items.api.ItemTypes;
+import it.unibo.goldhunt.player.api.PlayerOperations;
 import it.unibo.goldhunt.shop.api.Shop;
+import it.unibo.goldhunt.shop.api.ShopActionResult;
 
 /**
  * Represents a single game session.
@@ -27,7 +29,10 @@ public final class GameSession {
 
     private final Difficulty difficulty;
     private final Level level;
-    private final EngineWithState engine;
+    private EngineWithState engine;
+    private final Optional<EngineWithState.EngineWithShopActions> shopEngine;
+    //private Optional<Shop> currentShop = Optional.empty();
+    //private Optional<PlayerOperations> currentPlayer = Optional.empty();
 
     /**
      * Creates a new game session with the specified configuration and engine.
@@ -40,11 +45,13 @@ public final class GameSession {
     public GameSession(
         final Difficulty difficulty,
         final Level level,
-        final EngineWithState engine
+        final EngineWithState engine,
+        final Optional<EngineWithState.EngineWithShopActions> shopEngine
     ) {
         this.difficulty = Objects.requireNonNull(difficulty, "difficulty can't be null");
         this.level = Objects.requireNonNull(level, "level can't be null");
         this.engine = Objects.requireNonNull(engine, "engine can't be null");
+        this.shopEngine = Objects.requireNonNull(shopEngine, "shopEngine can't be null");
     }
 
     /**
@@ -88,7 +95,7 @@ public final class GameSession {
      * 
      * @return the player
      */
-    public Player player() {
+    public PlayerOperations player() {
         return this.engine.state().player();
     }
 
@@ -129,5 +136,40 @@ public final class GameSession {
      */
     public ActionResult toggleFlag(final Position p) {
         return this.engine.toggleFlag(p);
+    }
+
+    /**
+     * Attempts to buy one unit of the specified item from the current shop.
+     * 
+     * @param type the item type to buy
+     * @return a {@link ShopActionResult} describing the outcome
+     * @throws NullPointerException if {@code type} is {@code null}
+     * @throws IllegalStateException if the current engine does not support shop actions
+     */
+    public ShopActionResult buy(final ItemTypes type) {
+        Objects.requireNonNull(type, "type can't be null");
+        final EngineWithState.EngineWithShopActions shopEn = this.shopEngine
+                .orElseThrow(
+                    () -> new IllegalStateException("Shop actions not available in this session")
+                );
+        final ShopActionResult shopAR = shopEn.buy(type);
+        this.engine = this.engine
+                .withPlayer(shopAR.player())
+                .withShop(Optional.of(shopAR.shop()));
+        return shopAR;
+    }
+
+    public void leaveShop() {
+        final EngineWithState.EngineWithShopActions shopEn = this.shopEngine
+                .orElseThrow(
+                    () -> new IllegalStateException("Shop actions not available in this session")
+                );
+        shopEn.leaveShop();
+    }
+
+    public void useItem(final ItemTypes type) {
+        Objects.requireNonNull(type, "type can't be null");
+        final PlayerOperations updated = this.player().useItem(type, 1);
+        this.engine = this.engine.withPlayer(updated);
     }
 }

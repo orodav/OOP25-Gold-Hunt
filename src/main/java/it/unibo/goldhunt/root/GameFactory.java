@@ -2,6 +2,7 @@ package it.unibo.goldhunt.root;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import it.unibo.goldhunt.board.api.BoardFactory;
 import it.unibo.goldhunt.board.api.CellFactory;
@@ -17,7 +18,7 @@ import it.unibo.goldhunt.configuration.api.LevelConfigFactory;
 import it.unibo.goldhunt.configuration.impl.BoardGeneratorImpl;
 import it.unibo.goldhunt.configuration.impl.LevelImpl;
 import it.unibo.goldhunt.configuration.impl.LevelConfigFactoryImpl;
-import it.unibo.goldhunt.engine.api.EngineWithState;
+import it.unibo.goldhunt.engine.api.EngineWithState.EngineWithShopActions;
 import it.unibo.goldhunt.engine.api.MovementRules;
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.engine.api.Status;
@@ -50,7 +51,7 @@ import it.unibo.goldhunt.shop.impl.DefaultShopFactory;
 public class GameFactory {
 
     private static final Position DEFAULT_START = new Position(0, 0);
-    private static final int DEFAULT_INITIAL_LIVES = 0;
+    private static final int DEFAULT_INITIAL_LIVES = 3;
     private static final int DEFAULT_INITIAL_GOLD = 0;
     private static final int DEFAULT_SHOP_MAX_PURCHASES = 3;
     private final LevelConfigFactory configFactory;
@@ -108,7 +109,7 @@ public class GameFactory {
         level.initLives();
         final MovementRules rules = new MovementRulesImpl(level.getBoard());
         final Status status = StatusImpl.createStartingState();
-        final EngineWithState engine = new EngineImpl(
+        final EngineWithShopActions engine = new EngineImpl(
             level.getPlayer(), 
             status, 
             level.getBoard(), 
@@ -120,6 +121,6 @@ public class GameFactory {
             this.shopCatalog,
             this.shopMaxPurchases
         );
-        return new GameSession(difficulty, level, engine);
+        return new GameSession(difficulty, level, engine, Optional.of(engine));
     }
 }
