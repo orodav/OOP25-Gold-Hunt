@@ -10,6 +10,7 @@ import it.unibo.goldhunt.items.api.ItemTypes;
 import it.unibo.goldhunt.root.GameSession;
 import it.unibo.goldhunt.view.api.GameController;
 import it.unibo.goldhunt.view.api.GuiCommand;
+import it.unibo.goldhunt.view.api.ViewStateMapper;
 import it.unibo.goldhunt.view.viewstate.GameViewState;
 import it.unibo.goldhunt.view.viewstate.ScreenType;
 
@@ -91,7 +92,8 @@ public class GameControllerImpl implements GameController {
     @Override
     public GameViewState handleBuy(ItemTypes type) {
         Objects.requireNonNull(type, "type can't be null");
-        return refresh(this.mapper.handleBuy(this.session, type));
+        final var res = this.session.buy(type);
+        return refresh(this.mapper.messageFromShopActionResult(res));
     }
 
     /**
@@ -101,7 +103,8 @@ public class GameControllerImpl implements GameController {
     public GameViewState handleUseItem(ItemTypes type, Optional<Position> target) {
         Objects.requireNonNull(type, "type can't be null");
         Objects.requireNonNull(target, "target can't be null");
-        return refresh(this.mapper.handleUseItem(this.session, type, target));
+        this.session.useItem(type);
+        return refresh(Optional.empty());
 
     }
 
