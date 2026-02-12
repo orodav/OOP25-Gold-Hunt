@@ -1,16 +1,20 @@
-package it.unibo.goldhunt.view.impl;
+package it.unibo.goldhunt.view.api;
 
 import java.util.Optional;
 
 import it.unibo.goldhunt.engine.api.ActionResult;
-import it.unibo.goldhunt.engine.api.Position;
-import it.unibo.goldhunt.items.api.ItemTypes;
 import it.unibo.goldhunt.root.GameSession;
+import it.unibo.goldhunt.shop.api.ShopActionResult;
 import it.unibo.goldhunt.view.viewstate.GameViewState;
 import it.unibo.goldhunt.view.viewstate.ScreenType;
 
 /**
- * Maps the model/session state to immutable UI view states.
+ * Default implementation of {@link ViewStateMapper}.
+ * 
+ * <p>
+ * This class is responsible for translating the current
+ * {@link GameSession} state and action results into immutable
+ * {@link GameViewState} instances consumable by the UI layer.
  */
 public interface ViewStateMapper {
 
@@ -33,21 +37,10 @@ public interface ViewStateMapper {
     Optional<String> messageFromActionResult(ActionResult result);
 
     /**
-     * Executes a shop purchase and returns a message describing the outcome.
+     * Extracts an optional UI message from a {@link ShopActionResult}.
      * 
-     * @param session the current session
-     * @param type the item type to buy
-     * @return an optional message
+     * @param result the shop action result to inspect
+     * @return an optional message describing the outcome
      */
-    Optional<String> handleBuy(GameSession session, ItemTypes type);
-
-    /**
-     * Executes an item usage and returns a message describing the outcome.
-     * 
-     * @param session the current session
-     * @param type the item type to use
-     * @param target optional target position
-     * @return an optional message
-     */
-    Optional<String> handleUseItem(GameSession session, ItemTypes type, Optional<Position> target);
+    Optional<String>messageFromShopActionResult(final ShopActionResult result);
 }
