@@ -3,6 +3,7 @@ package it.unibo.goldhunt.engine.api;
 /**
  * Represents the result of executing a game action.
  * 
+ * <p>
  * An {@code ActionResult} encapsulates all the information needed to
  * describe the outcome of an action performed by the player.
  * This record is immutable and is typically returned by the engine

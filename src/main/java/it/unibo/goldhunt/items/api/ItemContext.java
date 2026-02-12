@@ -4,9 +4,9 @@ import it.unibo.goldhunt.board.api.Board;
 import it.unibo.goldhunt.player.api.Inventory;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 
-
 /**
- * Holds the context needed for an item to operate
+ * Holds the context needed for an item to operate.
+ * 
  * <p>
  * Contains the {@link Board}, the {@link PlayerOperation}, and the player's {@link Inventory}
  * 

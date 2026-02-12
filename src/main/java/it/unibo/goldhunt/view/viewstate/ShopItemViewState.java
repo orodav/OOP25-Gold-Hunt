@@ -1,8 +1,7 @@
-package it.unibo.goldhunt.view.viewmodel;
+package it.unibo.goldhunt.view.viewstate;
 
 /**
- * Immutable snapshot describing how a single shop item should be 
- * displayed in the UI.
+ * Immutable snapshot describing how a single shop item should be displayed in the UI.
  */
 public record ShopItemViewState(
     String name,

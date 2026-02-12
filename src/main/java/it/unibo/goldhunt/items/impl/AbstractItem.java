@@ -1,6 +1,5 @@
 package it.unibo.goldhunt.items.impl;
 
-import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.items.api.ItemContext;
 import it.unibo.goldhunt.items.api.ItemTypes;
 
@@ -10,12 +9,7 @@ import it.unibo.goldhunt.items.api.ItemTypes;
  * <p>
  * Provides shared constants, context binding, and a position field.
  */
-public abstract class Item implements ItemTypes {
-
-    /**
-     * Context containing player, inventory, and board
-     */
-    protected ItemContext context;
+public abstract class AbstractItem implements ItemTypes {
 
     /**
      * Maximum quantities for various items. 
@@ -31,16 +25,25 @@ public abstract class Item implements ItemTypes {
     public static final int LUCKY_CLOVER_MULTIPLIER = 2;
 
     /**
-     * Position of the item on the board. 
+     * Context containing player, inventory, and board.
      */
-    public Position position;
+    private ItemContext context;
 
     /**
      * Binds the item to its context.
      * 
-     * @param context the context containing board, player, and the inventory.
+     * @param contextItem the context containing board, player, and the inventory.
      */
-    public void bind(final ItemContext context) {
-        this.context = context;
+    public void bind(final ItemContext contextItem) {
+        this.context = contextItem;
+    }
+
+    /**
+     * Getter for the context.
+     * 
+     * @return an item context type.
+     */
+    protected ItemContext getContext() {
+        return this.context;
     }
 }

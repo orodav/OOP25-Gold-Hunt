@@ -1,16 +1,15 @@
-package it.unibo.goldhunt.view.viewmodel;
+package it.unibo.goldhunt.view.viewstate;
 
 import it.unibo.goldhunt.engine.api.Position;
 
 /**
- * Immutable shanpshot describing how a single board cell should be
- * displayed in the UI.
+ * Immutable snapshot describing how a single board cell should be displayed in the UI.
  */
 public record CellViewState(
     Position pos,
     boolean revealed,
     boolean flagged,
-    int adjactentTraps,
+    int adjacentTraps,
     String glyph,
     String styleKey
 ) { }

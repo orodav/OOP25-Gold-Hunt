@@ -1,15 +1,24 @@
 package it.unibo.goldhunt.player.impl;
-//davv
+
 import java.util.HashMap;
 import java.util.Map;
 
 import it.unibo.goldhunt.items.api.ItemTypes;
 import it.unibo.goldhunt.player.api.Inventory;
 
+/**
+ * Default immutable implementation of {@link Inventory}.
+ * 
+ * <p>
+ * This implementation stores item quantities in an immutable internal map.
+ */
 public class InventoryImpl implements Inventory {
 
     private final Map<ItemTypes, Integer> items;
 
+    /**
+     * Creates an empty inventory.
+     */
     public InventoryImpl() {
         this.items = Map.of();  //empty inventory - immutable 
     }
@@ -17,10 +26,14 @@ public class InventoryImpl implements Inventory {
     private InventoryImpl(final Map<ItemTypes, Integer> items) {
         this.items = Map.copyOf(items);
     }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Inventory add(final ItemTypes item, final int quantity) {
         if (item == null) {
-            throw new IllegalArgumentException("item");
+            throw new IllegalArgumentException("parameter can't be null");
         }
         if (quantity < 0) {
             throw new IllegalArgumentException("quantity must be >= 0");
@@ -30,6 +43,9 @@ public class InventoryImpl implements Inventory {
         return new InventoryImpl(newItems);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Inventory remove(final ItemTypes item, final int quantity) {
         if (item == null) {
@@ -51,6 +67,9 @@ public class InventoryImpl implements Inventory {
         return new InventoryImpl(newItems);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int quantity(final ItemTypes item) {
         if (item == null) {

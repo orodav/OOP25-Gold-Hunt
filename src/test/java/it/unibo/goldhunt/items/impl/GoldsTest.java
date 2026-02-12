@@ -35,12 +35,13 @@ class GoldsTest {
         player = new FakePlayer(inventory);
         goldX3 = new GoldX3();
         gold = new Gold();
+        final ItemContext context = new ItemContext(null, player, inventory);
         Objects.requireNonNull(goldX3);
         Objects.requireNonNull(inventory);
         Objects.requireNonNull(gold);
         Objects.requireNonNull(player);
-        gold.context = new ItemContext(null, player, inventory);
-        goldX3.context = new ItemContext(null, player, inventory);
+        gold.bind(context);
+        goldX3.bind(context);
     }
 
     /**

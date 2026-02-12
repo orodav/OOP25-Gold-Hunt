@@ -37,6 +37,16 @@ import it.unibo.goldhunt.shop.api.ShopItem;
 import it.unibo.goldhunt.shop.impl.DefaultShopCatalog;
 import it.unibo.goldhunt.shop.impl.DefaultShopFactory;
 
+/**
+ * Factory responsible for creating fully wired {@link GameSession} instances.
+ * 
+ * <p>
+ * {@code GameFactory} acts as the composition root of the application.
+ * 
+ * <p>
+ * The default constructor provides a ready-to-use configuration,
+ * configuration following a simple wiring strategy (KISS principle).
+ */
 public class GameFactory {
 
     private static final Position DEFAULT_START = new Position(0, 0);
@@ -52,7 +62,10 @@ public class GameFactory {
     private final int shopMaxPurchases;
 
     /**
-     * Default wiring (KISS).
+     * Creates a {@code GameFactory} with default component wiring.
+     * 
+     * <p>
+     * This configuration uses standard implementations.
      */
     public GameFactory() {
         this.configFactory = new LevelConfigFactoryImpl();
@@ -64,6 +77,13 @@ public class GameFactory {
         this.shopMaxPurchases = DEFAULT_SHOP_MAX_PURCHASES;
     }
 
+    /**
+     * Creates and initializes a new {@link GameSession} for the specified difficulty.
+     * 
+     * @param difficulty the selected game difficulty
+     * @return a fully initialized {@code GameSession}
+     * @throws NullPoiterException if {@code difficulty} is {@code null}
+     */
     public GameSession newGame(final Difficulty difficulty) {
         Objects.requireNonNull(difficulty);
         final LevelConfig config = this.configFactory.create(difficulty);

@@ -1,4 +1,4 @@
-package it.unibo.goldhunt.view.viewmodel;
+package it.unibo.goldhunt.view.viewstate;
 
 import java.util.List;
 

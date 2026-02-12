@@ -10,6 +10,7 @@ import it.unibo.goldhunt.board.api.ReadOnlyBoard;
 /**
  * Represents an immutable snapshot of the current game state.
  * 
+ * <p>
  * A {@code GameState} provides read-only access to all the
  * relevant components of the game at a specific moment in time.
  * It is typically used by UI layers or controllers to observe
@@ -41,8 +42,8 @@ public interface GameState {
     /**
      * Returns the current {@link Shop} if the game is in shop mode.
      * 
-     * @return an {@link Optional} containing the shop
-     * if present, otherwise {@link Optional#empty()}
+     * @return an {@link Optional} containing the shop if present,
+     *         an {@link Optional#empty()} otherwise
      */
     Optional<Shop> shop();
 }

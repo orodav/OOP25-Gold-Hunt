@@ -6,8 +6,11 @@ import it.unibo.goldhunt.items.api.ItemTypes;
 
 /**
  * Models the in-game shop available at the end of a level.
- * The shop is immutable: a purchase return a result containing
- * the updated Player.
+ * 
+ * <p>
+ * The shop is immutable: each purchase attempt returns a 
+ * {@link ShopActionResult} containing the outcome 
+ * and the updated player.
  */
 public interface Shop {
 
@@ -15,7 +18,8 @@ public interface Shop {
      * Returns the list of items currently available for purchase.
      * the GUI should build its buttons from this list.
      * Items not sold are not shown.
-     * @return
+     * 
+     * @return the list of purchasable {@link ShopItem}
      */
     List<ShopItem> items();
 
@@ -24,7 +28,7 @@ public interface Shop {
      * 
      * @param type the item type to buy
      * @return a {@link ShopActionResult} describing the outcome
-     * and the updated player
+     *         and the updated player state
      * @throws IllegalArgumentException if {@code type} is {@code null}
      */
     ShopActionResult buy(ItemTypes type);
@@ -32,7 +36,7 @@ public interface Shop {
     /**
      * Returns the remaining number of purchases allowed in this shop sesison.
      * 
-     * @return remaining purchases (>= 0)
+     * @return the remaining purchases
      */
     int remainingPurchases();
 }
