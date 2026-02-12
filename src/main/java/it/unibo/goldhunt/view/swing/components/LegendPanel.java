@@ -4,7 +4,7 @@ import java.awt.FlowLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
+import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.plaf.DimensionUIResource;
@@ -22,7 +22,7 @@ public class LegendPanel extends JPanel {
 
         for (String id : registry.getAllItemsID()) {
             
-            ImageIcon icon = registry.getIcon(id);
+            Icon icon = registry.getIcon(id);
             String tooltip = registry.getTooltip(id);
 
             JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 2));

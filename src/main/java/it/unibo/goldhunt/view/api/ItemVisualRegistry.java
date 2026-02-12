@@ -1,6 +1,6 @@
 package it.unibo.goldhunt.view.api;
 
-import javax.swing.ImageIcon;
+import javax.swing.Icon;
 
 public interface ItemVisualRegistry {
 
@@ -10,5 +10,5 @@ public interface ItemVisualRegistry {
 
     String getStyleKey(final String contentID);
 
-    ImageIcon getIcon(String id);
+    Icon getIcon(String id);
 }
