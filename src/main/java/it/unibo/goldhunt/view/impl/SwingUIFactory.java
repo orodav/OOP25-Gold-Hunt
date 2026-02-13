@@ -30,10 +30,10 @@ public final class SwingUIFactory implements UIFactory {
     @Override
     public JFrame createFrame(final String title) {
         final JFrame frame = new JFrame(title);
-    
+
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(true);
-    
+
         return frame;
     }
 
@@ -91,12 +91,12 @@ public final class SwingUIFactory implements UIFactory {
     @Override
     public JButton createIconButton(final String iconName) {
         final JButton button = new JButton(loadIcon(iconName));
-    
+
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
         button.setFocusPainted(false);
         button.setFocusable(false);
-    
+
         return button;
     }
 
