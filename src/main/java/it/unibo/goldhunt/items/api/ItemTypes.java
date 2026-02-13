@@ -28,7 +28,16 @@ public interface ItemTypes extends CellContent {
      */
     KindOfItem getItem();
 
-    default PlayerOperations toInventory(final PlayerOperations playerop){
+    /**
+     * Adds the item to the player's inventory.
+     * 
+     * <p>
+     * By default this method adds one unit of this kind of item to the inventory.
+     * 
+     * @param playerop the player operation instance.
+     * @return the updated {@link PlayerOperation} after adding the item.
+     */
+    default PlayerOperations toInventory(final PlayerOperations playerop) {
         return playerop.addItem(getItem(), 1);
     }
 }

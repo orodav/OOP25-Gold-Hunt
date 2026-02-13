@@ -12,7 +12,7 @@ import it.unibo.goldhunt.player.api.PlayerOperations;
  * <p>
  * The shield protects the player by nullifying damage taken from traps.
  */
-public class Shield extends AbstractItem {
+public final class Shield extends AbstractItem {
 
     private static final String ITEM_NAME = "Shield";
 
@@ -84,7 +84,8 @@ public class Shield extends AbstractItem {
         return KindOfItem.SHIELD;
     }
 
-    public PlayerOperations toInventory(final PlayerOperations playerop){
+    @Override
+    public PlayerOperations toInventory(final PlayerOperations playerop) {
         return playerop.addItem(this.getItem(), 1);
     }
 }

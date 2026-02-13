@@ -11,24 +11,26 @@ import javax.swing.plaf.DimensionUIResource;
 
 import it.unibo.goldhunt.view.api.ItemVisualRegistry;
 
-public class LegendPanel extends JPanel {
+public final class LegendPanel extends JPanel {
 
+    private static final long serialVersionUID = 1L;
     private static final int WIDTH = 150;
 
-    public LegendPanel(ItemVisualRegistry registry) {
+    public LegendPanel(final ItemVisualRegistry registry) {
+        super();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(BorderFactory.createTitledBorder("Legend"));
         setPreferredSize(new DimensionUIResource(WIDTH, 0));
 
-        for (String id : registry.getAllItemsID()) {
-            
-            Icon icon = registry.getIcon(id);
-            String tooltip = registry.getItemName(id);
+        for (final String id : registry.getAllItemsID()) {
 
-            JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 2));
+            final Icon icon = registry.getIcon(id);
+            final String tooltip = registry.getItemName(id);
+
+            final JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 2));
             row.setOpaque(false);
 
-            JLabel iconLabel = (icon != null) ? new JLabel(icon) : new JLabel(registry.getGlyph(id));
+            final JLabel iconLabel = (icon != null) ? new JLabel(icon) : new JLabel(registry.getGlyph(id));
             final JLabel tooltipLabel = new JLabel(tooltip);
 
             row.add(iconLabel);
@@ -36,5 +38,4 @@ public class LegendPanel extends JPanel {
             add(row);
         }
     }
-
 }

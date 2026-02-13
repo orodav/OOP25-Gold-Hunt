@@ -19,7 +19,7 @@ import it.unibo.goldhunt.player.api.PlayerOperations;
  * When used, the {@code Chart} reveals nearby traps within a certain radius.
  * It flags any cell that contains a {@link Revealable} content.
  */
-public class Chart extends AbstractItem {
+public final class Chart extends AbstractItem {
 
     /**
      * Name of the item.
@@ -106,7 +106,8 @@ public class Chart extends AbstractItem {
         return KindOfItem.CHART;
     }
 
-    public PlayerOperations toInventory(final PlayerOperations playerop){
+    @Override
+    public PlayerOperations toInventory(final PlayerOperations playerop) {
         return playerop.addItem(this.getItem(), 1);
     }
 }

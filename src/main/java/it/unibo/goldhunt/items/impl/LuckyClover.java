@@ -10,7 +10,7 @@ import it.unibo.goldhunt.player.api.PlayerOperations;
  * This item can be collected by the player and added to their inventory
  * to provide specific bonuses.
  */
-public class LuckyClover extends AbstractItem {
+public final class LuckyClover extends AbstractItem {
 
     private static final String ITEM_NAME = "Lucky clover";
 
@@ -64,7 +64,8 @@ public class LuckyClover extends AbstractItem {
         return KindOfItem.LUCKYCLOVER;
     }
 
-    public PlayerOperations toInventory(final PlayerOperations playerop){
+    @Override
+    public PlayerOperations toInventory(final PlayerOperations playerop) {
         return playerop.addItem(this.getItem(), 1);
     }
 }
