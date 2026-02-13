@@ -24,6 +24,11 @@ public class SwingUIFactory implements UIFactory {
     }
 
     @Override
+    public JPanel createPanel() {
+        return new JPanel();
+    }
+
+    @Override
     public JPanel createPanel(final LayoutManager manager) {
         return new JPanel(manager);
     }

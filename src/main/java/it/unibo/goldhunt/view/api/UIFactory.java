@@ -17,6 +17,8 @@ public interface UIFactory {
 
     JFrame createFrame(String title);
 
+    JPanel createPanel();
+
     JPanel createPanel(LayoutManager manager);
 
     JLabel createStandardLabel(String text);
