@@ -6,9 +6,9 @@ import javax.swing.Icon;
 
 public interface ItemVisualRegistry {
 
-    String getGlyph(final String getContentID);
+    String getGlyph(String getContentID);
 
-    String getItemName(final String contentID);
+    String getItemName(String contentID);
 
     Icon getIcon(String id);
 

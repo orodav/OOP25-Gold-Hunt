@@ -10,22 +10,9 @@ import javax.swing.Icon;
 import it.unibo.goldhunt.view.api.ItemVisualRegistry;
 import it.unibo.goldhunt.view.api.UIFactory;
 
-public class ItemRegistry implements ItemVisualRegistry {
+public final class ItemRegistry implements ItemVisualRegistry {
 
     private final Map<String, ItemMap> iteMap;
-
-    private static class ItemMap {
-
-        final String glyph;
-        final String itemName;
-        final Icon icon;
-
-        ItemMap(final String glyph, final String itemName, final Icon icon ){
-            this.glyph = glyph;
-            this.icon = icon;
-            this.itemName = itemName;
-        }
-    }
 
     public ItemRegistry(final UIFactory factori) {
 
@@ -33,45 +20,38 @@ public class ItemRegistry implements ItemVisualRegistry {
             throw new IllegalArgumentException();
         }
 
-        Map<String, ItemMap> factoriMap = new HashMap<>();
+        final Map<String, ItemMap> factoriMap = new HashMap<>();
 
-        factoriMap.put("M", new ItemMap("M", "Map", 
+        factoriMap.put("M", new ItemMap("M", "Map, reveals traps nearby", 
         factori.loadIcon("map.png")));
 
-        factoriMap.put("D", new ItemMap("D", "Dynamite", 
+        factoriMap.put("D", new ItemMap("D", "Dynamite, disarm and reevals cells nearby", 
         factori.loadIcon("dynamite.png")));
 
-        factoriMap.put("G", new ItemMap("G", "Gold", 
+        factoriMap.put("G", new ItemMap("G", "Gold, game value", 
         factori.loadIcon("gold.png")));
 
-        factoriMap.put("X", new ItemMap("X", "GoldX3", 
+        factoriMap.put("X", new ItemMap("X", "GoldX3, game value x3", 
         factori.loadIcon("goldX3.png")));
 
-        factoriMap.put("L", new ItemMap("L", "Life", 
+        factoriMap.put("L", new ItemMap("L", "Life, useful to survive the game", 
         factori.loadIcon("life.png")));
 
-        factoriMap.put("C", new ItemMap("C", "Lucky Clover", 
+        factoriMap.put("C", new ItemMap("C", "Lucky Clover, doubles the gold", 
         factori.loadIcon("luckyClover.png")));
 
-        factoriMap.put("P", new ItemMap("P", "Pickaxe", 
+        factoriMap.put("P", new ItemMap("P", "Pickaxe, disarms and reveals a row or a column", 
         factori.loadIcon("pickaxe.png")));
 
-        factoriMap.put("S", new ItemMap("S", "Shield", 
+        factoriMap.put("S", new ItemMap("S", "Shield, protects the player", 
         factori.loadIcon("shield.png")));
 
-        factoriMap.put("T", new ItemMap("T", "Trap", 
+        factoriMap.put("T", new ItemMap("T", "Trap, decreases the lives by 1", 
         factori.loadIcon("trap.png")));
 
         this.iteMap = Collections.unmodifiableMap(factoriMap);
-    }  
-
-    private ItemMap getItem(final String itemID) {
-        if (itemID == null || !iteMap.containsKey(itemID)) {
-            throw new IllegalArgumentException();
-        }
-        return iteMap.get(itemID);
     }
-    
+
     @Override
     public String getGlyph(final String getContentID) {
         return getItem(getContentID).glyph;
@@ -90,5 +70,26 @@ public class ItemRegistry implements ItemVisualRegistry {
     @Override
     public Set<String> getAllItemsID() {
         return iteMap.keySet();
+    }
+
+    private ItemMap getItem(final String itemID) {
+        if (itemID == null || !iteMap.containsKey(itemID)) {
+            throw new IllegalArgumentException();
+        }
+        return iteMap.get(itemID);
+    }
+
+    // CLASSE INTERNA SPOSTATA IN FONDO
+    private static class ItemMap {
+
+        private final String glyph;
+        private final String itemName;
+        private final Icon icon;
+
+        ItemMap(final String glyph, final String itemName, final Icon icon) {
+            this.glyph = glyph;
+            this.icon = icon;
+            this.itemName = itemName;
+        }
     }
 }

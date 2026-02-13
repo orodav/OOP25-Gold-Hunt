@@ -18,7 +18,7 @@ import it.unibo.goldhunt.player.api.PlayerOperations;
  * The pickaxe allows the player to clear an entire row or column 
  * of the board from traps.
  */
-public class Pickaxe extends AbstractItem implements ClearCells {
+public final class Pickaxe extends AbstractItem implements ClearCells {
 
     private static final Random RANDOM = new Random();
     private static final String ITEM_NAME = "Pickaxe";
@@ -76,7 +76,8 @@ public class Pickaxe extends AbstractItem implements ClearCells {
         return KindOfItem.PICKAXE;
     }
 
-    public PlayerOperations toInventory(final PlayerOperations playerop){
+    @Override
+    public PlayerOperations toInventory(final PlayerOperations playerop) {
         return playerop.addItem(this.getItem(), 1);
     }
 }

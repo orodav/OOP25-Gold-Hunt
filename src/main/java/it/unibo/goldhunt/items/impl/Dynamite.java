@@ -14,7 +14,7 @@ import it.unibo.goldhunt.player.api.PlayerOperations;
  * <p>
  * When used it disarms the cells in the adjacent cells and reveals them.
  */
-public class Dynamite extends AbstractItem implements ClearCells { 
+public final class Dynamite extends AbstractItem implements ClearCells { 
 
     private static final String ITEM_NAME = "Dynamite";
 
@@ -73,7 +73,8 @@ public class Dynamite extends AbstractItem implements ClearCells {
         return KindOfItem.DYNAMITE;
     }
 
-    public PlayerOperations toInventory(final PlayerOperations playerop){
+    @Override
+    public PlayerOperations toInventory(final PlayerOperations playerop) {
         return playerop.addItem(this.getItem(), 1);
     }
 }

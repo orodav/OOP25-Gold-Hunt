@@ -28,7 +28,7 @@ public interface ItemTypes extends CellContent {
      */
     KindOfItem getItem();
 
-    default PlayerOperations toInventory(final PlayerOperations playerop){
+    default PlayerOperations toInventory(final PlayerOperations playerop) {
         return playerop.addItem(getItem(), 1);
     }
 }
