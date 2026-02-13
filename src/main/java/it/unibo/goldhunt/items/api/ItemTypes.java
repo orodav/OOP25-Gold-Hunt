@@ -1,5 +1,7 @@
 package it.unibo.goldhunt.items.api;
 
+import it.unibo.goldhunt.player.api.PlayerOperations;
+
 //luca
 
 /**
@@ -25,4 +27,8 @@ public interface ItemTypes extends CellContent {
      * @return the kind of item 
      */
     KindOfItem getItem();
+
+    default PlayerOperations toInventory(final PlayerOperations playerop){
+        return playerop.addItem(getItem(), 1);
+    }
 }

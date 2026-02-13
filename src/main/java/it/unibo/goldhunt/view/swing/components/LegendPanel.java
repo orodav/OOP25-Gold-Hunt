@@ -9,13 +9,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.plaf.DimensionUIResource;
 
-import it.unibo.goldhunt.view.impl.ItemRegistry;
+import it.unibo.goldhunt.view.api.ItemVisualRegistry;
 
 public class LegendPanel extends JPanel {
 
     private static final int WIDTH = 150;
 
-    public LegendPanel(ItemRegistry registry) {
+    public LegendPanel(ItemVisualRegistry registry) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(BorderFactory.createTitledBorder("Legend"));
         setPreferredSize(new DimensionUIResource(WIDTH, 0));
@@ -23,7 +23,7 @@ public class LegendPanel extends JPanel {
         for (String id : registry.getAllItemsID()) {
             
             Icon icon = registry.getIcon(id);
-            String tooltip = registry.getTooltip(id);
+            String tooltip = registry.getItemName(id);
 
             JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 2));
             row.setOpaque(false);

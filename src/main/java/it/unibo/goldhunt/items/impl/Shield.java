@@ -83,4 +83,9 @@ public class Shield extends AbstractItem {
     public KindOfItem getItem() {
         return KindOfItem.SHIELD;
     }
+
+    @Override
+    public PlayerOperations toInventory(final PlayerOperations playerop){
+        return playerop.addItem(this.getItem(), 1);
+    }
 }

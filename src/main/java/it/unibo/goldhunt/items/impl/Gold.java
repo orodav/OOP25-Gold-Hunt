@@ -71,5 +71,4 @@ public class Gold extends AbstractItem {
     public KindOfItem getItem() {
         return KindOfItem.GOLD;
     }
-
 }

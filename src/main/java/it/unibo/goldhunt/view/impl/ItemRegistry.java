@@ -1,5 +1,6 @@
 package it.unibo.goldhunt.view.impl;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -11,81 +12,83 @@ import it.unibo.goldhunt.view.api.UIFactory;
 
 public class ItemRegistry implements ItemVisualRegistry {
 
-    private final UIFactory factori = new SwingUIFactory();
+    private final Map<String, ItemMap> iteMap;
 
-    private final Map<String, String> glyphMap = new HashMap<>();
-    private final Map<String, String> tooltipMap = new HashMap<>();
-    private final Map<String, String> stylekeyMap = new HashMap<>();
-    private final Map<String, Icon> iconMap = new HashMap<>();
+    private static class ItemMap {
 
-    public ItemRegistry() {
-        glyphMap.put("M", "M");
-        tooltipMap.put("M", "Chart");
-        stylekeyMap.put("M", "chart-style");
-        iconMap.put("M", factori.loadIcon("map.png"));
-        
-        glyphMap.put("D", "D");
-        tooltipMap.put("D", "Dynamite");
-        stylekeyMap.put("D", "dynamite-style");
-        iconMap.put("D", factori.loadIcon("dynamite.png"));
+        final String glyph;
+        final String itemName;
+        final Icon icon;
 
-        glyphMap.put("G", "G");
-        tooltipMap.put("G", "Gold");
-        stylekeyMap.put("G", "gold-style");
-        iconMap.put("G", factori.loadIcon("gold.png"));
+        ItemMap(final String glyph, final String itemName, final Icon icon ){
+            this.glyph = glyph;
+            this.icon = icon;
+            this.itemName = itemName;
+        }
+    }
 
-        glyphMap.put("L", "L");
-        tooltipMap.put("L", "Life");
-        stylekeyMap.put("L", "life-style");
-        iconMap.put("L", factori.loadIcon("life.png"));
+    public ItemRegistry(final UIFactory factori) {
 
-        glyphMap.put("C", "C");
-        tooltipMap.put("C", "Lucky Clover");
-        stylekeyMap.put("C", "clover-style");
-        iconMap.put("C", factori.loadIcon("luckyClover.png"));
+        if (factori == null) {
+            throw new IllegalArgumentException();
+        }
 
-        glyphMap.put("P", "P");
-        tooltipMap.put("P", "Pickaxe");
-        stylekeyMap.put("P", "pickaxe-style");
-        iconMap.put("P", factori.loadIcon("pickaxe.png"));
+        Map<String, ItemMap> factoriMap = new HashMap<>();
 
-        glyphMap.put("S", "S");
-        tooltipMap.put("S", "Shield");
-        stylekeyMap.put("S", "shield-style");
-        iconMap.put("S", factori.loadIcon("shield.png"));
+        factoriMap.put("M", new ItemMap("M", "Map", 
+        factori.loadIcon("map.png")));
 
-        glyphMap.put("X", "X");
-        tooltipMap.put("X", "Gold x3");
-        stylekeyMap.put("X", "goldx3-style");
-        iconMap.put("X", factori.loadIcon("goldX3.png"));
+        factoriMap.put("D", new ItemMap("D", "Dynamite", 
+        factori.loadIcon("dynamite.png")));
 
-        glyphMap.put("T", "T");
-        tooltipMap.put("T", "Trap");
-        stylekeyMap.put("T", "trap-style");
-        iconMap.put("T", factori.loadIcon("trap.png"));
+        factoriMap.put("G", new ItemMap("G", "Gold", 
+        factori.loadIcon("gold.png")));
+
+        factoriMap.put("X", new ItemMap("X", "GoldX3", 
+        factori.loadIcon("goldX3.png")));
+
+        factoriMap.put("L", new ItemMap("L", "Life", 
+        factori.loadIcon("life.png")));
+
+        factoriMap.put("C", new ItemMap("C", "Lucky Clover", 
+        factori.loadIcon("luckyClover.png")));
+
+        factoriMap.put("P", new ItemMap("P", "Pickaxe", 
+        factori.loadIcon("pickaxe.png")));
+
+        factoriMap.put("S", new ItemMap("S", "Shield", 
+        factori.loadIcon("shield.png")));
+
+        factoriMap.put("T", new ItemMap("T", "Trap", 
+        factori.loadIcon("trap.png")));
+
+        this.iteMap = Collections.unmodifiableMap(factoriMap);
+    }  
+
+    private ItemMap getItem(final String itemID) {
+        if (itemID == null || !iteMap.containsKey(itemID)) {
+            throw new IllegalArgumentException();
+        }
+        return iteMap.get(itemID);
+    }
+    
+    @Override
+    public String getGlyph(final String getContentID) {
+        return getItem(getContentID).glyph;
     }
 
     @Override
-    public String getGlyph(String getContentID) {
-        return glyphMap.get(getContentID);
+    public String getItemName(final String contentID) {
+        return getItem(contentID).itemName;
     }
 
     @Override
-    public String getTooltip(String contentID) {
-        return tooltipMap.get(contentID);
+    public Icon getIcon(final String id) {
+        return getItem(id).icon;
     }
 
     @Override
-    public String getStyleKey(String contentID) {
-        return stylekeyMap.get(contentID);
-    }
-
-    @Override
-    public Icon getIcon(String id) {
-        return iconMap.get(id);
-    }
-
-    public Set<String> getAllItemsID(){
-        return glyphMap.keySet();
+    public Set<String> getAllItemsID() {
+        return iteMap.keySet();
     }
 }
