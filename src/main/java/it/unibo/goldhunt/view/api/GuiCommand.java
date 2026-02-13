@@ -11,6 +11,7 @@ import it.unibo.goldhunt.view.viewstate.GameViewState;
  * It will be handled by the GameController.
  * It assures a polymorphic dynamic implementation.
  */
+@FunctionalInterface
 public interface GuiCommand {
 
     /**
@@ -19,8 +20,8 @@ public interface GuiCommand {
      * @param controller the controller handling the command
      * @return the updated view state
      */
-
     GameViewState apply(GameController controller);
+
     /**
      * Requests to move the player to a specific position.
      * 
@@ -29,7 +30,7 @@ public interface GuiCommand {
     record MoveTo(Position pos) implements GuiCommand {
 
         @Override
-        public GameViewState apply(GameController controller) {
+        public GameViewState apply(final GameController controller) {
             return controller.handleMoveTo(pos);
         }
     }
@@ -42,7 +43,7 @@ public interface GuiCommand {
     record Reveal(Position pos) implements GuiCommand {
 
         @Override
-        public GameViewState apply(GameController controller) {
+        public GameViewState apply(final GameController controller) {
             return controller.handleReveal(pos);
         }
     }
@@ -55,7 +56,7 @@ public interface GuiCommand {
     record ToggleFlag(Position pos) implements GuiCommand {
 
         @Override
-        public GameViewState apply(GameController controller) {
+        public GameViewState apply(final GameController controller) {
             return controller.handleToggleFlag(pos);
         }
     }
@@ -68,7 +69,7 @@ public interface GuiCommand {
     record Buy(ItemTypes type) implements GuiCommand {
 
         @Override
-        public GameViewState apply(GameController controller) {
+        public GameViewState apply(final GameController controller) {
             return controller.handleBuy(type);
         }
     }
@@ -85,7 +86,7 @@ public interface GuiCommand {
     record UseItem(ItemTypes type, Optional<Position> target) implements GuiCommand {
 
         @Override
-        public GameViewState apply(GameController controller) {
+        public GameViewState apply(final GameController controller) {
             return controller.handleUseItem(type, target);
         }
     }
@@ -97,7 +98,7 @@ public interface GuiCommand {
     record Continue() implements GuiCommand {
 
         @Override
-        public GameViewState apply(GameController controller) {
+        public GameViewState apply(final GameController controller) {
             return controller.handleContinue();
         }
     }
@@ -109,7 +110,7 @@ public interface GuiCommand {
     record LeaveToMenu() implements GuiCommand {
 
         @Override
-        public GameViewState apply(GameController controller) {
+        public GameViewState apply(final GameController controller) {
             return controller.handleLeaveToMenu();
         }
     }

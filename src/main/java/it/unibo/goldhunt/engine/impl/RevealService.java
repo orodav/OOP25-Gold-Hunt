@@ -28,11 +28,6 @@ import it.unibo.goldhunt.player.api.PlayerOperations;
  */
 public class RevealService {
 
-    private final Board board;
-    private final RevealStrategy revealStrategy;
-    private final Supplier<PlayerOperations> player;
-    private final UnaryOperator<PlayerOperations> setPlayer;
-    private final Supplier<Status> status;
     private static final Set<ItemTypes> PICKUP_ITEMS = Set.of(
         KindOfItem.PICKAXE,
         KindOfItem.DYNAMITE,
@@ -40,6 +35,11 @@ public class RevealService {
         KindOfItem.CHART,
         KindOfItem.LUCKYCLOVER
     );
+    private final Board board;
+    private final RevealStrategy revealStrategy;
+    private final Supplier<PlayerOperations> player;
+    private final UnaryOperator<PlayerOperations> setPlayer;
+    private final Supplier<Status> status;
 
     /**
      * Creates a reveal service with the required dependencies.

@@ -41,6 +41,8 @@ public final class GameSession {
      * @param difficulty the selected difficulty
      * @param level the level configurations
      * @param engine the engine managing game
+     * @param shopEngine an optional reference to the engine with shop capabilities
+     * @param itemFactory the factory used to generate usable items
      * @throws NullPointerException if any parameter is {@code null}
      */
     public GameSession(
@@ -177,8 +179,15 @@ public final class GameSession {
     }
 
     /**
+     * Uses one unit of the specified item form the player's inventory.
      * 
-     * @param type
+     * @param type the type of item to use
+     * @throws NullPointerException if {@code type} is {@code null}
+     * @throws IllegalStateException if the game is not in level mode,
+     *                               if shop actions are unavailable,
+     *                               or if the item effect returns {@code null}
+     * @throws IllegalArgumentException if the player does not have at least
+     *                                  one unit of the specified item
      */
     public void useItem(final ItemTypes type) {
         Objects.requireNonNull(type, "type can't be null");

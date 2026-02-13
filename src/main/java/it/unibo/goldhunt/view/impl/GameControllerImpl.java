@@ -3,10 +3,12 @@ package it.unibo.goldhunt.view.impl;
 import java.util.Objects;
 import java.util.Optional;
 
+import it.unibo.goldhunt.configuration.api.Difficulty;
 import it.unibo.goldhunt.engine.api.ActionResult;
 import it.unibo.goldhunt.engine.api.LevelState;
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.items.api.ItemTypes;
+import it.unibo.goldhunt.root.GameFactory;
 import it.unibo.goldhunt.root.GameSession;
 import it.unibo.goldhunt.view.api.GameController;
 import it.unibo.goldhunt.view.api.GuiCommand;
@@ -21,21 +23,30 @@ import it.unibo.goldhunt.view.viewstate.ScreenType;
  */
 public class GameControllerImpl implements GameController {
 
-    private final GameSession session;
+    private GameSession session;
     private final ViewStateMapper mapper;
+    private final GameFactory factory;
     private GameViewState state;
     private ScreenType screen;
 
+    /**
+     * Creates a new controller bound to the given game session and ViewStateMapper.
+     * 
+     * @param factory the factory used to create new game sessions
+     * @param session the game session managed by this controller
+     * @param mapper the mapper used to convert the session into view states
+     * @throws NullPointerException if session or mapper is null
+     */
     public GameControllerImpl(
+        final GameFactory factory,
         final GameSession session,
         final ViewStateMapper mapper
     ) {
         this.session = Objects.requireNonNull(session, "session can't be null");
         this.mapper = Objects.requireNonNull(mapper, "mapper can't be null");
+        this.factory = Objects.requireNonNull(factory, "factory can't be null");
         this.screen = ScreenType.MENU;
         this.state = this.mapper.fromSession(this.session, Optional.empty(), this.screen);
-
-        
     }
 
     /**
@@ -60,8 +71,8 @@ public class GameControllerImpl implements GameController {
      * {@inheritDoc}
      */
     @Override
-    public GameViewState handleMoveTo(Position pos) {
-        Objects.requireNonNull(pos, "pos can't be null");
+    public GameViewState handleMoveTo(final Position pos) {
+        Objects.requireNonNull(pos, "pos value can't be null");
         final ActionResult res = this.session.move(pos);
         return refresh(this.mapper.messageFromActionResult(res));
     }
@@ -70,7 +81,7 @@ public class GameControllerImpl implements GameController {
      * {@inheritDoc}
      */
     @Override
-    public GameViewState handleReveal(Position pos) {
+    public GameViewState handleReveal(final Position pos) {
         Objects.requireNonNull(pos, "pos can't be null");
         final ActionResult res = this.session.reveal(pos);
         return refresh(this.mapper.messageFromActionResult(res));
@@ -80,7 +91,7 @@ public class GameControllerImpl implements GameController {
      * {@inheritDoc}
      */
     @Override
-    public GameViewState handleToggleFlag(Position pos) {
+    public GameViewState handleToggleFlag(final Position pos) {
         Objects.requireNonNull(pos, "pos can't be null");
         final ActionResult res = this.session.toggleFlag(pos);
         return refresh(this.mapper.messageFromActionResult(res));
@@ -90,7 +101,7 @@ public class GameControllerImpl implements GameController {
      * {@inheritDoc}
      */
     @Override
-    public GameViewState handleBuy(ItemTypes type) {
+    public GameViewState handleBuy(final ItemTypes type) {
         Objects.requireNonNull(type, "type can't be null");
         final var res = this.session.buy(type);
         return refresh(this.mapper.messageFromShopActionResult(res));
@@ -100,7 +111,7 @@ public class GameControllerImpl implements GameController {
      * {@inheritDoc}
      */
     @Override
-    public GameViewState handleUseItem(ItemTypes type, Optional<Position> target) {
+    public GameViewState handleUseItem(final ItemTypes type, final Optional<Position> target) {
         Objects.requireNonNull(type, "type can't be null");
         Objects.requireNonNull(target, "target can't be null");
         this.session.useItem(type);
@@ -114,6 +125,7 @@ public class GameControllerImpl implements GameController {
     @Override
     public GameViewState handleContinue() {
         if (this.screen == ScreenType.SHOP) {
+            this.session.leaveShop();
             this.screen = ScreenType.DIFFICULTY;
         } else if (this.screen == ScreenType.END) {
             this.screen = ScreenType.SHOP;
@@ -131,11 +143,22 @@ public class GameControllerImpl implements GameController {
     }
 
     private GameViewState refresh(final Optional<String> message) {
-        LevelState levelState = session.status().levelState();
-        if (levelState != LevelState.PLAYING) {
+        final LevelState levelState = this.session.status().levelState();
+        if (levelState == LevelState.WON || levelState == LevelState.LOSS) {
             this.screen = ScreenType.END;
         }
         this.state = this.mapper.fromSession(this.session, message, this.screen);
         return this.state;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public GameViewState handleSetDifficulty(final Difficulty difficulty) {
+        Objects.requireNonNull(difficulty, "difficulty can't be null");
+        this.session = this.factory.newGame(difficulty);
+        this.screen = ScreenType.PLAYING;
+        return refresh(Optional.of("Set " + difficulty + "level"));
     }
 }

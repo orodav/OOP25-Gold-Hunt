@@ -2,6 +2,7 @@ package it.unibo.goldhunt.view.api;
 
 import java.util.Optional;
 
+import it.unibo.goldhunt.configuration.api.Difficulty;
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.items.api.ItemTypes;
 import it.unibo.goldhunt.view.viewstate.GameViewState;
@@ -76,6 +77,7 @@ public interface GameController {
      * {@code target}. Otherwise {@code target} should be {@link Optional#empty()}
      * 
      * @param type the item type to use
+     * @param target the target position
      * @return the updated {@link GameViewState}
      * @throws NullPointerException if {@code type} is {@code null}
      */
@@ -97,5 +99,12 @@ public interface GameController {
      * @return the updated {@link GameViewState}
      */
     GameViewState handleLeaveToMenu();
+
+    /**
+     * Handles a request to set the current difficulty for the game run.
+     * 
+     * @param difficulty the difficulty selected
+     * @return the updated {@link GameViewState}
+     */
+    GameViewState handleSetDifficulty(Difficulty difficulty);
 }
- 

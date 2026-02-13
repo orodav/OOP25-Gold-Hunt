@@ -36,6 +36,7 @@ public interface InventoryView {
     /**
      * Listener for inventory UI actions.
      */
+    @FunctionalInterface
     interface Listener {
 
         /**

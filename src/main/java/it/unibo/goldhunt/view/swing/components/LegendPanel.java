@@ -29,7 +29,7 @@ public class LegendPanel extends JPanel {
             row.setOpaque(false);
 
             JLabel iconLabel = (icon != null) ? new JLabel(icon) : new JLabel(registry.getGlyph(id));
-            JLabel tooltipLabel = new JLabel(tooltip);
+            final JLabel tooltipLabel = new JLabel(tooltip);
 
             row.add(iconLabel);
             row.add(tooltipLabel);

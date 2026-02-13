@@ -304,9 +304,12 @@ public class EngineImpl implements EngineWithShopActions {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public EngineWithState withPlayer(PlayerOperations player) {
-        Objects.requireNonNull(player, "player can't be null");
+    public EngineWithState withPlayer(final PlayerOperations newPlayer) {
+        Objects.requireNonNull(newPlayer, "player can't be null");
         final EngineImpl copy = new EngineImpl(
             player, 
             this.status, 
@@ -323,9 +326,12 @@ public class EngineImpl implements EngineWithShopActions {
         return copy;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public EngineWithState withShop(Optional<Shop> shop) {
-        Objects.requireNonNull(shop, "shop can't be null");
+    public EngineWithState withShop(final Optional<Shop> newShop) {
+        Objects.requireNonNull(newShop, "shop can't be null");
         final EngineImpl copy = new EngineImpl(
             this.player, 
             this.status, 
@@ -338,7 +344,7 @@ public class EngineImpl implements EngineWithShopActions {
             this.globalCatalog, 
             this.shopLimit
         );
-        copy.shop = shop;
+        copy.shop = newShop;
         return copy;
     }
 }

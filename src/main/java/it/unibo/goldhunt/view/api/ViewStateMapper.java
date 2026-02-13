@@ -42,5 +42,5 @@ public interface ViewStateMapper {
      * @param result the shop action result to inspect
      * @return an optional message describing the outcome
      */
-    Optional<String>messageFromShopActionResult(final ShopActionResult result);
+    Optional<String> messageFromShopActionResult(ShopActionResult result);
 }

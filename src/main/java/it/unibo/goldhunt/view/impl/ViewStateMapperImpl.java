@@ -2,6 +2,7 @@ package it.unibo.goldhunt.view.impl;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -36,13 +37,16 @@ import it.unibo.goldhunt.view.viewstate.ShopViewState;
  * instances for the UI layer.
  * This class only reads the session state and formats UI messages.
  */
-public class ViewStateMapperImpl implements ViewStateMapper{
+public class ViewStateMapperImpl implements ViewStateMapper {
 
     private static final String STYLE_HIDDEN = "cell.hidden";
     private static final String STYLE_REVEALED = "cell.revealed";
     private static final String STYLE_FLAGGED = "cell.flagged";
     private static final String STYLE_PLAYER = "cell.player";
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public GameViewState fromSession(
         final GameSession session,
@@ -56,8 +60,9 @@ public class ViewStateMapperImpl implements ViewStateMapper{
         final int size = board.boardSize();
         final PlayerOperations player = session.player();
         final Position playerPos = player.position();
+        final Position exitPos = session.level().getExit();
         final LevelState levelState = session.status().levelState();
-        final List<CellViewState> cells = buildCells(board, size, playerPos);
+        final List<CellViewState> cells = buildCells(board, size, playerPos, exitPos);
         final HudViewState hud = new HudViewState(
             session.status().levelNumber(),
             player.livesCount(),
@@ -105,6 +110,9 @@ public class ViewStateMapperImpl implements ViewStateMapper{
         };
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<String> messageFromShopActionResult(final ShopActionResult result) {
         Objects.requireNonNull(result, "result can't be null");
@@ -128,7 +136,8 @@ public class ViewStateMapperImpl implements ViewStateMapper{
     private List<CellViewState> buildCells(
         final ReadOnlyBoard board,
         final int size,
-        final Position playerPos
+        final Position playerPos,
+        final Position exitPos
     ) {
         return IntStream.range(0, size * size)
                 .mapToObj(i -> {
@@ -140,7 +149,14 @@ public class ViewStateMapperImpl implements ViewStateMapper{
                     final boolean flagged = cell.isFlagged();
                     final int adjacent = cell.getAdjacentTraps();
                     final Optional<String> contentID = cell.contentID();
-                    final String symbol = computeCellSymbol(revealed, flagged, adjacent, contentID);
+                    final String symbol = computeCellSymbol(
+                        pos,
+                        exitPos,
+                        revealed,
+                        flagged,
+                        adjacent,
+                        contentID
+                    );
                     final String style = computeCellStyle(pos, revealed, flagged, playerPos);
                     return new CellViewState(
                         pos,
@@ -154,17 +170,22 @@ public class ViewStateMapperImpl implements ViewStateMapper{
     }
 
     private String computeCellSymbol(
+        final Position pos,
+        final Position exitPos,
         final boolean revealed,
         final boolean flagged,
         final int adjacent,
         final Optional<String> contentID
     ) {
+        if (pos.equals(exitPos)) {
+            return "E";
+        }
         if (!revealed) {
             return flagged ? "F" : "";
         }
         if (contentID.isPresent()) {
             final String id = contentID.get();
-            return id.isEmpty() ? "" : id.substring(0, 1).toUpperCase();
+            return id.isEmpty() ? "" : id.substring(0, 1).toUpperCase(Locale.ROOT);
         }
         return adjacent > 0 ? Integer.toString(adjacent) : "";
     }
@@ -220,7 +241,7 @@ public class ViewStateMapperImpl implements ViewStateMapper{
     ) {
         Objects.requireNonNull(player, "player can't be null");
         Objects.requireNonNull(screen, "screen can't be null");
-        final boolean allowUse = (screen == ScreenType.PLAYING);
+        final boolean allowUse = screen == ScreenType.PLAYING;
         final List<InventoryItemViewState> items =
             Arrays.stream(KindOfItem.values())
                 .map(type -> {
