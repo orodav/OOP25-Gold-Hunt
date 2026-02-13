@@ -15,18 +15,27 @@ import it.unibo.goldhunt.view.api.GameView;
 import it.unibo.goldhunt.view.api.ItemVisualRegistry;
 import it.unibo.goldhunt.view.viewstate.CellViewState;
 
-public class CellButton extends JButton {
+/**
+ * This class is a personalized Swing component and it
+ * represents a single cell of the game board.
+ */
+public final class CellButton extends JButton {
 
     private final Position position;
     private GameView.Listener listener;
     private String lastStyleKey = "";
     private final ItemVisualRegistry registry;
 
+    /**
+     * {@code CellButton}'s constructor. It creates a
+     * button associated to a specific board position.
+     * 
+     * @param position the cell's position in the board
+     * @param registry the used item visual registry
+     */
     public CellButton (final Position position, final ItemVisualRegistry registry) {
-        Objects.requireNonNull(position);
-        Objects.requireNonNull(registry);
-        this.position = position;
-        this.registry = registry;
+        this.position = Objects.requireNonNull(position);
+        this.registry = Objects.requireNonNull(registry);
 
         setFocusable(false);
         setOpaque(true);
@@ -49,14 +58,30 @@ public class CellButton extends JButton {
         });
     }
 
+    /**
+     * Sets the cell's listener for the user's interactions.
+     * 
+     * @param listener the listener to register
+     */
     public void setListener(final GameView.Listener listener) {
         this.listener = listener;
     }
 
+    /**
+     * Returns the cell's position in the board.
+     * 
+     * @return the associated position
+     */
     public Position getPosition() {
         return this.position;
     }
 
+    /**
+     * Renders the cell according to the provided view state.
+     * 
+     * @param state the current game view state
+     * @throws NullPointerException if {@code state} is {@code null}
+     */
     public void render(final CellViewState state) {
         Objects.requireNonNull(state);
         if (!state.pos().equals(this.position)) {
