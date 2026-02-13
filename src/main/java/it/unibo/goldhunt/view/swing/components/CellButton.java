@@ -22,7 +22,9 @@ import it.unibo.goldhunt.view.viewstate.CellViewState;
 public final class CellButton extends JButton {
 
     private final Position position;
+
     private GameView.Listener listener;
+
     private String lastStyleKey = "";
     private final ItemVisualRegistry registry;
 
@@ -47,12 +49,12 @@ public final class CellButton extends JButton {
                 if (listener == null) {
                     return;
                 }
+
                 if (SwingUtilities.isLeftMouseButton(e)) {
                     listener.onReveal(position);
-                } else if (SwingUtilities.isRightMouseButton(e)) {
-                    if ("cell.hidden".equals(lastStyleKey) || "cell.flagged".equals(lastStyleKey)) {
-                    listener.onToggleFlag(position);
-                    }
+                } else if (SwingUtilities.isRightMouseButton(e) &&
+                        ("cell.hidden".equals(lastStyleKey) || "cell.flagged".equals(lastStyleKey))) {
+                            listener.onToggleFlag(position);
                 }
             }
         });
@@ -84,6 +86,7 @@ public final class CellButton extends JButton {
      */
     public void render(final CellViewState state) {
         Objects.requireNonNull(state);
+
         if (!state.pos().equals(this.position)) {
             return;
         }
@@ -94,27 +97,28 @@ public final class CellButton extends JButton {
 
         if ("cell.player".equals(state.styleKey())) {
             renderPlayer(state);
-        }
-        else if (!state.revealed()) {
+        } else if (!state.revealed()) {
             renderHidden(state);
-        }
-        else {
+        } else {
             renderRevealed(state);
         }
 
         applyStyle(state.styleKey());
         revalidate();
         repaint();
+
     }
 
     private void renderPlayer (final CellViewState state) {
         final String symbol = state.symbol();
+    
         if ("T".equals(symbol)) {
             setIcon(registry.getIcon("T"));
             return;
         }
-        if (registry.getAllItemsID().contains("PLAYER")) {
-            setIcon(registry.getIcon("PLAYER"));
+    
+        if (registry.getAllItemsID().contains("Q")) {
+            setIcon(registry.getIcon("Q"));
         }
     }
     
@@ -146,6 +150,7 @@ public final class CellButton extends JButton {
 
     private void applyStyle (final String styleKey) {
         Objects.requireNonNull(styleKey);
+
         if (styleKey.equals(lastStyleKey)) {
             return;
         }
@@ -172,9 +177,10 @@ public final class CellButton extends JButton {
             }
 
             default -> setBackground(Color.RED);
-
         }
 
         lastStyleKey = styleKey;
+
     }
+
 }

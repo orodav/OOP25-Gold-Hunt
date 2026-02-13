@@ -1,8 +1,8 @@
 package it.unibo.goldhunt.view.swing.components;
 
 import java.awt.GridLayout;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.swing.JPanel;
@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.view.api.GameView;
 import it.unibo.goldhunt.view.api.ItemVisualRegistry;
+import it.unibo.goldhunt.view.viewstate.CellViewState;
 import it.unibo.goldhunt.view.viewstate.GameViewState;
 
 /**
@@ -17,11 +18,10 @@ import it.unibo.goldhunt.view.viewstate.GameViewState;
  * for displaying the game board.
  */
 public final class BoardPanel extends JPanel {
-
-    private final ItemVisualRegistry registry;
-    private final List<CellButton> viewCells = new ArrayList<>();
-    private GameView.Listener listener;
+    private final Map<Position, CellButton> cellsByPos = new HashMap<>();
     private int currentSize = -1;
+    private GameView.Listener listener;
+    private final ItemVisualRegistry registry;
 
     /**
      * {@code BoardPanel}'s constructor. It creates a
@@ -41,7 +41,7 @@ public final class BoardPanel extends JPanel {
      */
     public void setListener(final GameView.Listener listener) {
         this.listener = listener;
-        viewCells.forEach(b -> b.setListener(listener));
+        cellsByPos.values().forEach(b -> b.setListener(listener));
     }
 
     /**
@@ -62,32 +62,37 @@ public final class BoardPanel extends JPanel {
             rebuildGrid(size);
         }
 
-        final int n = Math.min(viewCells.size(), state.cells().size());
-        for (int i = 0; i < n ; i++) {
-            viewCells.get(i).render(state.cells().get(i));
+        for (final CellViewState cellState : state.cells()) {
+            final CellButton button = cellsByPos.get(cellState.pos());
+            if (button != null) {
+                button.render(cellState);
+            }
         }
 
-        revalidate();
         repaint();
     }
 
     private void rebuildGrid(final int size) {
         removeAll();
-        viewCells.clear();
+        cellsByPos.clear();
 
         setLayout(new GridLayout(size, size,0, 0));
 
-        for (int x = 0; x < size; x++) {
-            for (int y = 0; y < size; y++) {
-                final CellButton cellButton = new CellButton(new Position(x, y), registry);
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                final Position position = new Position(i, j);
+                final CellButton cellButton = new CellButton(position, registry);
                 if (listener != null) {
                     cellButton.setListener(listener);
                 }
-                viewCells.add(cellButton);
+                cellsByPos.put(position, cellButton);
                 add(cellButton);
             }
         }
 
         currentSize = size;
+        revalidate();
+        repaint();
     }
+
 }
