@@ -84,7 +84,7 @@ public interface UIFactory {
      * @param iconName the icon identifier
      * @return the loaded {@link Icon}
      * @throws NullPointerException if {@code iconName} is {@code null}
-     *     or if there is icon corresponding to {@code iconName}
+     * @throws IllegalArgumentException if there is icon corresponding to {@code iconName}
      */
     Icon loadIcon(String iconName);
 
