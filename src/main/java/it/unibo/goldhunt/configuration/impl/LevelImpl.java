@@ -63,7 +63,7 @@ public class LevelImpl implements Level {
      */
     @Override
     public void initLives() {
-        this.player = this.player.addLives(INITIAL_LIVES);
+        this.player = this.player.setLives(INITIAL_LIVES);
     }
 
     /**

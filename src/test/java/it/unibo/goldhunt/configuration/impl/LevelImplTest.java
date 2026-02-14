@@ -4,6 +4,7 @@ package it.unibo.goldhunt.configuration.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.nio.channels.UnsupportedAddressTypeException;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -58,7 +59,7 @@ class LevelImplTest {
     }
 
     @Test
-    void testEasyInitLivesAddsThreeLives() { 
+    void testEasyInitLivesSetsThreeLives() { 
         final Level level = new LevelImpl(new EasyConfig(), new FakeBoardGenerator(), new FakePlayer(new Position(0, 0), 0));
         level.initLives();
         assertEquals(3, level.getPlayer().livesCount());
@@ -99,7 +100,7 @@ class LevelImplTest {
     }
 
     @Test
-    void testMediumInitLivesAddsThreeLives() { 
+    void testMediumInitLivesSetsThreeLives() { 
         final Level level = new LevelImpl(new MediumConfig(), new FakeBoardGenerator(), new FakePlayer(new Position(0, 0), 0));
         level.initLives();
         assertEquals(3, level.getPlayer().livesCount());
@@ -140,7 +141,7 @@ class LevelImplTest {
     }
 
     @Test
-    void testHardInitLivesAddsThreeLives() { 
+    void testHardInitLivesSetsThreeLives() { 
         final Level level = new LevelImpl(new HardConfig(), new FakeBoardGenerator(), new FakePlayer(new Position(0, 0), 0));
         level.initLives();
         assertEquals(3, level.getPlayer().livesCount());
@@ -234,7 +235,7 @@ class LevelImplTest {
 
         @Override
         public PlayerOperations addLives(final int num) {
-            return new FakePlayer(position, lives + num);
+            throw new UnsupportedAddressTypeException();
         }
 
         @Override
@@ -270,6 +271,11 @@ class LevelImplTest {
         @Override
         public PlayerOperations withInventory(final Inventory inventory) {
             throw new UnsupportedOperationException("Unimplemented method 'withInventory'");
+        }
+
+        @Override
+        public PlayerOperations setLives(int num) {
+            return new FakePlayer(this.position, num);
         }
     }
 }
