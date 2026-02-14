@@ -27,27 +27,21 @@ public final class CellButton extends JButton {
     private static final int NOT_REVEALED_G = 134;
     private static final int NOT_REVEALED_B = 80;
     private static final int REVEALED_RGB = 96;
-
     private static final String EXIT = "E";
     private static final String PLAYER = "Q";
     private static final String FLAG = "F";
-
     private static final String STYLE_HIDDEN = "cell.hidden";
     private static final String STYLE_FLAGGED = "cell.flagged";
     private static final String STYLE_REVEALED = "cell.revealed";
     private static final String STYLE_PLAYER = "cell.player";
-
     private static final int ICON_PADDING = 2;
 
     private static final long serialVersionUID = 1L;
 
     private final transient Position position;
-
     private transient GameView.Listener listener;
-
     private String lastStyleKey = "";
     private final transient ItemVisualRegistry registry;
-
     private boolean lastRevealed;
 
     /**
@@ -100,7 +94,7 @@ public final class CellButton extends JButton {
                 if (SwingUtilities.isRightMouseButton(e) || e.isPopupTrigger()) {
                     handleRightClick(e);
                 }
-            }       
+            }
         });
     }
 
@@ -170,7 +164,7 @@ public final class CellButton extends JButton {
         } else {
             setIcon(icon);
         }
-    } catch (IllegalArgumentException e) {
+    } catch (final IllegalArgumentException e) {
         // ulteriore sicurezza: se il registry cambia comportamento o c'è mismatch
         setIcon(null);
     }

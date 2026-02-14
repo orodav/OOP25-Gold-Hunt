@@ -10,33 +10,49 @@ import java.awt.RenderingHints;
 import javax.swing.AbstractButton;
 import javax.swing.Icon;
 
+/**
+ * This class is an implementation of {@link Icon}.
+ * It automatically scales an {@link Image} to fit inside the available
+ * area of a Swing component. 
+ */
 public class ScaledIcon implements Icon {
 
     private final Image image;
     private final int padding;
 
+    /**
+     * {@code ScaledIcon}'s constructor. It creates a scaled icon.
+     * 
+     * @param image the image to render
+     * @param padding extra space (in pixels) kept between the image
+     *     and the component edges.
+     */
     public ScaledIcon(final Image image, final int padding) {
         this.image = image;
         this.padding = Math.max(0, padding);
     }
 
+    /**
+     * Paints the image scaled to the largest possible
+     * centered square inside the component.
+     */
     @Override
-    public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
+    public void paintIcon(final Component c, final Graphics g,
+                            final int x, final int y) {
         if (image == null) {
             return;
         }
 
-        final Insets in = (c instanceof AbstractButton b)
-        ? b.getInsets()
-        : new Insets(0, 0, 0, 0);
+        final Insets insets = (c instanceof AbstractButton b)
+            ? b.getInsets()
+            : new Insets(0, 0, 0, 0);
 
-        final int availW = Math.max(1, c.getWidth()  - in.left - in.right  - 2 * padding);
-        final int availH = Math.max(1, c.getHeight() - in.top  - in.bottom - 2 * padding);
-
+        final int availW = Math.max(1, c.getWidth() - insets.left - insets.right - 2 * padding);
+        final int availH = Math.max(1, c.getHeight() - insets.top - insets.bottom - 2 * padding);
         final int size = Math.min(availW, availH);
 
-        final int drawX = in.left + padding + (availW - size) / 2;
-        final int drawY = in.top  + padding + (availH - size) / 2;
+        final int drawX = insets.left + padding + (availW - size) / 2;
+        final int drawY = insets.top + padding + (availH - size) / 2;
 
         final Graphics2D g2 = (Graphics2D) g.create();
         try {
@@ -46,19 +62,29 @@ public class ScaledIcon implements Icon {
                     RenderingHints.VALUE_RENDER_QUALITY);
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                     RenderingHints.VALUE_ANTIALIAS_ON);
-
             g2.drawImage(image, drawX, drawY, size, size, null);
-
         } finally {
             g2.dispose();
         }
     }
 
+    /**
+     * Returns a nominal width for layout managers.
+     * The actual rendered size depends on the component.
+     *
+     * @return constant value (16)
+     */
     @Override
     public int getIconWidth() {
         return 16;
     }
 
+    /**
+     * Returns a nominal height for layout managers.
+     * The actual rendered size depends on the component.
+     *
+     * @return constant value (16)
+     */
     @Override
     public int getIconHeight() {
         return 16;
