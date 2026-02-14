@@ -1,5 +1,6 @@
 package it.unibo.goldhunt.engine.impl;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -83,16 +84,22 @@ public class RevealService {
         if (preconditions.isPresent()) {
             return preconditions.get();
         }
+        if (!this.board.isPositionValid(p)) {
+            return ActionResultsFactory.reveal(this.status.get(), ActionEffect.INVALID);
+        }
+        final Set<Position> revealedBefore = snapshotRevealedCells();
+
         final Cell cell = this.board.getCell(p);
         if (cell.isFlagged() || cell.isRevealed()) {
             return ActionResultsFactory.reveal(this.status.get(), ActionEffect.BLOCKED);
         }
-        final boolean wasRevealed = cell.isRevealed();
+
         this.revealStrategy.reveal(this.board, p);
-        final boolean nowRevealed = this.board.getCell(p).isRevealed();
-        final boolean changed = !wasRevealed && nowRevealed;
-        if (changed) {
-            applyContentIfAny(p);
+
+        final Set<Position> revealedAfter = snapshotRevealedCells();
+        revealedAfter.removeAll(revealedBefore);
+        if (!revealedAfter.isEmpty()) {
+            revealedAfter.forEach(this::applyContentIfAny);
             return ActionResultsFactory.reveal(this.status.get(), ActionEffect.APPLIED);
         }
         return ActionResultsFactory.reveal(this.status.get(), ActionEffect.NONE);
@@ -189,5 +196,15 @@ public class RevealService {
             );
         }
         return Optional.empty();
+    }
+
+    private Set<Position> snapshotRevealedCells() {
+        final Set<Position> revealed = new HashSet<>();
+        for (final Cell c : this.board.getBoardCells()) {
+            if (c.isRevealed()) {
+                revealed.add(this.board.getCellPosition(c));
+            }
+        }
+        return revealed;
     }
 }

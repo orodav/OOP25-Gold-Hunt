@@ -2,6 +2,9 @@ package it.unibo.goldhunt.view.swing.components;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.Objects;
 
 import javax.swing.JComponent;
@@ -38,6 +41,14 @@ public final class HudPanel extends JPanel implements HudView {
         this.levelLabel = new JLabel("Level: -");
         this.livesLabel = new JLabel("Lives: -");
         this.goldLabel = new JLabel("Gold: 0");
+        addComponentListener(new ComponentAdapter() {
+            
+            @Override
+            public void componentResized(ComponentEvent e) {
+                updateFontSize();
+            }
+        });
+
         stats.add(levelLabel);
         stats.add(livesLabel);
         stats.add(goldLabel);
@@ -61,5 +72,19 @@ public final class HudPanel extends JPanel implements HudView {
     @Override
     public JComponent component() {
         return this;
+    }
+
+    private void updateFontSize() {
+        final int h = getHeight();
+        if (h <= 0) {
+            return;
+        }
+        final int fontSize = Math.max(14, h/4);
+        final Font baseFont = getFont();
+        final Font scaledFont = baseFont.deriveFont((float) fontSize);
+
+        levelLabel.setFont(scaledFont);
+        livesLabel.setFont(scaledFont);
+        goldLabel.setFont(scaledFont);
     }
 }

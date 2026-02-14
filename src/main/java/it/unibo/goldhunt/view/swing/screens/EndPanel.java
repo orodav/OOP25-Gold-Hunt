@@ -1,7 +1,6 @@
 package it.unibo.goldhunt.view.swing.screens;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.util.Objects;
 
 import javax.swing.Box;
@@ -21,37 +20,31 @@ public class EndPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
-    public interface Listener {
+    private static final int VERTICAL_GAP_LARGE = 30;
+    private static final int VERTICAL_GAP_MEDIUM = 15;
 
-        /**
-         * Invoked when the user wants to continue.
-         */
-        void onGoToShop();
-
-        /**
-         * Invoked when the user wants to return to the main menu.
-         */
-        void onBackToMenu();
-    }
-
+    /**
+     * Listener for difficulty screen interactions.
+     */
     private static final Listener NO_OP_LISTENER = new Listener() {
+
         @Override
-        public void onGoToShop() {}
+        public void onGoToShop() { }
+
         @Override
-        public void onBackToMenu() {}
+        public void onBackToMenu() { }
     };
 
     private transient Listener listener = NO_OP_LISTENER;
-
     private final JLabel stateLabel;
-    
+
     /**
      * Builds the end panel.
      * 
      * @param factory the UI factory used to create components
      * @throws NullPointerException if factory is null
      */
-    public EndPanel(UIFactory factory) {
+    public EndPanel(final UIFactory factory) {
 
         super(new BorderLayout());
         Objects.requireNonNull(factory);
@@ -60,36 +53,36 @@ public class EndPanel extends JPanel {
         center.setLayout(new BoxLayout(center, BoxLayout.Y_AXIS));
 
         this.stateLabel = factory.createTitleLabel("");
-        this.stateLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        this.stateLabel.setAlignmentX(CENTER_ALIGNMENT);
         this.stateLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         final JButton shopButton = factory.createButton("SHOP");
         final JButton menuButton = factory.createButton("MENU");
 
-        shopButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        menuButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        shopButton.setAlignmentX(CENTER_ALIGNMENT);
+        menuButton.setAlignmentX(CENTER_ALIGNMENT);
 
         shopButton.addActionListener(e -> this.listener.onGoToShop());
         menuButton.addActionListener(e -> this.listener.onBackToMenu());
 
         center.add(Box.createVerticalGlue());
         center.add(this.stateLabel);
-        center.add(Box.createVerticalStrut(30));
+        center.add(Box.createVerticalStrut(VERTICAL_GAP_LARGE));
         center.add(shopButton);
-        center.add(Box.createVerticalStrut(15));
+        center.add(Box.createVerticalStrut(VERTICAL_GAP_MEDIUM));
         center.add(menuButton);
         center.add(Box.createVerticalGlue());
 
-        add(center, BorderLayout.CENTER);
+        super.add(center, BorderLayout.CENTER);
     }
-        
+
     /**
      * Renders the end screen.
      * 
      * @param levelState the current level state
      * @throws NullPointerException if levelState is null
      */
-    public void render (final LevelState levelState) {
+    public void render(final LevelState levelState) {
         Objects.requireNonNull(levelState);
 
         switch (levelState) {
@@ -107,5 +100,21 @@ public class EndPanel extends JPanel {
      */
     public void setListener(final Listener listener) {
         this.listener = Objects.requireNonNull(listener);
+    }
+
+    /**
+     * Listener for difficulty screen interactions.
+     */
+    public interface Listener {
+
+        /**
+         * Invoked when the user wants to continue.
+         */
+        void onGoToShop();
+
+        /**
+         * Invoked when the user wants to return to the main menu.
+         */
+        void onBackToMenu();
     }
 }

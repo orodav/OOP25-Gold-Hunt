@@ -158,14 +158,21 @@ public class GameControllerImpl implements GameController {
     @Override
     public GameViewState handleSetDifficulty(final Difficulty difficulty) {
         Objects.requireNonNull(difficulty, "difficulty can't be null");
-        this.session = this.factory.newGame(difficulty);
+
+        if (this.screen == ScreenType.DIFFICULTY) {
+            this.session = this.factory.nextLevel(this.session, difficulty);
+        } else {
+            this.session = this.factory.newGame(difficulty);
+        }
+
         this.screen = ScreenType.PLAYING;
         return refresh(Optional.of("Set " + difficulty + "level"));
     }
 
     private GameViewState refresh(final Optional<String> message) {
         final LevelState levelState = this.session.status().levelState();
-        if (levelState == LevelState.WON || levelState == LevelState.LOSS) {
+        if ((levelState == LevelState.WON || levelState == LevelState.LOSS)
+                && this.screen == ScreenType.PLAYING) {
             this.screen = ScreenType.END;
         }
         this.state = this.mapper.fromSession(this.session, message, this.screen);

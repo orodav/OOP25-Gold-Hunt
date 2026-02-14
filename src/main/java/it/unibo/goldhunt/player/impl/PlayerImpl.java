@@ -108,7 +108,7 @@ public final class PlayerImpl implements PlayerOperations {
 
     /** 
      * Returns a readable representation of the player state.
-     */
+     */ 
     @Override
     public String toString() {
         return "Player[position=" + this.position
@@ -140,6 +140,13 @@ public final class PlayerImpl implements PlayerOperations {
     @Override
     public PlayerImpl addLives(final int num) {
         return new PlayerImpl(this.position, this.lives + num, this.gold, this.inventory);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public PlayerImpl setLives(final int num) {
+        return new PlayerImpl(this.position, num, this.gold, this.inventory);
     }
 
     /**

@@ -64,7 +64,18 @@ public final class SwingGameView implements GameView {
     public void bind() {
 
         final MenuPanel menu = this.mainFrame.getMenuPanel();
-        menu.setListener(() -> this.listener.onStartGame());
+        menu.setListener(new MenuPanel.Listener() {
+            
+            @Override
+            public void onStartGame() {
+                SwingGameView.this.listener.onStartGame();
+            }
+
+            @Override
+            public void onExitRequested() {
+                System.exit(0);
+            }
+        });
 
         final DifficultyPanel diff = this.mainFrame.getDifficultyPanel();
         diff.setListener(new DifficultyPanel.Listener() {
@@ -137,7 +148,7 @@ public final class SwingGameView implements GameView {
 
             @Override
             public void onReveal(final Position p) {
-                apply(controller.handle(new GuiCommand.Reveal(p)));
+                apply(controller.handle(new GuiCommand.MoveTo(p)));
             }
 
             @Override

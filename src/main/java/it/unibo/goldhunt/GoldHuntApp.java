@@ -1,6 +1,7 @@
 package it.unibo.goldhunt;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
 import it.unibo.goldhunt.configuration.api.Difficulty;
@@ -42,7 +43,8 @@ public final class GoldHuntApp {
                 gameFactory, initialSession, mapper
             );
             final ItemVisualRegistry itemRegistry = new ItemRegistry(uiFactory);
-            final MainFrame mainFrame = new MainFrame(uiFactory, itemRegistry);
+            final JLabel stateLabel = new JLabel();
+            final MainFrame mainFrame = new MainFrame(uiFactory, itemRegistry, stateLabel);
             final SwingGameView view = new SwingGameView(mainFrame, controller);
             view.bind();
 

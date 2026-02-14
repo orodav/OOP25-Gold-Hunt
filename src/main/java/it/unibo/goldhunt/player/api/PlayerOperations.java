@@ -36,6 +36,15 @@ public interface PlayerOperations extends Player {
     PlayerOperations addLives(int num);
 
     /**
+     * Returns a new player instance with resetted lives for a new level.
+     * 
+     * @param num the lives amount to add
+     * @return a new {@code PlayerOperations} instance with updated lives count
+     * @throws IllegalArgumentException if {@code num} is negative
+     */
+    PlayerOperations setLives(int num);
+
+    /**
      * Returns a new player instance with the specified quantity of an item added.
      * 
      * @param item the item type to add

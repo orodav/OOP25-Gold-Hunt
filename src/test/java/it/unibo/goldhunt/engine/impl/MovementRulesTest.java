@@ -319,6 +319,11 @@ class MovementRulesTest {
             throw new UnsupportedOperationException("Unimplemented method 'useItem'");
         }
 
+        @Override
+        public PlayerOperations setLives(int num) {
+            throw new UnsupportedOperationException("Unimplemented method 'setLives'");
+        }
+
     }
 
     private static final class TestCell implements Cell {

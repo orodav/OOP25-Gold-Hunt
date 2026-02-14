@@ -51,7 +51,7 @@ import it.unibo.goldhunt.shop.impl.DefaultShopFactory;
 public class GameFactory {
 
     private static final Position DEFAULT_START = new Position(0, 0);
-    private static final int DEFAULT_INITIAL_LIVES = 3;
+    private static final int DEFAULT_INITIAL_LIVES = 0;
     private static final int DEFAULT_INITIAL_GOLD = 0;
     private static final int DEFAULT_SHOP_MAX_PURCHASES = 3;
     private final LevelConfigFactory configFactory;
@@ -123,4 +123,52 @@ public class GameFactory {
         );
         return new GameSession(difficulty, level, engine, Optional.of(engine), this.itemFactory);
     }
+
+    /**
+     * Initializes a new {@link GameSession} for the specified difficulty.
+     * 
+     * <p>
+     * Keeps trace of gold amount and items in inventory from previous levels.
+     * 
+     * @param difficulty the selected game difficulty
+     * @return a fully initialized {@code GameSession}
+     * @throws NullPoiterException if {@code difficulty} is {@code null}
+     */
+    public GameSession nextLevel(final GameSession current, final Difficulty difficulty) {
+        Objects.requireNonNull(current, "current can't be null");
+        Objects.requireNonNull(difficulty, "difficulty can't be null");
+
+        final PlayerOperations player = current.player();
+        final LevelConfig config = this.configFactory.create(difficulty);
+        final BoardFactory boardFactory = new SquareBoardFactory(this.cellFactory);
+        final TrapFactory trapFactory = new TrapFactoryImpl(player);
+        final BoardGenerator boardGenerator = new BoardGeneratorImpl(
+            boardFactory,
+            trapFactory,
+            this.itemFactory,
+            player
+        );
+        final Level level = new LevelImpl(config, boardGenerator, player);
+        level.initBoard();
+        level.initPlayerPosition();
+        level.initLives();
+
+        final MovementRules rules = new MovementRulesImpl(level.getBoard());
+        final Status status = StatusImpl.createStartingState();
+        final EngineWithShopActions engine = new EngineImpl(
+            level.getPlayer(),
+            status,
+            level.getBoard(),
+            rules,
+            this.revealStrategy,
+            level.getStart(),
+            level.getExit(),
+            this.shopFactory,
+            this.shopCatalog,
+            this.shopMaxPurchases
+        );
+
+        return new GameSession(difficulty, level, engine, Optional.of(engine), this.itemFactory);
+    }
+
 }
