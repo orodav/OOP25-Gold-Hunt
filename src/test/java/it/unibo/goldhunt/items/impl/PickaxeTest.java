@@ -304,5 +304,10 @@ class PickaxeTest {
 
             throw new UnsupportedOperationException("Unimplemented method 'useItem'");
         }
+
+        @Override
+        public PlayerOperations setLives(final int num) {
+            throw new UnsupportedOperationException("Unimplemented method 'setLives'");
+        }
     }
 }

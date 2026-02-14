@@ -17,7 +17,7 @@ public final class LegendPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private static final int WIDTH = 150;
-    private static final int ICON_SIZE = 18;
+    private static final int ICON_SIZE = 25;
 
     public LegendPanel(final ItemVisualRegistry registry) {
         super();

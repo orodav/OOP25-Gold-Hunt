@@ -105,5 +105,10 @@ class TrapTest {
         public PlayerOperations withInventory(final Inventory inventory) {
             throw new UnsupportedOperationException("Unimplemented method 'withInventory'");
         }
+
+        @Override
+        public PlayerOperations setLives(final int num) {
+            throw new UnsupportedOperationException("Unimplemented method 'setLives'");
+        }
     }
 }

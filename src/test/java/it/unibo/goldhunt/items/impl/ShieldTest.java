@@ -144,5 +144,10 @@ class ShieldTest {
         public PlayerOperations useItem(final ItemTypes item, final int quantity) {
             throw new UnsupportedOperationException("Unimplemented method 'useItem'");
         }
+
+        @Override
+        public PlayerOperations setLives(final int num) {
+            throw new UnsupportedOperationException("Unimplemented method 'setLives'");
+        }
     }
 }
