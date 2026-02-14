@@ -1,6 +1,5 @@
 package it.unibo.goldhunt.view.swing.main;
 
-import java.awt.CardLayout;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -16,10 +15,10 @@ import it.unibo.goldhunt.view.api.GuiCommand;
 import it.unibo.goldhunt.view.api.ShopView;
 import it.unibo.goldhunt.view.swing.screens.DifficultyPanel;
 import it.unibo.goldhunt.view.swing.screens.EndPanel;
+import it.unibo.goldhunt.view.swing.screens.MenuPanel;
 import it.unibo.goldhunt.view.swing.screens.PlayingPanel;
 import it.unibo.goldhunt.view.swing.screens.ShopPanel;
 import it.unibo.goldhunt.view.viewstate.GameViewState;
-import it.unibo.goldhunt.view.viewstate.ScreenType;
 
 /**
  * Swing implementation of {@link GameView}.
@@ -64,15 +63,15 @@ public final class SwingGameView implements GameView {
      */
     public void bind() {
 
-        // from menu panel
-        this.mainFrame.getMenuPanel().setListener(() -> this.listener.onStartGame());
+        final MenuPanel menu = this.mainFrame.getMenuPanel();
+        menu.setListener(() -> this.listener.onStartGame());
 
-        // from difficulty panel
-        this.mainFrame.getDifficultyPanel().setListener(new DifficultyPanel.Listener() {
+        final DifficultyPanel diff = this.mainFrame.getDifficultyPanel();
+        diff.setListener(new DifficultyPanel.Listener() {
 
             @Override
-            public void onDifficultySelected(final Difficulty d) {
-                apply(controller.handle(new GuiCommand.difficulty));
+            public void onDifficultySelected(final Difficulty difficulty) {
+                apply(controller.handle(new GuiCommand.SetDifficulty(difficulty)));
             }
 
             @Override
@@ -81,7 +80,8 @@ public final class SwingGameView implements GameView {
             }
         });
 
-        this.mainFrame.getPlayingPanel().setListener(new PlayingPanel.Listener() {
+        final PlayingPanel playing = this.mainFrame.getPlayingPanel();
+        playing.setListener(new PlayingPanel.Listener() {
 
             @Override
             public void onReveal(final Position p) {
@@ -104,7 +104,8 @@ public final class SwingGameView implements GameView {
             }
         });
 
-        this.mainFrame.getShopPanel().setListener(new ShopView.Listener() {
+        final ShopPanel shop = this.mainFrame.getShopPanel();
+        shop.setListener(new ShopView.Listener() {
 
             @Override
             public void onBuy(final ItemTypes type) {
@@ -117,7 +118,19 @@ public final class SwingGameView implements GameView {
             }
         });
 
-        // end panel to be implemented
+        final EndPanel end = this.mainFrame.getEndPanel();
+        end.setListener(new EndPanel.Listener() {
+            
+            @Override
+            public void onGoToShop() {
+                apply(controller.handle(new GuiCommand.Continue()));
+            }
+
+            @Override
+            public void onBackToMenu() {
+                apply(controller.handle(new GuiCommand.LeaveToMenu()));
+            }
+        });
 
 
         setListener(new GameView.Listener() {
@@ -157,18 +170,15 @@ public final class SwingGameView implements GameView {
     @Override
     public void render(final GameViewState state) {
         Objects.requireNonNull(state, "state can't be null");
+
         if (!SwingUtilities.isEventDispatchThread()) {
             SwingUtilities.invokeLater(() -> render(state));
             return;
         }
         this.mainFrame.show(state.screen());
-
-        // playing
         this.mainFrame.getPlayingPanel().render(state);
         state.shop().ifPresent(this.mainFrame.getShopPanel()::render);
-
-        // end panel
-        this.mainFrame.getEndPanel().render(state);
+        this.mainFrame.getEndPanel().render(state.levelState());
     }
 
     @Override
