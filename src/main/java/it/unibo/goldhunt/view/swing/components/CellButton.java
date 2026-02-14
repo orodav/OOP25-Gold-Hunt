@@ -9,7 +9,6 @@ import java.util.Objects;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.SwingUtilities;
 
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.view.api.GameView;
@@ -75,7 +74,7 @@ public final class CellButton extends JButton {
                 if (listener == null) {
                     return;
                 }
-                if (!lastRevealed) {
+                if (e.isPopupTrigger() && !lastRevealed) {
                     listener.onToggleFlag(position);
                     e.consume();
                 }
@@ -83,16 +82,12 @@ public final class CellButton extends JButton {
 
             @Override
             public void mousePressed(final MouseEvent e) {
-                if (SwingUtilities.isRightMouseButton(e) || e.isPopupTrigger()) {
                     handleRightClick(e);
-                }
             }
 
             @Override
             public void mouseReleased(final MouseEvent e) {
-                if (SwingUtilities.isRightMouseButton(e) || e.isPopupTrigger()) {
                     handleRightClick(e);
-                }
             }
         });
     }
