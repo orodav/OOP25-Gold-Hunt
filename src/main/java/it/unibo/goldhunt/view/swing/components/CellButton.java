@@ -48,6 +48,8 @@ public final class CellButton extends JButton {
     private String lastStyleKey = "";
     private final transient ItemVisualRegistry registry;
 
+    private boolean lastRevealed;
+
     /**
      * {@code CellButton}'s constructor. It creates a
      * button associated to a specific board position.
@@ -75,24 +77,30 @@ public final class CellButton extends JButton {
         });
 
         addMouseListener(new MouseAdapter() { 
-            @Override
-            public void mousePressed(final MouseEvent e) {
+
+            private void handleRightClick(final MouseEvent e) {
                 if (listener == null) {
                     return;
                 }
-
-                if (SwingUtilities.isRightMouseButton(e)
-                && (STYLE_HIDDEN.equals(lastStyleKey) || STYLE_FLAGGED.equals(lastStyleKey))) {
-                    setEnabled(false);
-                    try {
-                        listener.onToggleFlag(position);
-                } finally {
-                    setEnabled(true);
-                }
-
-                e.consume();
+                if (!lastRevealed) {
+                    listener.onToggleFlag(position);
+                    e.consume();
                 }
             }
+
+            @Override
+            public void mousePressed(final MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e) || e.isPopupTrigger()) {
+                    handleRightClick(e);
+                }
+            }
+
+            @Override
+            public void mouseReleased(final MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e) || e.isPopupTrigger()) {
+                    handleRightClick(e);
+                }
+            }       
         });
     }
 
@@ -139,6 +147,7 @@ public final class CellButton extends JButton {
             renderRevealed(state);
         }
 
+        this.lastRevealed = state.revealed();
         applyStyle(state.styleKey());
         repaint();
     }
