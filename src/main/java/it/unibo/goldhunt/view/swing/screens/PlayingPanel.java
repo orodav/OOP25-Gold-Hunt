@@ -20,6 +20,7 @@ import it.unibo.goldhunt.view.swing.components.BoardPanel;
 import it.unibo.goldhunt.view.swing.components.HudPanel;
 import it.unibo.goldhunt.view.swing.components.InventoryPanel;
 import it.unibo.goldhunt.view.swing.components.LegendPanel;
+import it.unibo.goldhunt.view.swing.components.SquareWrappedPanel;
 import it.unibo.goldhunt.view.viewstate.GameViewState;
 
 /**
@@ -97,7 +98,9 @@ public final class PlayingPanel extends JPanel {
         this.add(this.legendScroll, BorderLayout.EAST);
 
         this.boardPanel = new BoardPanel(itemRegistry);
-        this.add(this.boardPanel, BorderLayout.CENTER);
+        final SquareWrappedPanel boardWrapper = new SquareWrappedPanel();
+        boardWrapper.setContent(this.boardPanel);
+        this.add(boardWrapper, BorderLayout.CENTER);
 
         this.inventoryPanel = new InventoryPanel();
         this.add(this.inventoryPanel, BorderLayout.WEST);
