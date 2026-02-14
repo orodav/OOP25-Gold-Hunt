@@ -7,6 +7,7 @@ import java.util.Objects;
 
 import javax.swing.JPanel;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.view.api.GameView;
 import it.unibo.goldhunt.view.api.ItemVisualRegistry;
@@ -18,10 +19,16 @@ import it.unibo.goldhunt.view.viewstate.GameViewState;
  * for displaying the game board.
  */
 public final class BoardPanel extends JPanel {
-    private final Map<Position, CellButton> cellsByPos = new HashMap<>();
+    private static final long serialVersionUID = 1L;
+
+    @SuppressFBWarnings(
+        value = "SE_TRANSIENT_FIELD_NOT_RESTORED",
+        justification = "These components are not meant to be deserialized."
+    )
+    private transient Map<Position, CellButton> cellsByPos;
     private int currentSize = -1;
-    private GameView.Listener listener;
-    private final ItemVisualRegistry registry;
+    private transient GameView.Listener listener;
+    private final transient ItemVisualRegistry registry;
 
     /**
      * {@code BoardPanel}'s constructor. It creates a
@@ -32,6 +39,7 @@ public final class BoardPanel extends JPanel {
      */
     public BoardPanel(final ItemVisualRegistry registry) {
         this.registry = Objects.requireNonNull(registry);
+        this.cellsByPos = new HashMap<>();
     }
 
     /**

@@ -1,10 +1,13 @@
 package it.unibo.goldhunt.view.swing.components;
 
 import java.awt.FlowLayout;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.plaf.DimensionUIResource;
@@ -15,6 +18,7 @@ public final class LegendPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private static final int WIDTH = 150;
+    private static final int ICON_SIZE = 18;
 
     public LegendPanel(final ItemVisualRegistry registry) {
         super();
@@ -24,7 +28,7 @@ public final class LegendPanel extends JPanel {
 
         for (final String id : registry.getAllItemsID()) {
 
-            final Icon icon = registry.getIcon(id);
+            final Icon icon = resizeIcon(registry.getIcon(id));
             final String tooltip = registry.getItemName(id);
 
             final JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 2));
@@ -38,4 +42,19 @@ public final class LegendPanel extends JPanel {
             add(row);
         }
     }
+
+    private Icon resizeIcon(final Icon icon) {
+        if (icon == null) {
+            return null;
+        }
+        final BufferedImage img = new BufferedImage(ICON_SIZE, ICON_SIZE, 
+        BufferedImage.TYPE_INT_ARGB);
+
+        final Graphics2D graphic = img.createGraphics();
+        icon.paintIcon(null, graphic, 0, 0);
+        graphic.dispose();
+
+        return new ImageIcon(img);
+    }
+
 }

@@ -16,6 +16,8 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     // The engine that must be available at runtime to run the tests.
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    // Necessary for SpotBugs suppression
+    compileOnly("com.github.spotbugs:spotbugs-annotations:4.7.3")
 }
 
 tasks.withType<Test>().configureEach {
