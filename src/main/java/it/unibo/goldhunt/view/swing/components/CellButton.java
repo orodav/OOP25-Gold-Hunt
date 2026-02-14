@@ -68,6 +68,12 @@ public final class CellButton extends JButton {
         setHorizontalTextPosition(SwingConstants.CENTER);
         setVerticalTextPosition(SwingConstants.CENTER);
 
+        addActionListener(e -> {
+            if (listener != null) {
+                listener.onReveal(position);
+            }
+        });
+
         addMouseListener(new MouseAdapter() { 
             @Override
             public void mousePressed(final MouseEvent e) {
@@ -75,11 +81,16 @@ public final class CellButton extends JButton {
                     return;
                 }
 
-                if (SwingUtilities.isLeftMouseButton(e)) {
-                    listener.onReveal(position);
-                } else if (SwingUtilities.isRightMouseButton(e)
-                        && (STYLE_HIDDEN.equals(lastStyleKey) || STYLE_FLAGGED.equals(lastStyleKey))) {
-                            listener.onToggleFlag(position);
+                if (SwingUtilities.isRightMouseButton(e)
+                && (STYLE_HIDDEN.equals(lastStyleKey) || STYLE_FLAGGED.equals(lastStyleKey))) {
+                    setEnabled(false);
+                    try {
+                        listener.onToggleFlag(position);
+                } finally {
+                    setEnabled(true);
+                }
+
+                e.consume();
                 }
             }
         });
