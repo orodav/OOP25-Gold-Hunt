@@ -1,10 +1,15 @@
 package it.unibo.goldhunt.view.swing.screens;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.Objects;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.items.api.ItemTypes;
@@ -25,6 +30,20 @@ import it.unibo.goldhunt.view.viewstate.GameViewState;
 public final class PlayingPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
+
+    private static final double INVENTORY_WIDTH = 0.20;
+    private static final double LEGEND_WIDTH = 0.14;
+    private static final double HUD_HEIGHT = 0.10;
+
+    private static final int MIN_INVENTORY = 180;
+    private static final int MAX_INVENTORY = 320;
+
+    private static final int MIN_LEGEND = 160;
+    private static final int MAX_LEGEND = 280;
+
+    private static final int MIN_HUD = 60;
+    private static final int MAX_HUD = 100;
+
 
     /**
      * Default no-operation listener to avoid null checks.
@@ -49,6 +68,7 @@ public final class PlayingPanel extends JPanel {
     private final BoardPanel boardPanel;
     private final InventoryPanel inventoryPanel;
     private final HudPanel hudPanel;
+    private final JScrollPane legendScroll;
 
     /**
      * Creates the playing screen.
@@ -67,7 +87,14 @@ public final class PlayingPanel extends JPanel {
         Objects.requireNonNull(itemRegistry);
 
         final LegendPanel legendPanel = new LegendPanel(itemRegistry);
-        this.add(legendPanel, BorderLayout.EAST);
+        this.legendScroll = new JScrollPane(
+            legendPanel,
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+        );
+        this.legendScroll.setBorder(null);
+        this.legendScroll.getVerticalScrollBar().setUnitIncrement(12);
+        this.add(this.legendScroll, BorderLayout.EAST);
 
         this.boardPanel = new BoardPanel(itemRegistry);
         this.add(this.boardPanel, BorderLayout.CENTER);
@@ -82,11 +109,20 @@ public final class PlayingPanel extends JPanel {
 
         final JButton backToMenu = factory.createButton("MENU");
         Objects.requireNonNull(backToMenu);
-
         backToMenu.addActionListener(e -> this.listener.onLeaveToMenu());
         south.add(backToMenu, BorderLayout.EAST);
 
         this.add(south, BorderLayout.SOUTH);
+
+        this.addComponentListener(new ComponentAdapter() {
+
+            @Override
+            public void componentResized(final ComponentEvent e) {
+                updateFixedAreasSizes();
+            }
+        });
+
+        updateFixedAreasSizes();
 
         this.boardPanel.setListener(new GameView.Listener() {
 
@@ -192,6 +228,33 @@ public final class PlayingPanel extends JPanel {
      */
     public HudPanel getHudPanel() {
         return this.hudPanel;
+    }
+
+    private void updateFixedAreasSizes() {
+        final int w = Math.max(1, getWidth());
+        final int h = Math.max(1, getHeight());
+
+        final int inventoryW = clamp((int) (w * INVENTORY_WIDTH), MIN_INVENTORY, MAX_INVENTORY);
+        final int legendW = clamp((int) (w * LEGEND_WIDTH), MIN_LEGEND, MAX_LEGEND);
+        final int hudH = clamp((int) (h * HUD_HEIGHT), MIN_HUD, MAX_HUD);
+
+        this.inventoryPanel.setPreferredSize(new Dimension(inventoryW, 1));
+        this.inventoryPanel.setMinimumSize(new Dimension(MIN_INVENTORY, 1));
+        this.inventoryPanel.setMaximumSize(new Dimension(MAX_INVENTORY, Integer.MAX_VALUE));
+
+        this.legendScroll.setPreferredSize(new Dimension(legendW, 1));
+        this.legendScroll.setMinimumSize(new Dimension(MIN_LEGEND, 1));
+        this.legendScroll.setMaximumSize(new Dimension(MAX_LEGEND, Integer.MAX_VALUE));
+
+        this.hudPanel.setPreferredSize(new Dimension(1, hudH));
+        this.hudPanel.setMinimumSize(new Dimension(1, MIN_HUD));
+        this.hudPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, MAX_HUD));
+
+        revalidate();
+    }
+
+    private static int clamp(final int v, final int min, final int max) {
+        return Math.max(min, Math.min(max, v));
     }
 
     /**
