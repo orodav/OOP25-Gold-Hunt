@@ -4,11 +4,13 @@ import java.awt.FlowLayout;
 import java.awt.Image;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.plaf.DimensionUIResource;
 
 import it.unibo.goldhunt.view.api.ItemVisualRegistry;
@@ -30,14 +32,21 @@ public final class LegendPanel extends JPanel {
             final Icon icon = resizeIcon(registry.getIcon(id));
             final String tooltip = registry.getItemName(id);
 
-            final JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 2));
+            final JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
             row.setOpaque(false);
 
+            row.setLayout(new BoxLayout(row, BoxLayout.X_AXIS));
             final JLabel iconLabel = (icon != null) ? new JLabel(icon) : new JLabel(registry.getGlyph(id));
-            final JLabel tooltipLabel = new JLabel(tooltip);
+            final JTextArea textArea = new JTextArea(tooltip);
+            textArea.setLineWrap(true);
+            textArea.setWrapStyleWord(true);
+            textArea.setEditable(false);
+            textArea.setFocusable(false);
+            textArea.setOpaque(false);
 
             row.add(iconLabel);
-            row.add(tooltipLabel);
+            row.add(Box.createHorizontalStrut(5));
+            row.add(textArea);
             add(row);
         }
     }
