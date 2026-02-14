@@ -1,6 +1,5 @@
 package it.unibo.goldhunt.view.swing.components;
 
-import java.awt.Dimension;
 import javax.swing.JPanel;
 
 /**
@@ -38,14 +37,6 @@ public class SquareWrappedPanel extends JPanel {
         final int y = (height - maxSize) / 2;
 
         panel.setBounds(x, y, maxSize, maxSize);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Dimension getPreferredSize() {
-        return super.getPreferredSize();
     }
 
     /**

@@ -9,7 +9,6 @@ import java.util.Objects;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 import it.unibo.goldhunt.engine.api.Position;
@@ -59,10 +58,10 @@ public final class CellButton extends JButton {
         setOpaque(true);
         setMargin(new Insets(0, 0, 0, 0));
 
-        setHorizontalAlignment(SwingConstants.CENTER);
-        setVerticalAlignment(SwingConstants.CENTER);
-        setHorizontalTextPosition(SwingConstants.CENTER);
-        setVerticalTextPosition(SwingConstants.CENTER);
+        setHorizontalAlignment(CENTER);
+        setVerticalAlignment(CENTER);
+        setHorizontalTextPosition(CENTER);
+        setVerticalTextPosition(CENTER);
 
         addActionListener(e -> {
             if (listener != null) {

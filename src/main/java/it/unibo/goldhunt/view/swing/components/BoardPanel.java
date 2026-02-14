@@ -25,7 +25,7 @@ public final class BoardPanel extends JPanel {
         value = "SE_TRANSIENT_FIELD_NOT_RESTORED",
         justification = "These components are not meant to be deserialized."
     )
-    private transient Map<Position, CellButton> cellsByPos;
+    private final transient Map<Position, CellButton> cellsByPos;
     private int currentSize = -1;
     private transient GameView.Listener listener;
     private final transient ItemVisualRegistry registry;
