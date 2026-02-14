@@ -2,6 +2,7 @@ package it.unibo.goldhunt.view.api;
 
 import java.util.Optional;
 
+import it.unibo.goldhunt.configuration.api.Difficulty;
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.items.api.ItemTypes;
 import it.unibo.goldhunt.view.viewstate.GameViewState;
@@ -112,6 +113,20 @@ public interface GuiCommand {
         @Override
         public GameViewState apply(final GameController controller) {
             return controller.handleLeaveToMenu();
+        }
+    }
+
+    record StartGame() implements GuiCommand {
+        @Override
+        public GameViewState apply(GameController c) {
+            return c.handleStartGame();
+        }
+    }
+
+    record SetDifficulty(Difficulty d) implements GuiCommand {
+        @Override
+        public GameViewState apply(GameController c) {
+            return c.handleSetDifficulty(d);
         }
     }
 }

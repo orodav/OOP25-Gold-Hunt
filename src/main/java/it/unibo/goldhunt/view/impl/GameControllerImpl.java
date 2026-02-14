@@ -42,9 +42,9 @@ public class GameControllerImpl implements GameController {
         final GameSession session,
         final ViewStateMapper mapper
     ) {
+        this.factory = Objects.requireNonNull(factory, "factory can't be null");
         this.session = Objects.requireNonNull(session, "session can't be null");
         this.mapper = Objects.requireNonNull(mapper, "mapper can't be null");
-        this.factory = Objects.requireNonNull(factory, "factory can't be null");
         this.screen = ScreenType.MENU;
         this.state = this.mapper.fromSession(this.session, Optional.empty(), this.screen);
     }
@@ -75,6 +75,15 @@ public class GameControllerImpl implements GameController {
         Objects.requireNonNull(pos, "pos value can't be null");
         final ActionResult res = this.session.move(pos);
         return refresh(this.mapper.messageFromActionResult(res));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public GameViewState handleStartGame() {
+        this.screen = ScreenType.DIFFICULTY;
+        return refresh(Optional.empty());
     }
 
     /**
@@ -138,17 +147,9 @@ public class GameControllerImpl implements GameController {
      */
     @Override
     public GameViewState handleLeaveToMenu() {
+        this.session = this.factory.newGame(Difficulty.EASY);
         this.screen = ScreenType.MENU;
         return refresh(Optional.empty());
-    }
-
-    private GameViewState refresh(final Optional<String> message) {
-        final LevelState levelState = this.session.status().levelState();
-        if (levelState == LevelState.WON || levelState == LevelState.LOSS) {
-            this.screen = ScreenType.END;
-        }
-        this.state = this.mapper.fromSession(this.session, message, this.screen);
-        return this.state;
     }
 
     /**
@@ -160,5 +161,14 @@ public class GameControllerImpl implements GameController {
         this.session = this.factory.newGame(difficulty);
         this.screen = ScreenType.PLAYING;
         return refresh(Optional.of("Set " + difficulty + "level"));
+    }
+
+    private GameViewState refresh(final Optional<String> message) {
+        final LevelState levelState = this.session.status().levelState();
+        if (levelState == LevelState.WON || levelState == LevelState.LOSS) {
+            this.screen = ScreenType.END;
+        }
+        this.state = this.mapper.fromSession(this.session, message, this.screen);
+        return this.state;
     }
 }

@@ -18,7 +18,7 @@ import it.unibo.goldhunt.view.viewstate.ShopItemViewState;
 import it.unibo.goldhunt.view.viewstate.ShopViewState;
 
 /**
- * Swing implementation of {@link ShowView}.
+ * Swing implementation of {@link ShopView}.
  * 
  * <p>
  * Displays the current shop state, including the number of remaining
@@ -57,20 +57,18 @@ public final class ShopPanel extends JPanel implements ShopView {
 
         final JPanel topBar = new JPanel(new BorderLayout());
         this.remainingLabel = new JLabel("Remaining purchases: 0");
-
         final JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
         this.leaveButton = new JButton("Leave shop");
         this.leaveButton.setFocusable(false);
         this.leaveButton.addActionListener(e -> this.listener.onLeaveShop());
         right.add(this.leaveButton);
-
         topBar.add(this.remainingLabel, BorderLayout.WEST);
         topBar.add(right, BorderLayout.EAST);
 
         this.itemsPanel = new JPanel(new GridLayout(0, 3, 8, 8));
         final JScrollPane scroll = new JScrollPane(this.itemsPanel);
         scroll.setBorder(null);
-
         this.add(topBar, BorderLayout.NORTH);
         this.add(scroll, BorderLayout.CENTER);
     }
@@ -81,6 +79,7 @@ public final class ShopPanel extends JPanel implements ShopView {
     @Override
     public void render(final ShopViewState state) {
         Objects.requireNonNull(state, "state can't be null");
+
         this.remainingLabel.setText("Remaining purchases: " + state.remainingPurchases());
         this.itemsPanel.removeAll();
         for (final ShopItemViewState item : state.items()) {
@@ -111,13 +110,11 @@ public final class ShopPanel extends JPanel implements ShopView {
         final JButton b = new JButton(label);
         b.setFocusable(false);
         b.setEnabled(item.enabled());
-
         if (!item.enabled()) {
             b.setToolTipText(!item.affordable() ? "Not enough gold" : "No remaining purchases");
         } else {
             b.setToolTipText(null);
         }
-
         b.addActionListener(e -> {
             if (item.enabled()) {
                 this.listener.onBuy(item.type());

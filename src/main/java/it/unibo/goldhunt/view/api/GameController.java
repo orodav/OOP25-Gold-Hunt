@@ -35,6 +35,14 @@ public interface GameController {
     GameViewState handle(GuiCommand command);
 
     /**
+     * Handles a "start game" request from the main menu.
+     * This moves the UI flow to the difficulty selection screen.
+     * 
+     * @return the updated {@link GameViewState}
+     */
+    GameViewState handleStartGame();
+
+    /**
      * Handles a movement request toward the specified board position.
      * 
      * @param pos the target position
