@@ -380,7 +380,7 @@ public ActionResult move(final Position newPos) {
     public EngineWithState withPlayer(final PlayerOperations newPlayer) {
         Objects.requireNonNull(newPlayer, "player can't be null");
         final EngineImpl copy = new EngineImpl(
-            player, 
+            newPlayer, 
             this.status, 
             this.board, 
             this.rules, 

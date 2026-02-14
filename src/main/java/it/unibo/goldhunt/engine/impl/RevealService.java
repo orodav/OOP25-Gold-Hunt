@@ -159,7 +159,9 @@ public class RevealService {
             );
         }
         this.setPlayer.apply(updatedPlayer);
-        cell.removeContent();
+        if (!cellContent.isTrap()) {
+            cell.removeContent();
+        }
     }
 
     private Optional<ActionResult> checkRevealPreconditions(final Position p) {
