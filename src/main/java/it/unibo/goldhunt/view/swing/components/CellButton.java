@@ -35,12 +35,14 @@ public final class CellButton extends JButton {
     private static final String STYLE_REVEALED = "cell.revealed";
     private static final String STYLE_PLAYER = "cell.player";
 
-    private final Position position;
+    private static final long serialVersionUID = 1L;
 
-    private GameView.Listener listener;
+    private final transient Position position;
+
+    private transient GameView.Listener listener;
 
     private String lastStyleKey = "";
-    private final ItemVisualRegistry registry;
+    private final transient ItemVisualRegistry registry;
 
     /**
      * {@code CellButton}'s constructor. It creates a
@@ -110,7 +112,7 @@ public final class CellButton extends JButton {
         setForeground(Color.BLACK);
 
         if (STYLE_PLAYER.equals(state.styleKey())) {
-            renderPlayer(state);
+            renderPlayer();
         } else if (!state.revealed()) {
             renderHidden(state);
         } else {
@@ -122,7 +124,7 @@ public final class CellButton extends JButton {
 
     }
 
-    private void renderPlayer(final CellViewState state) {
+    private void renderPlayer() {
         if (registry.getAllItemsID().contains(PLAYER)) {
             setIcon(registry.getIcon(PLAYER));
         }

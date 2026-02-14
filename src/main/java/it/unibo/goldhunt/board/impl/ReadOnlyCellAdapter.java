@@ -3,6 +3,7 @@ package it.unibo.goldhunt.board.impl;
 import java.util.Objects;
 import java.util.Optional;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import it.unibo.goldhunt.board.api.Cell;
 import it.unibo.goldhunt.board.api.ReadOnlyCell;
 import it.unibo.goldhunt.items.api.CellContent;
@@ -21,6 +22,10 @@ public final class ReadOnlyCellAdapter implements ReadOnlyCell {
      * @param cell the given cell
      * @throws NullPointerException if {@code cell} is {@code null}.
      */
+    @SuppressFBWarnings(
+        value = "EI2",
+        justification = "Intentional live read-only proxy: must reflect underlying Cell changes"
+    )
     public ReadOnlyCellAdapter(final Cell cell) {
         Objects.requireNonNull(cell);
         this.cell = cell;
