@@ -196,12 +196,17 @@ class RevealServiceTest {
     }
 
     private static final class TestCell implements Cell {
+
         private boolean flagged;
         private boolean revealed;
+
+        private int adjacentTraps;
+        private Optional<CellContent> content = Optional.empty();
 
         TestCell(final boolean flagged, final boolean revealed) {
             this.flagged = flagged;
             this.revealed = revealed;
+            this.adjacentTraps = 0;
         }
 
         @Override
@@ -230,29 +235,38 @@ class RevealServiceTest {
 
         @Override
         public int getAdjacentTraps() {
-            throw new UnsupportedOperationException("Unimplemented method 'getAdjacentTraps'");
+            return this.adjacentTraps;
         }
 
         @Override
         public void setAdjacentTraps(final int n) {
+            if (n < 0 || n > 8) {
+                throw new IllegalArgumentException("adjacentTraps must be in [0,8]");
+            }
+            this.adjacentTraps = n;
         }
 
         @Override
         public boolean hasContent() {
-            throw new UnsupportedOperationException("Unimplemented method 'hasContent'");
+            return this.content.isPresent();
         }
 
         @Override
         public Optional<CellContent> getContent() {
-            return Optional.empty();
+            return this.content;
         }
 
         @Override
         public void setContent(final CellContent content) {
+            if (this.content.isPresent()) {
+                throw new IllegalStateException("cell already has content");
+            }
+            this.content = Optional.ofNullable(content);
         }
 
         @Override
         public void removeContent() {
+            this.content = Optional.empty();
         }
     }
 
@@ -291,7 +305,13 @@ class RevealServiceTest {
 
         @Override
         public List<Cell> getBoardCells() {
-            throw new UnsupportedOperationException("Unimplemented method 'getBoardCells'");
+            return this.validPos.stream()
+                .sorted((a, b) -> {
+                    final int cmpX = Integer.compare(a.x(), b.x());
+                    return cmpX != 0 ? cmpX : Integer.compare(a.y(), b.y());
+                })
+                .map(this::getCell)
+                .toList();
         }
 
         @Override

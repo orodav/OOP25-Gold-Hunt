@@ -140,6 +140,9 @@ public class MoveService {
         final PlayerOperations currentPlayer,
         final Position nextPosition
     ) {
+        if (this.board.getCell(nextPosition).isFlagged()) {
+            return Optional.of(blocked());
+        }
         if (!this.rules.canEnter(currentPlayer.position(), nextPosition, currentPlayer)) {
             return Optional.of(blocked());
         }

@@ -320,7 +320,7 @@ class MovementRulesTest {
         }
 
         @Override
-        public PlayerOperations setLives(int num) {
+        public PlayerOperations setLives(final int num) {
             throw new UnsupportedOperationException("Unimplemented method 'setLives'");
         }
 

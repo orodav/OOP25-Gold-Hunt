@@ -216,94 +216,102 @@ public class EngineImpl implements EngineWithShopActions {
      * and initializes the shop session.
      */
     @Override
-public ActionResult move(final Position newPos) {
-    Objects.requireNonNull(newPos, "newPos can't be null");
+    public ActionResult move(final Position newPos) {
+        Objects.requireNonNull(newPos, "newPos can't be null");
 
-    final Position from = this.player.position();
-    final Optional<List<Position>> maybePath = this.rules.pathCalculation(from, newPos, this.player);
+        if (!this.board.isPositionValid(newPos)) {
+            return new ActionResult(
+                ActionType.MOVE,
+                StopReason.NO_AVAILABLE_PATH,
+                this.status.levelState(),
+                ActionEffect.INVALID
+            );
+        }
+        final Position from = this.player.position();
+        final Optional<List<Position>> maybePath = this.rules.pathCalculation(from, newPos, this.player);
 
-    if (maybePath.isEmpty()) {
-        return new ActionResult(
-            ActionType.MOVE,
-            StopReason.NO_AVAILABLE_PATH,
-            this.status.levelState(),
-            ActionEffect.BLOCKED
-        );
-    }
+        if (maybePath.isEmpty()) {
+            return new ActionResult(
+                ActionType.MOVE,
+                StopReason.NO_AVAILABLE_PATH,
+                this.status.levelState(),
+                ActionEffect.BLOCKED
+            );
+        }
 
-    final List<Position> path = maybePath.get();
-    final int startIdx = !path.isEmpty() && path.get(0).equals(from) ? 1 : 0;
+        final List<Position> path = maybePath.get();
+        final int startIdx = !path.isEmpty() && path.get(0).equals(from) ? 1 : 0;
 
-    if (startIdx >= path.size()) {
-        return new ActionResult(
+        if (startIdx >= path.size()) {
+            return new ActionResult(
+                ActionType.MOVE,
+                StopReason.ALREADY_THERE,
+                this.status.levelState(),
+                ActionEffect.BLOCKED
+            );
+        }
+
+        ActionResult result = new ActionResult(
             ActionType.MOVE,
             StopReason.ALREADY_THERE,
             this.status.levelState(),
             ActionEffect.BLOCKED
         );
-    }
 
-    ActionResult result = new ActionResult(
-        ActionType.MOVE,
-        StopReason.ALREADY_THERE,
-        this.status.levelState(),
-        ActionEffect.BLOCKED
-    );
+        for (int i = startIdx; i < path.size(); i++) {
+            final Position step = path.get(i);
 
-    for (int i = startIdx; i < path.size(); i++) {
-        final Position step = path.get(i);
+            result = this.moveService.move(step);
+            if (result.effect() != ActionEffect.APPLIED) {
+                return result;
+            }
+            this.revealService.reveal(step);
+            this.revealService.collect(step);
 
-        result = this.moveService.move(step);
-        if (result.effect() != ActionEffect.APPLIED) {
-            return result;
-        }
-        this.revealService.reveal(step);
-        this.revealService.collect(step);
-
-        this.updateLossIfNeeded();
-        if (this.status.levelState() == LevelState.LOSS) {
-            return new ActionResult(
-                result.type(),
-                result.reason(),
-                this.status.levelState(),
-                result.effect()
-            );
-        }
-        if (this.rules.mustStopOn(step, this.player)) {
-            return new ActionResult(
-                result.type(),
-                result.reason(),
-                this.status.levelState(),
-                result.effect()
-            );
-        }
-        if (this.player.position().equals(this.exit)) {
             this.updateLossIfNeeded();
-            this.status = this.status
-                .withLevelState(LevelState.WON)
-                .withGameMode(GameMode.SHOP);
-            this.shop = Optional.of(
-                this.shopFactory.create(
-                    this.player,
-                    this.shopItems(this.status.levelNumber()),
-                    this.shopLimit
-                )
-            );
-            return new ActionResult(
-                result.type(),
-                result.reason(),
-                this.status.levelState(),
-                result.effect()
-            );
+            if (this.status.levelState() == LevelState.LOSS) {
+                return new ActionResult(
+                    result.type(),
+                    result.reason(),
+                    this.status.levelState(),
+                    result.effect()
+                );
+            }
+            if (this.rules.mustStopOn(step, this.player)) {
+                return new ActionResult(
+                    result.type(),
+                    result.reason(),
+                    this.status.levelState(),
+                    result.effect()
+                );
+            }
+            if (this.player.position().equals(this.exit)) {
+                this.updateLossIfNeeded();
+                this.status = this.status
+                    .withLevelState(LevelState.WON)
+                    .withGameMode(GameMode.SHOP);
+                this.shop = Optional.of(
+                    this.shopFactory.create(
+                        this.player,
+                        this.shopItems(this.status.levelNumber()),
+                        this.shopLimit
+                    )
+                );
+                return new ActionResult(
+                    result.type(),
+                    result.reason(),
+                    this.status.levelState(),
+                    result.effect()
+                );
+            }
         }
+        return new ActionResult(
+            result.type(),
+            result.reason(),
+            this.status.levelState(),
+            result.effect()
+        );
     }
-    return new ActionResult(
-        result.type(),
-        result.reason(),
-        this.status.levelState(),
-        result.effect()
-    );
-}
 
 
     /**

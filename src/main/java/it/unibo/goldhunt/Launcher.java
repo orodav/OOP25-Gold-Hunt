@@ -8,7 +8,15 @@ package it.unibo.goldhunt;
  * to {@link GoldHuntApp}, keeping the application bootstrap logic
  * separated from the standard {@code main} method.
  */
-public class Launcher {
+public final class Launcher {
+
+    /**
+     * Utility class contructor.
+     * 
+     * <p>
+     * This constructor is private to prevent instantiation.
+     */
+    private Launcher() { }
 
     /**
      * Starts the application.

@@ -470,8 +470,9 @@ class EngineTest {
     }
 
     private static final class TestRules implements MovementRules {
+
+        private static final boolean CAN_ENTER = true;
         private Optional<List<Position>> path = Optional.empty();
-        private static final boolean canEnter = true;
         private final Set<Position> warnings = Set.of();
 
         @Override
@@ -485,7 +486,7 @@ class EngineTest {
 
         @Override
         public boolean canEnter(final Position from, final Position to, final Player player) {
-            return canEnter;
+            return CAN_ENTER;
         }
 
         @Override
@@ -522,61 +523,73 @@ class EngineTest {
         private boolean flagged;
         private boolean revealed;
 
+        private int adjacentTraps;
+        private Optional<CellContent> content = Optional.empty();
+
         TestCell(final boolean flagged, final boolean revealed) {
             this.flagged = flagged;
             this.revealed = revealed;
+            this.adjacentTraps = 0;
         }
 
         @Override
         public void reveal() {
-            if (!flagged) {
-                revealed = true;
+            if (!this.flagged) {
+                this.revealed = true;
             }
         }
 
         @Override
         public boolean isRevealed() {
-            return revealed;
+            return this.revealed;
         }
 
         @Override
         public void toggleFlag() {
-            if (!revealed) {
-                flagged = !flagged;
+            if (!this.revealed) {
+                this.flagged = !this.flagged;
             }
         }
 
         @Override
         public boolean isFlagged() {
-            return flagged;
+            return this.flagged;
         }
 
         @Override
         public int getAdjacentTraps() {
-            throw new UnsupportedOperationException("getAdjacentTraps is not used");
+            return this.adjacentTraps;
         }
 
         @Override
         public void setAdjacentTraps(final int n) {
+            if (n < 0 || n > 8) {
+                throw new IllegalArgumentException("adjacentTraps must be in [0,8]");
+            }
+            this.adjacentTraps = n;
         }
 
         @Override
         public boolean hasContent() {
-            return false;
+            return this.content.isPresent();
         }
 
         @Override
         public Optional<CellContent> getContent() {
-            return Optional.empty();
+            return this.content;
         }
 
         @Override
         public void setContent(final CellContent content) {
-            throw new UnsupportedOperationException("setContent is not used");
+            if (this.content.isPresent()) {
+                throw new IllegalStateException("cell already has content");
+            }
+            this.content = Optional.ofNullable(content);
         }
 
         @Override
         public void removeContent() {
+            this.content = Optional.empty();
         }
     }
 
@@ -614,7 +627,13 @@ class EngineTest {
 
         @Override
         public List<Cell> getBoardCells() {
-            throw new UnsupportedOperationException("getBoardCells is not used");
+            return this.validPos.stream()
+                .sorted((a, b) -> {
+                    final int cmpX = Integer.compare(a.x(), b.x());
+                    return cmpX != 0 ? cmpX : Integer.compare(a.y(), b.y());
+                })
+                .map(this::getCell)
+                .toList();
         }
 
         @Override

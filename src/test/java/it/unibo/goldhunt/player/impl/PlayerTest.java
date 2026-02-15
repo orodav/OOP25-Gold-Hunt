@@ -65,8 +65,6 @@ class PlayerTest {
         }
     }
 
-    // Testing Constructor Invariants
-
     @Test
     void shouldCreateValidPlayer() {
         final var inventory = emptyInventory();
@@ -101,8 +99,6 @@ class PlayerTest {
             () -> new PlayerImpl(pos(0, 0), 3, 0, null));
     }
 
-    // _______________moveTo
-
     @Test
     void moveToShouldChangeOnlyPosition() {
         final var player = basicPlayer();
@@ -119,8 +115,10 @@ class PlayerTest {
     @Test
     void moveToShouldThrowIfNullPosition() {
         final var player = basicPlayer();
-        assertThrows(IllegalArgumentException.class, 
-            () -> player.moveTo(null));
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> player.moveTo(null).hashCode()
+        );
     }
 
     @Test
@@ -130,8 +128,6 @@ class PlayerTest {
         assertNotSame(player, updated);
         assertEquals(player, updated);
     }
-
-    //_________________gold
 
     @Test
     void addGoldShouldIncreaseGoldWhenNumPositive() {
@@ -160,8 +156,10 @@ class PlayerTest {
     @Test
     void addGoldShouldThrowWhenResultNegative() {
         final var player = basicPlayer();
-        assertThrows(IllegalArgumentException.class, 
-            () -> player.addGold(ONE_NEGATIVE));
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> player.addGold(ONE_NEGATIVE).hashCode()
+        );
     }
 
     @Test
@@ -178,8 +176,6 @@ class PlayerTest {
         assertEquals(player, updated);
         assertNotSame(player, updated);
     }
-
-    //____________lives
 
     @Test
     void addLivesShouldIncreaseWhenPositive() {
@@ -215,8 +211,10 @@ class PlayerTest {
     @Test
     void addLivesShouldThrowWhenNegativeOrZero() {
         final var player = new PlayerImpl(pos(0, 0), 0, 0, emptyInventory());
-        assertThrows(IllegalArgumentException.class, 
-            () -> player.addLives(ONE_NEGATIVE));
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> player.addLives(ONE_NEGATIVE).hashCode()
+        );
     }
 
     @Test
@@ -242,8 +240,6 @@ class PlayerTest {
         assertNotSame(player, updated);
         assertNotEquals(player.inventory(), updated.inventory());
     }
-
-    // ________equals e hashCode
 
     @Test
     void equalsShouldBeTrueForSameState() {

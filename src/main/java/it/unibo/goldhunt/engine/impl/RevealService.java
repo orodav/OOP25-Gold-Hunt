@@ -30,15 +30,6 @@ import it.unibo.goldhunt.player.api.PlayerOperations;
  */
 public class RevealService {
 
-    /*
-    private static final Set<ItemTypes> PICKUP_ITEMS = Set.of(
-        KindOfItem.PICKAXE,
-        KindOfItem.DYNAMITE,
-        KindOfItem.SHIELD,
-        KindOfItem.CHART,
-        KindOfItem.LUCKYCLOVER
-    );
-    */
     private final Board board;
     private final RevealStrategy revealStrategy;
     private final Supplier<PlayerOperations> player;
@@ -160,9 +151,7 @@ public class RevealService {
             final PlayerOperations finalPlayer = (lostLife && hasShield)
                 ? afterEffect.addLives(1).useItem(KindOfItem.SHIELD, 1)
                 : afterEffect;
-
             this.setPlayer.apply(finalPlayer);
-            return;
         }
     }
 

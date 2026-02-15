@@ -193,12 +193,11 @@ public final class GameSession {
     public void useItem(final ItemTypes type) {
         Objects.requireNonNull(type, "type can't be null");
 
-        if (KindOfItem.SHIELD.equals(type)) {
-            return;
-        }
-
         if (this.status().gameMode() != GameMode.LEVEL) {
             throw new IllegalStateException("can't use items outside level");
+        }
+        if (type == KindOfItem.SHIELD || type == KindOfItem.LUCKYCLOVER) {
+            return;
         }
 
         final PlayerOperations currentPlayer = this.player();
@@ -238,5 +237,19 @@ public final class GameSession {
     shopEn.enterShop();
     this.engine = shopEn;
     this.shopEngine = Optional.of(shopEn);
+    consumeLuckyCloverIfPresent();
+    }
+
+    private void consumeLuckyCloverIfPresent() {
+        final PlayerOperations p = this.player();
+        if (p.inventory().hasAtLeast(KindOfItem.LUCKYCLOVER, 1)) {
+            final PlayerOperations updated = p.useItem(KindOfItem.LUCKYCLOVER, 1);
+            this.engine = this.engine.withPlayer(updated);
+            if (this.engine instanceof EngineWithState.EngineWithShopActions shopEn) {
+                this.shopEngine = Optional.of(shopEn);
+            } else {
+                this.shopEngine = Optional.empty();
+            }
+        }
     }
 }
