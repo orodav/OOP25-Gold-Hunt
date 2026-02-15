@@ -274,7 +274,7 @@ class LevelImplTest {
         }
 
         @Override
-        public PlayerOperations setLives(int num) {
+        public PlayerOperations setLives(final int num) {
             return new FakePlayer(this.position, num);
         }
     }
