@@ -172,6 +172,20 @@ public class EngineImpl implements EngineWithShopActions {
      */
     @Override
     public ActionResult reveal(final Position p) {
+
+        if (!isAdjactedOfSelf(this.player.position(), p)) {
+            return new ActionResult(
+                ActionType.REVEAL,
+                StopReason.NO_AVAILABLE_PATH,
+                this.status.levelState(),
+                ActionEffect.BLOCKED
+            );
+        }
+
+        if (this.board.getCell(p).isRevealed()) {
+            return this.revealService.collect(p);
+        }
+
         final ActionResult res = this.revealService.reveal(p);
         if (res.effect() == ActionEffect.APPLIED) {
             this.updateLossIfNeeded();
@@ -244,6 +258,7 @@ public ActionResult move(final Position newPos) {
             return result;
         }
         this.revealService.reveal(step);
+        this.revealService.collect(step);
 
         this.updateLossIfNeeded();
         if (this.status.levelState() == LevelState.LOSS) {
@@ -282,20 +297,6 @@ public ActionResult move(final Position newPos) {
             );
         }
     }
-    if (!this.player.position().equals(this.exit)) {
-        return result;
-    }
-    this.updateLossIfNeeded();
-    this.status = this.status
-        .withLevelState(LevelState.WON)
-        .withGameMode(GameMode.SHOP);
-    this.shop = Optional.of(
-        this.shopFactory.create(
-            this.player,
-            this.shopItems(this.status.levelNumber()),
-            this.shopLimit
-        )
-    );
     return new ActionResult(
         result.type(),
         result.reason(),
@@ -355,24 +356,6 @@ public ActionResult move(final Position newPos) {
         this.player = this.player.moveTo(this.start);
     }
 
-    private List<ShopItem> shopItems(final int levelNumber) {
-        final int size = this.globalCatalog.size();
-        if (size != CATALOG_SIZE) {
-            throw new IllegalStateException("globalCatalog must contain all items");
-        }
-        final int excluded = Math.floorMod(levelNumber - 1, size);
-        return IntStream.range(0, size)
-                .filter(i -> i != excluded)
-                .mapToObj(this.globalCatalog::get)
-                .toList();
-    }
-
-    private void updateLossIfNeeded() {
-        if (this.status.levelState() == LevelState.PLAYING && this.player.livesCount() <= 0) {
-            this.status = this.status.withLevelState(LevelState.LOSS);
-        }
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -415,5 +398,29 @@ public ActionResult move(final Position newPos) {
         );
         copy.shop = newShop;
         return copy;
+    }
+
+    private List<ShopItem> shopItems(final int levelNumber) {
+        final int size = this.globalCatalog.size();
+        if (size != CATALOG_SIZE) {
+            throw new IllegalStateException("globalCatalog must contain all items");
+        }
+        final int excluded = Math.floorMod(levelNumber - 1, size);
+        return IntStream.range(0, size)
+                .filter(i -> i != excluded)
+                .mapToObj(this.globalCatalog::get)
+                .toList();
+    }
+
+    private void updateLossIfNeeded() {
+        if (this.status.levelState() == LevelState.PLAYING && this.player.livesCount() <= 0) {
+            this.status = this.status.withLevelState(LevelState.LOSS);
+        }
+    }
+
+    private boolean isAdjactedOfSelf(final Position p1, final Position p2) {
+        final int dx = Math.abs(p1.x() - p2.x());
+        final int dy = Math.abs(p1.y() - p2.y());
+        return dx <= 1 && dy <= 1;
     }
 }

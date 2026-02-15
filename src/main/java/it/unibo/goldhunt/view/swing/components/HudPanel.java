@@ -42,9 +42,9 @@ public final class HudPanel extends JPanel implements HudView {
         this.livesLabel = new JLabel("Lives: -");
         this.goldLabel = new JLabel("Gold: 0");
         addComponentListener(new ComponentAdapter() {
-            
+
             @Override
-            public void componentResized(ComponentEvent e) {
+            public void componentResized(final ComponentEvent e) {
                 updateFontSize();
             }
         });
@@ -79,7 +79,7 @@ public final class HudPanel extends JPanel implements HudView {
         if (h <= 0) {
             return;
         }
-        final int fontSize = Math.max(14, h/4);
+        final int fontSize = Math.max(14, h / 4);
         final Font baseFont = getFont();
         final Font scaledFont = baseFont.deriveFont((float) fontSize);
 

@@ -145,6 +145,7 @@ public final class PlayerImpl implements PlayerOperations {
     /**
      * {@inheritDoc}
      */
+    @Override
     public PlayerImpl setLives(final int num) {
         return new PlayerImpl(this.position, num, this.gold, this.inventory);
     }

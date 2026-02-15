@@ -116,16 +116,29 @@ public interface GuiCommand {
         }
     }
 
+    /**
+     * Requests to start a new game run.
+     * The controller initializes the game session and transitions
+     * to the gameplay state.
+     */
     record StartGame() implements GuiCommand {
         @Override
-        public GameViewState apply(GameController c) {
+        public GameViewState apply(final GameController c) {
             return c.handleStartGame();
         }
     }
 
+    /**
+     * Requests to change the current difficulty setting.
+     *
+     * <p>
+     * This affects the configuration of the next game run.
+     *
+     * @param d the selected difficulty level
+     */
     record SetDifficulty(Difficulty d) implements GuiCommand {
         @Override
-        public GameViewState apply(GameController c) {
+        public GameViewState apply(final GameController c) {
             return c.handleSetDifficulty(d);
         }
     }

@@ -37,9 +37,7 @@ public final class Shield extends AbstractItem {
      */
     @Override
     public PlayerOperations applyEffect(final PlayerOperations playerop) {
-        if (getContext() == null) {
-            throw new IllegalStateException("cannot bound item");
-        }
+
 
         if (trap == null) {
             return null;

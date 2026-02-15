@@ -29,6 +29,7 @@ import it.unibo.goldhunt.player.api.PlayerOperations;
  */
 public class RevealService {
 
+    /*
     private static final Set<ItemTypes> PICKUP_ITEMS = Set.of(
         KindOfItem.PICKAXE,
         KindOfItem.DYNAMITE,
@@ -36,6 +37,7 @@ public class RevealService {
         KindOfItem.CHART,
         KindOfItem.LUCKYCLOVER
     );
+    */
     private final Board board;
     private final RevealStrategy revealStrategy;
     private final Supplier<PlayerOperations> player;
@@ -130,7 +132,7 @@ public class RevealService {
     }
 
     /**
-     * cellContent may be either an ItemTypes or a trap/other content.
+     * Applies the effect of the content for the cell at the given position.
      * 
      * @param p the position of application
      */
@@ -140,27 +142,29 @@ public class RevealService {
         if (optionalCell.isEmpty()) {
             return;
         }
+
         final CellContent cellContent = optionalCell.get();
-        final PlayerOperations currentPlayer = this.player.get();
-        PlayerOperations updatedPlayer;
-        try {
-            final ItemTypes item = (ItemTypes) cellContent;
-            if (PICKUP_ITEMS.contains(item.getItem())) {
-                updatedPlayer = item.toInventory(currentPlayer);
-            } else {
-                updatedPlayer = item.applyEffect(currentPlayer);
+        if (cellContent.isTrap()) {
+            final PlayerOperations beforePlayer = this.player.get();
+            final int livesBefore = beforePlayer.livesCount();
+            try {
+                PlayerOperations updatedPlayer = cellContent.applyEffect(beforePlayer);
+                if (updatedPlayer == null) {
+                    return;
+                }
+                final int updatedLives = updatedPlayer.livesCount();
+                final boolean lostLife = updatedLives < livesBefore;
+                final boolean hasShield = beforePlayer.inventory().quantity(KindOfItem.SHIELD) > 0;
+                if (lostLife && hasShield) {
+                    updatedPlayer = updatedPlayer.addLives(1).useItem(KindOfItem.SHIELD, 1);
+                }
+                this.setPlayer.apply(updatedPlayer);
+            } catch (Exception e) {
+                throw new IllegalStateException(
+                    "Failed to apply trap effect at " + p
+                );
             }
-        } catch (final ClassCastException notAnIventoryItem) {
-            updatedPlayer = cellContent.applyEffect(currentPlayer);
-        } 
-        if (updatedPlayer == null) {
-            throw new IllegalStateException(
-                "applyEffect returned null for " + cellContent.getClass().getSimpleName()
-            );
-        }
-        this.setPlayer.apply(updatedPlayer);
-        if (!cellContent.isTrap()) {
-            cell.removeContent();
+            return;
         }
     }
 
@@ -208,5 +212,25 @@ public class RevealService {
             }
         }
         return revealed;
+    }
+
+    ActionResult collect(final Position p) {
+        if (!this.board.isPositionValid(p) || !this.board.getCell(p).isRevealed()) {
+            return ActionResultsFactory.reveal(this.status.get(), ActionEffect.NONE);
+        }
+        if (this.board.getCell(p).getContent().isEmpty()) {
+            return ActionResultsFactory.reveal(this.status.get(), ActionEffect.NONE);
+        }
+
+        final CellContent cellContent = this.board.getCell(p).getContent().get();
+        if (cellContent instanceof ItemTypes && !cellContent.isTrap()) {
+            final ItemTypes item = (ItemTypes) cellContent;
+            final PlayerOperations currentPlayer = this.player.get();
+            final PlayerOperations updatedPlayer = item.toInventory(currentPlayer);
+            this.setPlayer.apply(updatedPlayer);
+            this.board.getCell(p).removeContent();
+            return ActionResultsFactory.reveal(this.status.get(), ActionEffect.APPLIED);
+        }
+        return ActionResultsFactory.reveal(this.status.get(), ActionEffect.NONE);
     }
 }

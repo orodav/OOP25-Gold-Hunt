@@ -191,30 +191,34 @@ public final class GameSession {
      */
     public void useItem(final ItemTypes type) {
         Objects.requireNonNull(type, "type can't be null");
+
         if (this.status().gameMode() != GameMode.LEVEL) {
             throw new IllegalStateException("can't use items outside level");
         }
+
         final PlayerOperations currentPlayer = this.player();
         if (!currentPlayer.inventory().hasAtLeast(type, 1)) {
             throw new IllegalArgumentException("not enough item in inventory");
         }
+
         final var usableItem = this.itemFactory.generateItem(
-            type.getItem().name(),
+            type.shortString(),
             this.level.getBoard(),
             currentPlayer,
             currentPlayer.inventory()
         );
-        final PlayerOperations updatedPlayer = usableItem.applyEffect(currentPlayer);
-        if (updatedPlayer == null) {
+
+        final PlayerOperations effectedPlayer = usableItem.applyEffect(currentPlayer);
+        if (effectedPlayer == null) {
             throw new IllegalStateException("item applyEffect returned null: " + type.getItem());
         }
-        final PlayerOperations updatedEfPlayer = updatedPlayer.useItem(type, 1);
-        final EngineWithState.EngineWithShopActions shopEn = this.shopEngine
-                .orElseThrow(() -> new IllegalStateException("shop actions not available"));
-        final EngineWithState updatedEngine = shopEn.withPlayer(updatedEfPlayer);
+        final PlayerOperations updatedPlayer = effectedPlayer.useItem(type, 1);
+        final EngineWithState updatedEngine = this.engine.withPlayer(updatedPlayer);
         this.engine = updatedEngine;
-        this.shopEngine = Optional.of(
-            (EngineWithState.EngineWithShopActions) updatedEngine
-        );
+        if (updatedEngine instanceof EngineWithState.EngineWithShopActions engineShopAction) {
+            this.shopEngine = Optional.of(engineShopAction);
+        } else {
+            this.shopEngine = Optional.empty();
+        }
     }
 }

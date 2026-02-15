@@ -93,7 +93,8 @@ public class MoveService {
                     actualStatus, 
                     StopReason.NONE, 
                     ActionEffect.INVALID
-            ));
+                )
+            );
         }
         if (actualStatus.levelState() != LevelState.PLAYING) {
             return Optional.of(
@@ -101,7 +102,8 @@ public class MoveService {
                     actualStatus, 
                     StopReason.NONE, 
                     ActionEffect.BLOCKED
-            ));
+                )
+            );
         }
         return Optional.empty();
     }
@@ -142,6 +144,7 @@ public class MoveService {
             return Optional.of(blocked());
         }
         this.setPlayer.apply(currentPlayer.moveTo(nextPosition));
+
         final PlayerOperations updatedPlayer = this.player.get();
         if (this.rules.mustStopOn(nextPosition, updatedPlayer)) {
             return Optional.of(warningStop());
