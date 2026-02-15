@@ -10,19 +10,21 @@ import it.unibo.goldhunt.player.api.PlayerOperations;
  * and its identification.
  */
 public enum KindOfItem implements ItemTypes {
-    CHART("Map"),
-    DYNAMITE("Dynamite"),
-    PICKAXE("Pickaxe"),
-    LUCKYCLOVER("Lucky Clover"),
-    LIVES("Life"),
-    GOLDX3("Gold x3"),
-    GOLD("Gold"),
-    SHIELD("Shield");
+    CHART("Map", "M"),
+    DYNAMITE("Dynamite", "D"),
+    PICKAXE("Pickaxe", "P"),
+    LUCKYCLOVER("Lucky Clover", "C"),
+    LIVES("Life", "L"),
+    GOLDX3("Gold x3", "X"),
+    GOLD("Gold", "G"),
+    SHIELD("Shield", "S");
 
     private final String itemName;
+    private final String symbol;
 
-    KindOfItem(final String itemName) {
+    KindOfItem(final String itemName, final String symbol) {
         this.itemName = itemName;
+        this.symbol = symbol;
     }
 
     /**
@@ -48,7 +50,7 @@ public enum KindOfItem implements ItemTypes {
 
     @Override
     public String shortString() {
-        return this.name();
+        return this.symbol;
     }
 
     @Override

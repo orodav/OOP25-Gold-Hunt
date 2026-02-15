@@ -14,7 +14,6 @@ public class Trap implements Revealable {
 
     public static final int DAMAGE = -1;
 
-    @SuppressWarnings("unused")
     private PlayerOperations playerop;
 
     /**
@@ -42,7 +41,7 @@ public class Trap implements Revealable {
      */
     @Override
     public PlayerOperations applyEffect(final PlayerOperations playero) {
-        if (playero == null) {
+        if (this.playerop == null) {
             throw new IllegalStateException("cannot bind items");
         }
         return playero.addLives(DAMAGE);
