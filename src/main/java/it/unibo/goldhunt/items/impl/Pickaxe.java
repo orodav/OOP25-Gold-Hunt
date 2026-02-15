@@ -6,6 +6,7 @@ import java.util.List;
 
 import java.util.Random;
 
+import it.unibo.goldhunt.board.api.Board;
 import it.unibo.goldhunt.board.api.Cell;
 import it.unibo.goldhunt.items.api.ClearCells;
 import it.unibo.goldhunt.items.api.KindOfItem;
@@ -53,6 +54,7 @@ public final class Pickaxe extends AbstractItem implements ClearCells {
         : board.getColumn(idx);
 
         disarm(cells);
+        recomputeAdjacentTraps(board);
         return playerop;
     }
 
@@ -79,5 +81,20 @@ public final class Pickaxe extends AbstractItem implements ClearCells {
     @Override
     public PlayerOperations toInventory(final PlayerOperations playerop) {
         return playerop.addItem(this.getItem(), 1);
+    }
+
+    private static void recomputeAdjacentTraps(final Board board) {
+        for (final Cell cell : board.getBoardCells()) {
+            int count = 0;
+            final var pos = board.getCellPosition(cell);
+
+            for (final Cell neighbor : board.getAdjacentCells(pos)) {
+                if (neighbor.hasContent() && neighbor.getContent().get().isTrap()) {
+                    count++;
+                }
+            }
+
+            cell.setAdjacentTraps(count);
+        }
     }
 }

@@ -38,7 +38,6 @@ public final class Shield extends AbstractItem {
     @Override
     public PlayerOperations applyEffect(final PlayerOperations playerop) {
 
-
         if (trap == null) {
             return null;
         }
