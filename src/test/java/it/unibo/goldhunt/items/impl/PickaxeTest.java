@@ -109,7 +109,13 @@ class PickaxeTest {
 
         @Override
         public List<Cell> getBoardCells() {
-            throw new UnsupportedOperationException("Unimplemented method 'getBoardCells'");
+            final List<Cell> all = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    all.add(cell[i][j]);
+                }
+            }
+         return all;
         }
 
         @Override
@@ -119,12 +125,32 @@ class PickaxeTest {
 
         @Override
         public Position getCellPosition(final Cell pCell) {
-            throw new UnsupportedOperationException("Unimplemented method 'getCellPosition'");
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    if (cell[i][j].equals(pCell)) {
+                        return new Position(i, j);
+                    }
+                }
+            }
+            throw new IllegalArgumentException("Cell not found in board");
         }
 
         @Override
         public List<Cell> getAdjacentCells(final Position p) {
-            throw new UnsupportedOperationException("Unimplemented method 'getAdjacentCells'");
+            final List<Cell> adj = new ArrayList<>();
+            final int[] dx = {-1, 0, 1, 0};
+            final int[] dy = {0, -1, 0, 1};
+
+            for (int i = 0; i < 4; i++) {
+                final int nx = p.x() + dx[i];
+                final int ny = p.y() + dy[i];
+
+                if (nx >= 0 && nx < size && ny >= 0 && ny < size) {
+                    adj.add(cell[nx][ny]);
+                }
+            }
+
+            return adj;
         }
 
         boolean isRowDisarmed(final int row) {
@@ -187,6 +213,7 @@ class PickaxeTest {
         private boolean disarmed;
         private CellContent content;
         private boolean revealed;
+        private int adjacent;
 
         @Override
         public void reveal() {
@@ -211,12 +238,12 @@ class PickaxeTest {
 
         @Override
         public int getAdjacentTraps() {
-            throw new UnsupportedOperationException("Unimplemented method 'getAdjacentTraps'");
+            return adjacent;
         }
 
         @Override
         public void setAdjacentTraps(final int n) {
-            throw new UnsupportedOperationException("Unimplemented method 'setAdjacentTraps'");
+            this.adjacent = n;
         }
 
         @Override

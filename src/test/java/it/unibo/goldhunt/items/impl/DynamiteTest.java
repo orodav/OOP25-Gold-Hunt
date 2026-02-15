@@ -144,7 +144,13 @@ class DynamiteTest {
 
         @Override
         public List<Cell> getBoardCells() {
-            throw new UnsupportedOperationException("Unimplemented method 'getBoardCells'");
+            final List<Cell> all = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    all.add(cells[i][j]);
+                }
+            }
+            return all;
         }
 
         @Override
@@ -217,6 +223,7 @@ class DynamiteTest {
 
         private boolean disarmed;
         private boolean revealed;
+        private int adjacentTraps;
 
         @Override
         public void reveal() {
@@ -241,12 +248,12 @@ class DynamiteTest {
 
         @Override
         public int getAdjacentTraps() {
-            return 0;
+            return adjacentTraps;
         }
 
         @Override
         public void setAdjacentTraps(final int n) {
-            throw new UnsupportedOperationException("Unimplemented method 'setAdjacentTraps'");
+            this.adjacentTraps = n;
         }
 
         @Override
