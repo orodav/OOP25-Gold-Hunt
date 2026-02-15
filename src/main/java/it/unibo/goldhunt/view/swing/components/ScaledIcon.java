@@ -6,9 +6,11 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 
 import javax.swing.AbstractButton;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
 /**
  * This class is an implementation of {@link Icon}.
@@ -17,7 +19,9 @@ import javax.swing.Icon;
  */
 public class ScaledIcon implements Icon {
 
-    private final Image image;
+    private static final int NOMINAL_SIZE = 16;
+
+    private final BufferedImage image;
     private final int padding;
 
     /**
@@ -28,7 +32,7 @@ public class ScaledIcon implements Icon {
      *     and the component edges.
      */
     public ScaledIcon(final Image image, final int padding) {
-        this.image = image;
+        this.image = toBufferedImage(image);
         this.padding = Math.max(0, padding);
     }
 
@@ -76,7 +80,7 @@ public class ScaledIcon implements Icon {
      */
     @Override
     public int getIconWidth() {
-        return 16;
+        return NOMINAL_SIZE;
     }
 
     /**
@@ -87,7 +91,30 @@ public class ScaledIcon implements Icon {
      */
     @Override
     public int getIconHeight() {
-        return 16;
+        return NOMINAL_SIZE;
     }
 
+    private static BufferedImage toBufferedImage(final Image img) {
+        if (img == null) {
+            return null;
+        }
+
+        final Image loaded = new ImageIcon(img).getImage();
+        final int width = loaded.getWidth(null);
+        final int height = loaded.getHeight(null);
+        if (width <= 0 || height <= 0) {
+            return null;
+        }
+
+        final BufferedImage copy = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        final Graphics2D g2 = copy.createGraphics();
+
+        try {
+            g2.drawImage(loaded, 0, 0, null);
+        } finally {
+            g2.dispose();
+        }
+
+        return copy;
+    }
 }
