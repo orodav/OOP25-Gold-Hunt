@@ -192,10 +192,6 @@ class MoveServiceTest {
             }
         }
 
-        void setFlagged(final Position p, final boolean flagged) {
-            cells.put(p, new TestCell(flagged));
-        }
-
         @Override
         public boolean isPositionValid(final Position p) {
             return this.validPos.contains(p);
