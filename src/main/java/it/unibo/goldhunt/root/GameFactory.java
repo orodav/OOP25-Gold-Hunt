@@ -19,6 +19,8 @@ import it.unibo.goldhunt.configuration.impl.BoardGeneratorImpl;
 import it.unibo.goldhunt.configuration.impl.LevelImpl;
 import it.unibo.goldhunt.configuration.impl.LevelConfigFactoryImpl;
 import it.unibo.goldhunt.engine.api.EngineWithState.EngineWithShopActions;
+import it.unibo.goldhunt.engine.api.GameMode;
+import it.unibo.goldhunt.engine.api.LevelState;
 import it.unibo.goldhunt.engine.api.MovementRules;
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.engine.api.Status;
@@ -155,7 +157,9 @@ public class GameFactory {
         level.initLives();
 
         final MovementRules rules = new MovementRulesImpl(level.getBoard());
-        final Status status = StatusImpl.createStartingState();
+        final Status status = current.status()
+            .withGameMode(GameMode.LEVEL)
+            .withLevelState(LevelState.PLAYING);
         final EngineWithShopActions engine = new EngineImpl(
             level.getPlayer(),
             status,
