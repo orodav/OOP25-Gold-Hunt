@@ -63,6 +63,15 @@ public interface EngineWithState extends Engine {
         ShopActionResult buy(ItemTypes type);
 
         /**
+         * Enters the shop.
+         * 
+         * <p>
+         * This method does not return a result because leaving
+         * the shop is considered a state transition.
+         */
+        void enterShop();
+
+        /**
          * Leaves the shop and returns to the main game context.
          * 
          * <p>

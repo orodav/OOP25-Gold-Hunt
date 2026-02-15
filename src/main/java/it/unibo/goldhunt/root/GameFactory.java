@@ -130,6 +130,7 @@ public class GameFactory {
      * <p>
      * Keeps trace of gold amount and items in inventory from previous levels.
      * 
+     * @param current the current game session providing the player state
      * @param difficulty the selected game difficulty
      * @return a fully initialized {@code GameSession}
      * @throws NullPoiterException if {@code difficulty} is {@code null}

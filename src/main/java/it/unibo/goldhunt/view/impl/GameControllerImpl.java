@@ -134,13 +134,20 @@ public class GameControllerImpl implements GameController {
     @Override
     public GameViewState handleContinue() {
         if (this.screen == ScreenType.SHOP) {
-            this.session.leaveShop();
+            if (this.session.shop().isPresent()) {
+                this.session.leaveShop();
+            }
             this.screen = ScreenType.DIFFICULTY;
-        } else if (this.screen == ScreenType.END) {
+            return refresh(Optional.empty());
+        }
+        if (this.screen == ScreenType.END) {
+            this.session.enterShop();
             this.screen = ScreenType.SHOP;
+            return refresh(Optional.empty());
         }
         return refresh(Optional.empty());
     }
+
 
     /**
      * {@inheritDoc}

@@ -12,6 +12,7 @@ import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.engine.api.Status;
 import it.unibo.goldhunt.items.api.ItemFactory;
 import it.unibo.goldhunt.items.api.ItemTypes;
+import it.unibo.goldhunt.items.api.KindOfItem;
 import it.unibo.goldhunt.player.api.PlayerOperations;
 import it.unibo.goldhunt.shop.api.Shop;
 import it.unibo.goldhunt.shop.api.ShopActionResult;
@@ -192,6 +193,10 @@ public final class GameSession {
     public void useItem(final ItemTypes type) {
         Objects.requireNonNull(type, "type can't be null");
 
+        if (KindOfItem.SHIELD.equals(type)) {
+            return;
+        }
+
         if (this.status().gameMode() != GameMode.LEVEL) {
             throw new IllegalStateException("can't use items outside level");
         }
@@ -220,5 +225,18 @@ public final class GameSession {
         } else {
             this.shopEngine = Optional.empty();
         }
+    }
+
+    /**
+     * Enters the shop phase for the current session.
+     * 
+     * @throws IllegalStateException if shop actions are not available
+     */
+    public void enterShop() {
+    final EngineWithState.EngineWithShopActions shopEn = this.shopEngine
+        .orElseThrow(() -> new IllegalStateException("Shop actions not available"));
+    shopEn.enterShop();
+    this.engine = shopEn;
+    this.shopEngine = Optional.of(shopEn);
     }
 }

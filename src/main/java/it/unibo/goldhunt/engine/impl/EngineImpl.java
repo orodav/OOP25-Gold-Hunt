@@ -344,6 +344,25 @@ public ActionResult move(final Position newPos) {
      * {@inheritDoc}
      */
     @Override
+    public void enterShop() {
+        this.status = this.status.withGameMode(GameMode.SHOP);
+        if (this.shop.isEmpty()) {
+            this.shop = Optional.of(
+                this.shopFactory.create(
+                    this.player,
+                    this.shopItems(this.status.levelNumber()),
+                    this.shopLimit
+                )
+            );
+        }
+    }
+
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void leaveShop() {
         if (this.status.gameMode() != GameMode.SHOP) {
             throw new IllegalStateException("not in shop mode");

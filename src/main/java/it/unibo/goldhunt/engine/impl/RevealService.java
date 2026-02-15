@@ -1,6 +1,7 @@
 package it.unibo.goldhunt.engine.impl;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -147,27 +148,32 @@ public class RevealService {
         if (cellContent.isTrap()) {
             final PlayerOperations beforePlayer = this.player.get();
             final int livesBefore = beforePlayer.livesCount();
-            try {
-                PlayerOperations updatedPlayer = cellContent.applyEffect(beforePlayer);
-                if (updatedPlayer == null) {
-                    return;
-                }
-                final int updatedLives = updatedPlayer.livesCount();
-                final boolean lostLife = updatedLives < livesBefore;
-                final boolean hasShield = beforePlayer.inventory().quantity(KindOfItem.SHIELD) > 0;
-                if (lostLife && hasShield) {
-                    updatedPlayer = updatedPlayer.addLives(1).useItem(KindOfItem.SHIELD, 1);
-                }
-                this.setPlayer.apply(updatedPlayer);
-            } catch (Exception e) {
-                throw new IllegalStateException(
-                    "Failed to apply trap effect at " + p
-                );
-            }
+            final PlayerOperations afterEffect = Objects.requireNonNull(
+                cellContent.applyEffect(beforePlayer),
+                "Trap effect returned null player state"
+            );
+
+            final int updatedLives = afterEffect.livesCount();
+            final boolean lostLife = updatedLives < livesBefore;
+            final boolean hasShield = beforePlayer.inventory().quantity(KindOfItem.SHIELD) > 0;
+
+            final PlayerOperations finalPlayer = (lostLife && hasShield)
+                ? afterEffect.addLives(1).useItem(KindOfItem.SHIELD, 1)
+                : afterEffect;
+
+            this.setPlayer.apply(finalPlayer);
             return;
         }
     }
 
+    /**
+     * Checks whether a reveal action can be performed at the given position.
+     * 
+     * @param p the position to reveal
+     * @return an {@link Optional} containing the action result if blocked/invalid
+     *         or {@link Optional#empty()} if the action can proceed
+     * @throws IllegalArgumentException if {@code p} is {@code null}
+     */
     private Optional<ActionResult> checkRevealPreconditions(final Position p) {
         if (p == null) {
             throw new IllegalArgumentException("position can't be null");
@@ -186,6 +192,14 @@ public class RevealService {
         return Optional.empty(); 
     }
 
+    /**
+     * Checks whether a flag toggle action can be performed  at the given position.
+     * 
+     * @param p the position to flag/unflag
+     * @return an {@link Optional} containing the action result if blocked/invalid,
+     *         or {@link Optional#empty()} if the action can proceed
+     * @throws IllegalArgumentException if {@code p} is {@code null}
+     */
     private Optional<ActionResult> checkFlagPreconditions(final Position p) {
         if (p == null) {
             throw new IllegalArgumentException("position can't be null");
@@ -204,6 +218,11 @@ public class RevealService {
         return Optional.empty();
     }
 
+    /**
+     * Creates a snapshot of all currently revealed cell positions.
+     *
+     * @return a set containing the positions of all revealed cells
+     */
     private Set<Position> snapshotRevealedCells() {
         final Set<Position> revealed = new HashSet<>();
         for (final Cell c : this.board.getBoardCells()) {
@@ -214,6 +233,12 @@ public class RevealService {
         return revealed;
     }
 
+    /**
+     * Collects an item from a revealed cell, if present.
+     *
+     * @param p the position of the cell to collect from
+     * @return an {@link ActionResult} describing the outcome
+     */
     ActionResult collect(final Position p) {
         if (!this.board.isPositionValid(p) || !this.board.getCell(p).isRevealed()) {
             return ActionResultsFactory.reveal(this.status.get(), ActionEffect.NONE);

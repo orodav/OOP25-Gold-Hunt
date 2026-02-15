@@ -17,10 +17,24 @@ import it.unibo.goldhunt.view.impl.ViewStateMapperImpl;
 import it.unibo.goldhunt.view.swing.main.MainFrame;
 import it.unibo.goldhunt.view.swing.main.SwingGameView;
 
+/**
+ * Application entry point and bootstrap class for the Gold Hunt game.
+ *
+ * <p>
+ * This class is responsible for initializing all core components of the application,
+ * including the game session, controller, view, and Swing UI infrastructure.
+ *
+ * <p>
+ * It wires together the MVC layers and starts the Swing event loop.
+ */
 public final class GoldHuntApp {
 
     /**
-     * Utility class: no instances allowd.
+     * Utility class constructor.
+     *
+     * <p>
+     * This constructor is private to prevent instantiation, as this class only
+     * provides static bootstrap functionality.
      */
     private GoldHuntApp() { }
 
