@@ -6,6 +6,7 @@ import java.util.Objects;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import it.unibo.goldhunt.view.api.ItemVisualRegistry;
 import it.unibo.goldhunt.view.api.UIFactory;
 import it.unibo.goldhunt.view.swing.screens.DifficultyPanel;
@@ -20,6 +21,10 @@ import it.unibo.goldhunt.view.viewstate.ScreenType;
  * all screens using a {@link CardLayout}. 
  */
 public final class MainFrame {
+
+    private static final String EI_EXPOSE_REP = "EI_EXPOSE_REP";
+    private static final String JUSTIFICATION_ROOT = "Root Swing container is intentionally exposed for JFrame composition";
+    private static final String JUSTIFICATION_SCREENS = "Swing screen panels are intentionally exposed for controller wiring";
 
     private final JPanel root;
     private final CardLayout layout;
@@ -63,10 +68,14 @@ public final class MainFrame {
     }
 
     /**
-     * Returns the root panel to be set as the content pane of the JFrame.
+     * Returns the root container panel.
      * 
      * @return the root container panel
      */
+    @SuppressFBWarnings(
+        value = EI_EXPOSE_REP,
+        justification = JUSTIFICATION_ROOT
+    )
     public JPanel getMainPanel() {
         return this.root;
     }
@@ -86,6 +95,10 @@ public final class MainFrame {
      * 
      * @return {@link MenuPanel}
      */
+    @SuppressFBWarnings(
+        value = EI_EXPOSE_REP,
+        justification = JUSTIFICATION_SCREENS
+    )
     public MenuPanel getMenuPanel() {
         return this.menuPanel;
     }
@@ -95,6 +108,10 @@ public final class MainFrame {
      * 
      * @return {@link DifficultyPanel}
      */
+    @SuppressFBWarnings(
+        value = EI_EXPOSE_REP,
+        justification = JUSTIFICATION_SCREENS
+    )
     public DifficultyPanel getDifficultyPanel() {
         return this.difficultyPanel;
     }
@@ -104,6 +121,10 @@ public final class MainFrame {
      * 
      * @return {@link PlayingPanel}
      */
+    @SuppressFBWarnings(
+        value = EI_EXPOSE_REP,
+        justification = JUSTIFICATION_SCREENS
+    )
     public PlayingPanel getPlayingPanel() {
         return this.playingPanel;
     }
@@ -113,6 +134,10 @@ public final class MainFrame {
      * 
      * @return {@link EndPanel}
      */
+    @SuppressFBWarnings(
+        value = EI_EXPOSE_REP,
+        justification = JUSTIFICATION_SCREENS
+    )
     public EndPanel getEndPanel() {
         return this.endPanel;
     }
@@ -122,6 +147,10 @@ public final class MainFrame {
      * 
      * @return {@link ShopPanel}
      */
+    @SuppressFBWarnings(
+        value = EI_EXPOSE_REP,
+        justification = JUSTIFICATION_SCREENS
+    )
     public ShopPanel getShopPanel() {
         return this.shopPanel;
     }

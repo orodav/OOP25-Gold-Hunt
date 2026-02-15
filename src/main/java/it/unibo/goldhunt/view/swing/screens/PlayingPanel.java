@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import it.unibo.goldhunt.engine.api.Position;
 import it.unibo.goldhunt.items.api.ItemTypes;
 import it.unibo.goldhunt.view.api.GameView;
@@ -36,6 +37,8 @@ public final class PlayingPanel extends JPanel {
     private static final double LEGEND_WIDTH = 0.14;
     private static final double HUD_HEIGHT = 0.10;
 
+    private static final int LEGEND_SCROLL_UNIT_INCREMENT = 12;
+
     private static final int MIN_INVENTORY = 180;
     private static final int MAX_INVENTORY = 320;
 
@@ -44,7 +47,6 @@ public final class PlayingPanel extends JPanel {
 
     private static final int MIN_HUD = 60;
     private static final int MAX_HUD = 100;
-
 
     /**
      * Default no-operation listener to avoid null checks.
@@ -94,7 +96,7 @@ public final class PlayingPanel extends JPanel {
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
         );
         this.legendScroll.setBorder(null);
-        this.legendScroll.getVerticalScrollBar().setUnitIncrement(12);
+        this.legendScroll.getVerticalScrollBar().setUnitIncrement(LEGEND_SCROLL_UNIT_INCREMENT);
         this.add(this.legendScroll, BorderLayout.EAST);
 
         this.boardPanel = new BoardPanel(itemRegistry);
@@ -211,6 +213,10 @@ public final class PlayingPanel extends JPanel {
      * 
      * @return the board panel
      */
+    @SuppressFBWarnings(
+        value = "EI_EXPOSE_REP",
+        justification = "Swing UI components are intentionally exposed for view composition"
+    )
     public BoardPanel getBoardPanel() {
         return this.boardPanel;
     }
@@ -220,6 +226,10 @@ public final class PlayingPanel extends JPanel {
      * 
      * @return the inventory panel
      */
+    @SuppressFBWarnings(
+        value = "EI_EXPOSE_REP",
+        justification = "Swing UI components are intentionally exposed for view composition"
+    )
     public InventoryPanel getInventoryPanel() {
         return this.inventoryPanel;
     }
@@ -229,6 +239,10 @@ public final class PlayingPanel extends JPanel {
      * 
      * @return the HUD panel
      */
+    @SuppressFBWarnings(
+        value = "EI_EXPOSE_REP",
+        justification = "Swing UI components are intentionally exposed for view composition"
+    )
     public HudPanel getHudPanel() {
         return this.hudPanel;
     }
